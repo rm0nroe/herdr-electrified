@@ -1,0 +1,23 @@
+{
+  "name": "Herdr Electrified",
+  "base": "dark",
+  "overrides": {
+    "claude": "#d97757",
+    "claudeShimmer": "#e89b80",
+    "text": "#6c7086",
+    "inactive": "#6c7086",
+    "subtle": "#6c7086",
+    "suggestion": "#cba6f7",
+    "permission": "#f38ba8",
+    "remember": "#cba6f7",
+    "success": "#a6e3a1",
+    "error": "#f38ba8",
+    "warning": "#f9e2af",
+    "promptBorder": "#313244",
+    "autoAccept": "#ff6b80",
+    "bashBorder": "#cba6f7",
+    "userMessageBackground": "#11111b",
+    "userMessageBackgroundHover": "#1e1e2e",
+    "selectionBg": "#313244"
+  }
+}

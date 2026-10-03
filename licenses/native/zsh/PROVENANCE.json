@@ -1,0 +1,8 @@
+{
+  "upstream": "https://git.code.sf.net/p/zsh/code",
+  "revision": "77045ef899e53b9598bebc5a41db93a548a40ca6",
+  "codex_release_tag": "codex-zsh-v0.1.0",
+  "patch_sha256": "696b7d923b8071554d00e811afb9a08fcad4baada796f7314d12ecd72d06152c",
+  "manifest_sha256": "c534eab89dcea7e3d8a5e5b3f49c025c7c64cd4e4d9814ee24871de58a9359a1",
+  "binary_sha256": "712ebaa416a7505fe6719ba99440ae3125423ce46d42d0174963553d81f3f8f1"
+}

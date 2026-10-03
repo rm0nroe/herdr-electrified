@@ -1,0 +1,79 @@
+#!/usr/bin/env dotslash
+
+{
+  "name": "codex-zsh",
+  "platforms": {
+    "macos-aarch64": {
+      "size": 358776,
+      "hash": "sha256",
+      "digest": "c86a76218f34d263adc7c13e62988d44f7adbd7f4eb44b028ee47a1024637f8a",
+      "format": "tar.gz",
+      "path": "codex-zsh/bin/zsh",
+      "providers": [
+        {
+          "url": "https://github.com/openai/codex/releases/download/codex-zsh-v0.1.0/codex-zsh-aarch64-apple-darwin.tar.gz"
+        },
+        {
+          "type": "github-release",
+          "repo": "https://github.com/openai/codex",
+          "tag": "codex-zsh-v0.1.0",
+          "name": "codex-zsh-aarch64-apple-darwin.tar.gz"
+        }
+      ]
+    },
+    "macos-x86_64": {
+      "size": 391163,
+      "hash": "sha256",
+      "digest": "a928918f29a8743e6503265474feb4950e50422cfbff6f18b4f41b9f7c86a999",
+      "format": "tar.gz",
+      "path": "codex-zsh/bin/zsh",
+      "providers": [
+        {
+          "url": "https://github.com/openai/codex/releases/download/codex-zsh-v0.1.0/codex-zsh-x86_64-apple-darwin.tar.gz"
+        },
+        {
+          "type": "github-release",
+          "repo": "https://github.com/openai/codex",
+          "tag": "codex-zsh-v0.1.0",
+          "name": "codex-zsh-x86_64-apple-darwin.tar.gz"
+        }
+      ]
+    },
+    "linux-x86_64": {
+      "size": 433407,
+      "hash": "sha256",
+      "digest": "cb6ea328232cabd80f59141471a1362eb39b146a4d5e8a654d9b80cf9b7ec83c",
+      "format": "tar.gz",
+      "path": "codex-zsh/bin/zsh",
+      "providers": [
+        {
+          "url": "https://github.com/openai/codex/releases/download/codex-zsh-v0.1.0/codex-zsh-x86_64-unknown-linux-musl.tar.gz"
+        },
+        {
+          "type": "github-release",
+          "repo": "https://github.com/openai/codex",
+          "tag": "codex-zsh-v0.1.0",
+          "name": "codex-zsh-x86_64-unknown-linux-musl.tar.gz"
+        }
+      ]
+    },
+    "linux-aarch64": {
+      "size": 411652,
+      "hash": "sha256",
+      "digest": "2968a278581e4e7937212c9b14d634e318c7bd13d17c20c549a1ecbae673a121",
+      "format": "tar.gz",
+      "path": "codex-zsh/bin/zsh",
+      "providers": [
+        {
+          "url": "https://github.com/openai/codex/releases/download/codex-zsh-v0.1.0/codex-zsh-aarch64-unknown-linux-musl.tar.gz"
+        },
+        {
+          "type": "github-release",
+          "repo": "https://github.com/openai/codex",
+          "tag": "codex-zsh-v0.1.0",
+          "name": "codex-zsh-aarch64-unknown-linux-musl.tar.gz"
+        }
+      ]
+    }
+  }
+}

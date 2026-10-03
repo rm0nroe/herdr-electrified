@@ -1,0 +1,4221 @@
+diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
+index 19885ae..baab9c0 100644
+--- a/codex-rs/Cargo.lock
++++ b/codex-rs/Cargo.lock
+@@ -268,7 +268,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
+ 
+ [[package]]
+ name = "app_test_support"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -1893,7 +1893,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-core",
+@@ -1905,7 +1905,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-graph-store"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-state",
+@@ -1920,7 +1920,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-identity"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -1940,7 +1940,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-message-board-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -1960,7 +1960,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-message-board-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "caseless",
+@@ -1983,7 +1983,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-agent-roles"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-config",
+  "codex-file-system",
+@@ -1996,7 +1996,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-analytics"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-app-server-protocol",
+  "codex-git-utils",
+@@ -2018,7 +2018,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-ansi-escape"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "ansi-to-tui",
+  "ratatui",
+@@ -2027,7 +2027,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-api"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "assert_matches",
+@@ -2065,7 +2065,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -2177,7 +2177,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-app-server",
+  "codex-app-server-protocol",
+@@ -2204,7 +2204,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-daemon"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "blake3",
+@@ -2229,7 +2229,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-protocol"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-app-server-protocol-noop-macros",
+@@ -2263,11 +2263,11 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-protocol-noop-macros"
+-version = "0.0.0"
++version = "0.160.0"
+ 
+ [[package]]
+ name = "codex-app-server-test-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2289,7 +2289,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-app-server-transport"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "axum",
+  "base64 0.22.1",
+@@ -2331,7 +2331,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-apply-patch"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+@@ -2351,7 +2351,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-arg0"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-apply-patch",
+@@ -2374,7 +2374,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-async-utils"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "rand 0.9.3",
+@@ -2384,7 +2384,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-attachment-store"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "serde",
+@@ -2394,7 +2394,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-aws-auth"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "aws-config",
+  "aws-credential-types",
+@@ -2420,7 +2420,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-backend-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-api",
+@@ -2440,7 +2440,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-backend-openapi-models"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "serde",
+  "serde_json",
+@@ -2449,7 +2449,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-build-info"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-install-context",
+  "pretty_assertions",
+@@ -2462,7 +2462,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-bwrap"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "cc",
+  "libc",
+@@ -2471,7 +2471,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-chatgpt"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2493,7 +2493,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cli"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -2594,7 +2594,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-http-client",
+  "eventsource-stream",
+@@ -2608,7 +2608,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-config"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "chrono",
+@@ -2634,7 +2634,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -2667,7 +2667,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -2682,7 +2682,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-tasks-mock-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "chrono",
+  "codex-cloud-tasks-client",
+@@ -2691,7 +2691,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-code-mode-protocol",
+  "codex-http-client",
+@@ -2714,7 +2714,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-host"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -2743,7 +2743,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-protocol"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "glob",
+@@ -2761,7 +2761,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-code-mode-runtime"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-code-mode-protocol",
+@@ -2779,11 +2779,11 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-collaboration-mode-templates"
+-version = "0.0.0"
++version = "0.160.0"
+ 
+ [[package]]
+ name = "codex-config"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -2833,7 +2833,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-config-schema"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -2842,7 +2842,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-connectors"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -2864,7 +2864,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-connectors-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-connectors",
+  "codex-core-plugins",
+@@ -2878,7 +2878,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-context-fragments"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-utils-string",
+@@ -2888,7 +2888,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -3026,7 +3026,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-api"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-analytics",
+  "codex-app-server-protocol",
+@@ -3049,7 +3049,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-plugin-common"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "semver",
+@@ -3060,7 +3060,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-core-plugins"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3116,7 +3116,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-diagnostics"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "libc",
+  "pretty_assertions",
+@@ -3124,7 +3124,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+@@ -3176,7 +3176,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -3244,7 +3244,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server-protocol"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-file-system",
+@@ -3260,7 +3260,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-exec-server-test-support"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-exec-server",
+@@ -3275,7 +3275,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-execpolicy"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -3293,7 +3293,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-experimental-api-macros"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "proc-macro2",
+  "quote",
+@@ -3302,7 +3302,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-extension-api"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-api",
+  "codex-config",
+@@ -3324,7 +3324,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-extension-items"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "pretty_assertions",
+@@ -3336,7 +3336,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-external-agent-migration"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "chrono",
+  "codex-analytics",
+@@ -3366,7 +3366,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-features"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-network-proxy",
+  "codex-protocol",
+@@ -3379,7 +3379,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-feedback"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "bytes",
+@@ -3404,7 +3404,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-search"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -3420,7 +3420,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-system"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "bytes",
+  "codex-protocol",
+@@ -3432,7 +3432,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-file-watcher"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "notify",
+  "pretty_assertions",
+@@ -3443,7 +3443,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-git-attribution"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-backend-client",
+  "codex-extension-api",
+@@ -3456,7 +3456,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-git-utils"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3483,7 +3483,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-goal-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3508,7 +3508,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-guardian-context"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-context-fragments",
+  "codex-history",
+@@ -3519,7 +3519,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-guardian-reviewer"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-analytics",
+@@ -3544,7 +3544,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-guardian-v2"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-analytics",
+@@ -3580,7 +3580,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-history"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-protocol",
+@@ -3592,7 +3592,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-history-notes-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-analytics",
+  "codex-client",
+@@ -3617,7 +3617,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-home"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-extension-api",
+  "codex-utils-absolute-path",
+@@ -3629,7 +3629,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-hooks"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "async-channel",
+@@ -3657,7 +3657,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-http-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "bytes",
+  "codex-utils-cargo-bin",
+@@ -3693,7 +3693,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-image-generation-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-api",
+@@ -3721,7 +3721,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-install-context"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "codex-utils-home-dir",
+@@ -3734,7 +3734,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-keyring-store"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "keyring",
+  "pretty_assertions",
+@@ -3745,7 +3745,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-linux-sandbox"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "clap",
+  "codex-core",
+@@ -3773,7 +3773,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-lmstudio"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-core",
+  "codex-http-client",
+@@ -3787,7 +3787,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-login"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -3831,7 +3831,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mcp"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "arc-swap",
+@@ -3871,7 +3871,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mcp-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -3904,7 +3904,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-core",
+  "codex-extension-api",
+@@ -3926,7 +3926,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-read"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-shell-command",
+@@ -3936,7 +3936,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-memories-write"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -3973,7 +3973,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mermaid"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "insta",
+  "pretty_assertions",
+@@ -3982,7 +3982,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-message-history"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-config",
+  "memchr",
+@@ -3996,7 +3996,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-model-provider"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "chrono",
+@@ -4029,7 +4029,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-model-provider-info"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-client",
+  "codex-protocol",
+@@ -4047,7 +4047,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-models-manager"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "chrono",
+  "codex-http-client",
+@@ -4066,7 +4066,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-mxc-sandbox"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "appcontainer_common",
+@@ -4088,7 +4088,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-network-proxy"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -4137,7 +4137,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-ollama"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "assert_matches",
+  "async-stream",
+@@ -4157,7 +4157,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-otel"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "bytes",
+  "chrono",
+@@ -4194,7 +4194,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-otel-trace-websocket"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -4205,7 +4205,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-plugin"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-config",
+  "codex-core-plugin-common",
+@@ -4220,7 +4220,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-process-hardening"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "libc",
+  "pretty_assertions",
+@@ -4228,7 +4228,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-prompts"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-collaboration-mode-templates",
+@@ -4245,7 +4245,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-protocol"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chardetng",
+@@ -4289,7 +4289,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-queue-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-core",
+@@ -4310,7 +4310,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-realtime-webrtc"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-build-info",
+@@ -4328,7 +4328,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-response-debug-context"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-api",
+@@ -4339,7 +4339,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-responses-api-proxy"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -4356,7 +4356,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rmcp-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "axum",
+@@ -4405,7 +4405,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rollout"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -4433,7 +4433,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-rollout-trace"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-code-mode",
+@@ -4449,7 +4449,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-sandboxing"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-mxc-sandbox",
+@@ -4476,7 +4476,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-secrets"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "age",
+  "anyhow",
+@@ -4497,7 +4497,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-shell-command"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -4520,7 +4520,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-shell-escalation"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -4540,7 +4540,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-skills"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-shell-command",
+@@ -4557,7 +4557,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-skills-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "assert_matches",
+  "blake3",
+@@ -4594,7 +4594,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-state"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "chrono",
+@@ -4620,7 +4620,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-stdio-to-uds"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-uds",
+@@ -4632,7 +4632,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-tcp-tunnel"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "bytes",
+@@ -4653,7 +4653,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-terminal-detection"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "tracing",
+@@ -4661,7 +4661,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-test-binary-support"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-arg0",
+  "tempfile",
+@@ -4669,7 +4669,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-thread-manager-sample"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "clap",
+@@ -4680,7 +4680,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-thread-store"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "chrono",
+  "codex-app-server-protocol",
+@@ -4711,7 +4711,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-tools"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "bitflags 2.13.1",
+  "codex-code-mode",
+@@ -4737,7 +4737,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-tui"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "app_test_support",
+@@ -4863,7 +4863,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-uds"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "async-io",
+  "libc",
+@@ -4877,7 +4877,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-user-verification"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "core-foundation 0.10.1",
+@@ -4897,7 +4897,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-absolute-path"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "dirs",
+  "dunce",
+@@ -4911,14 +4911,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-approval-presets"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-audio"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-protocol",
+@@ -4932,7 +4932,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-cache"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "lru",
+  "sha1 0.10.6",
+@@ -4941,7 +4941,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-cargo-bin"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "assert_cmd",
+  "runfiles",
+@@ -4950,7 +4950,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-cli"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "clap",
+  "codex-protocol",
+@@ -4962,15 +4962,15 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-elapsed"
+-version = "0.0.0"
++version = "0.160.0"
+ 
+ [[package]]
+ name = "codex-utils-fuzzy-match"
+-version = "0.0.0"
++version = "0.160.0"
+ 
+ [[package]]
+ name = "codex-utils-git-discovery"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-git-utils",
+  "codex-utils-absolute-path",
+@@ -4983,7 +4983,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-home-dir"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "dirs",
+@@ -4993,7 +4993,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-image"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-utils-cache",
+@@ -5007,7 +5007,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-json-to-toml"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "serde_json",
+@@ -5016,7 +5016,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-oss"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-core",
+  "codex-lmstudio",
+@@ -5026,7 +5026,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-output-truncation"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-utils-string",
+@@ -5035,7 +5035,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-path"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-utils-absolute-path",
+  "dunce",
+@@ -5046,7 +5046,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-path-uri"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "base64 0.22.1",
+  "codex-utils-absolute-path",
+@@ -5062,7 +5062,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-plugins"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-exec-server",
+  "codex-exec-server-protocol",
+@@ -5076,7 +5076,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-process"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "tokio",
+@@ -5084,7 +5084,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-pty"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "ctor 0.6.3",
+@@ -5102,7 +5102,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-readiness"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "assert_matches",
+  "thiserror 2.0.18",
+@@ -5112,7 +5112,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-redacted-string"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "schemars 0.8.22",
+  "serde",
+@@ -5120,14 +5120,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-rustls-provider"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "rustls",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-sandbox-summary"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-protocol",
+  "codex-utils-absolute-path",
+@@ -5137,7 +5137,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-sleep-inhibitor"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "core-foundation 0.9.4",
+  "libc",
+@@ -5147,14 +5147,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-stream-parser"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+ ]
+ 
+ [[package]]
+ name = "codex-utils-string"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "regex-lite",
+@@ -5164,14 +5164,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-utils-template"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+ ]
+ 
+ [[package]]
+ name = "codex-v8-poc"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "pretty_assertions",
+  "v8",
+@@ -5179,7 +5179,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-voice-host"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-install-context",
+@@ -5206,7 +5206,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-web-search-extension"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-api",
+  "codex-core",
+@@ -5228,7 +5228,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-websocket-auth"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -5247,7 +5247,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-websocket-client"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-http-client",
+  "codex-utils-rustls-provider",
+@@ -5263,7 +5263,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-windows-sandbox"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "base64 0.22.1",
+@@ -5291,7 +5291,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-windows-sandbox-service"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-cloud-config",
+@@ -5308,7 +5308,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-workload-identity"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "codex-http-client",
+  "pretty_assertions",
+@@ -5323,7 +5323,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-worktree"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "codex-git-utils",
+@@ -5563,7 +5563,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "core_test_support"
+-version = "0.0.0"
++version = "0.160.0"
+ dependencies = [
+  "anyhow",
+  "assert_cmd",
+diff --git a/codex-rs/tui/src/app/agent_message_consolidation.rs b/codex-rs/tui/src/app/agent_message_consolidation.rs
+index 4b81201..200dc8d 100644
+--- a/codex-rs/tui/src/app/agent_message_consolidation.rs
++++ b/codex-rs/tui/src/app/agent_message_consolidation.rs
+@@ -2,8 +2,9 @@
+ //!
+ //! During streaming, the chat widget emits transient `AgentMessageCell`s so it
+ //! can animate stable lines into scrollback while keeping the active mutable
+-//! tail in the bottom pane. Once the answer finishes, the app replaces that
+-//! trailing run with a single source-backed `AgentMarkdownCell`. This makes the
++//! tail in the bottom pane. Once the answer finishes, the app replaces the
++//! temporary cells with a single source-backed `AgentMarkdownCell`, preserving
++//! any interleaved notices after the answer. This makes the
+ //! transcript the canonical owner of the raw markdown source used for future
+ //! resize re-renders. The retained view preserves its displayed revision before that
+ //! replacement, then repaints without replaying terminal scrollback.
+@@ -46,15 +47,30 @@ impl App {
+             self.transcript_cells.push(cell);
+         }
+ 
+-        // Walk backward to find the contiguous run of streaming AgentMessageCells that
+-        // belong to the just-finalized stream.
++        // Notices can arrive between streamed chunks. The latest first-line marker
++        // identifies this answer even when its temporary cells are not contiguous.
+         let end = self.transcript_cells.len();
+         tracing::debug!(
+             "ConsolidateAgentMessage: transcript_cells.len()={end}, source_len={}",
+             source.len()
+         );
+-        let start = trailing_run_start::<history_cell::AgentMessageCell>(&self.transcript_cells);
++        let start = self
++            .transcript_cells
++            .iter()
++            .rposition(|cell| {
++                cell.as_any().is::<history_cell::AgentMessageCell>()
++                    && !cell.is_stream_continuation()
++            })
++            .unwrap_or_else(|| {
++                trailing_run_start::<history_cell::AgentMessageCell>(&self.transcript_cells)
++            });
+         if start < end {
++            let notices: Vec<_> = self.transcript_cells[start..end]
++                .iter()
++                .filter(|cell| !cell.as_any().is::<history_cell::AgentMessageCell>())
++                .cloned()
++                .collect();
++            let interrupted = !notices.is_empty();
+             tracing::debug!(
+                 "ConsolidateAgentMessage: replacing cells [{start}..{end}] with AgentMarkdownCell"
+             );
+@@ -65,8 +81,14 @@ impl App {
+                     inline_visualization_context,
+                 ),
+             );
+-            self.native_history
+-                .consolidate(&self.transcript_cells[start..end], &consolidated);
++            self.native_history.consolidate(
++                &self.transcript_cells[start..end]
++                    .iter()
++                    .filter(|cell| cell.as_any().is::<history_cell::AgentMessageCell>())
++                    .cloned()
++                    .collect::<Vec<_>>(),
++                &consolidated,
++            );
+             if tui.is_owned_screen() {
+                 self.transcript_view.replace_group(
+                     &self.transcript_cells,
+@@ -80,15 +102,30 @@ impl App {
+                     &consolidated,
+                 );
+             }
+-            self.transcript_cells
+-                .splice(start..end, std::iter::once(consolidated.clone()));
++            self.transcript_cells.splice(
++                start..end,
++                std::iter::once(consolidated.clone()).chain(notices),
++            );
+ 
+             if let Some(Overlay::Transcript(t)) = &mut self.overlay {
+-                t.regroup_cells(start..end, consolidated.clone());
++                if interrupted {
++                    t.replace_cells(self.transcript_cells.clone());
++                } else {
++                    t.regroup_cells(start..end, consolidated.clone());
++                }
+                 tui.frame_requester().schedule_frame();
+             }
+ 
+-            self.finish_agent_message_consolidation(tui, scrollback_reflow)?;
++            // Put notices after the complete answer in both the canonical transcript
++            // and the visible terminal, rather than moving them only on the next resize.
++            self.finish_agent_message_consolidation(
++                tui,
++                if interrupted {
++                    ConsolidationScrollbackReflow::Required
++                } else {
++                    scrollback_reflow
++                },
++            )?;
+         } else {
+             tracing::debug!(
+                 "ConsolidateAgentMessage: no cells to consolidate(start={start}, end={end})",
+diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
+index 4de9db0..dff218a 100644
+--- a/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
++++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/app/daemon_menu_tests.rs
++assertion_line: 125
+ expression: "render_bottom_popup(&app.chat_widget,\nwidth).replace(r\"C:\\cli-build\\bin\\codex\", \"/x/cli-build/bin/codex\")"
+ ---
+   Update daemon and exit Codex?
+-  Use this CLI package v0.0.0 from /x/cli-build/bin/codex. Copy the complete package and pin it
++  Use this CLI package v0.160.0 from /x/cli-build/bin/codex. Copy the complete package and pin it
+   against automatic updates.
+   This may restart the daemon and interrupt active or queued work.
+   Codex exits to update in this terminal. Relaunch it afterward.
+diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
+index 1261499..9d97453 100644
+--- a/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
++++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/app/empty_state_animation_tests.rs
++assertion_line: 217
+ expression: "format!(\"enabled:\\n{}\\n---\\ndisabled:\\n{}\", text(after), text(&before))"
+ ---
+ enabled:
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   Pull up a prompt.
+@@ -50,7 +51,7 @@ enabled:
+ ---
+ disabled:
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   Pull up a prompt.
+diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
+index 8aa1bca..ec3b53a 100644
+--- a/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
++++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
+@@ -1,10 +1,10 @@
+ ---
+ source: tui/src/app/tests.rs
+-assertion_line: 6513
++assertion_line: 6509
+ expression: rendered
+ ---
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      <thread cwd>
+ 
+ 
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__active_reconnect__unavailable_conversation.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__active_reconnect__unavailable_conversation.snap
+index 335071a..b37853d 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__active_reconnect__unavailable_conversation.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__active_reconnect__unavailable_conversation.snap
+@@ -3,8 +3,6 @@ source: tui/src/app/tests/active_reconnect_tests.rs
+ expression: "format!(\"{history}\\n{}\",\nrender_bottom_popup(&app.chat_widget,\n80)).replace(&test_path_buf(\"/tmp/project\").display().to_string(),\n\"/tmp/project\")"
+ ---
+ • This conversation is unavailable. Its cached transcript and draft remain here; input is paused. Open the agent picker or return to the parent to continue.
+-⚠ A background Codex service is running v2.0.0, different from your Codex CLI
+-  v0.0.0.
+ › unavailable draft
+ 
+   gpt-test default · /tmp/project
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
+index 9ccef21..43b278a 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
+@@ -1,5 +1,6 @@
+ ---
+ source: tui/src/app/tests/navigation_reconnect_tests.rs
++assertion_line: 399
+ expression: "render_bottom_popup(&app.chat_widget, 100)"
+ ---
+   Agent command center  Group: Project  g
+@@ -25,4 +26,4 @@ expression: "render_bottom_popup(&app.chat_widget, 100)"
+                                                           │
+                                                           │
+                                                           │
+-  Service v2.0.0 ≠ Codex CLI v0.0.0 · /daemon
++  ? help  esc back  ↑/↓ move  enter open  n new
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
+index ab3a8c8..97b769f 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
+@@ -4,7 +4,7 @@ assertion_line: 889
+ expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
+ ---
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   To get started, describe a task or try one of these commands:
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
+index 2ecde20..e5aa0f0 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
+@@ -4,7 +4,7 @@ assertion_line: 1093
+ expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
+ ---
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   To get started, describe a task or try one of these commands:
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
+index 5c3a9d2..618ab2c 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
+@@ -15,7 +15,7 @@ Restored owner:
+ 
+   gpt-test default · /tmp/project
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   To get started, describe a task or try one of these commands:
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
+index 0dfd733..2451b92 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
+@@ -4,7 +4,7 @@ assertion_line: 716
+ expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
+ ---
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   To get started, describe a task or try one of these commands:
+diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
+index 8ed7c18..17c666d 100644
+--- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
++++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
+@@ -5,7 +5,7 @@ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.
+ ---
+ 80 columns
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   Pull up a prompt.
+@@ -27,7 +27,7 @@ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.
+ 
+ 32 columns
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   Pull up a prompt.
+diff --git a/codex-rs/tui/src/app/tests/stream_animation_tests.rs b/codex-rs/tui/src/app/tests/stream_animation_tests.rs
+index e8dbb09..03d89d2 100644
+--- a/codex-rs/tui/src/app/tests/stream_animation_tests.rs
++++ b/codex-rs/tui/src/app/tests/stream_animation_tests.rs
+@@ -49,3 +49,85 @@ async fn stream_animation_preserves_pacing_and_discards_stopped_ticks() -> Resul
+     time::resume();
+     Ok(())
+ }
++
++#[tokio::test]
++async fn warning_inside_stream_does_not_duplicate_answer_on_resize() -> Result<()> {
++    // Cover a notice between chunks and one arriving after the final chunk,
++    // before the authoritative completion event. Both must preserve the notice.
++    for warning_after_tail in [false, true] {
++        let mut app = make_test_app().await;
++        let mut tui = crate::tui::test_support::make_test_tui()?;
++        let prefix =
++            "1. A terminal accepts commands.\n2. It runs programs.\n3. It displays results.";
++        let warning = "Heads up, you have less than 25% of your weekly limit left.";
++        app.transcript_cells = vec![
++            plain_line_cell("earlier history"),
++            Arc::new(AgentMessageCell::new(
++                prefix.lines().map(Line::from).collect(),
++                /*is_first_line*/ true,
++            )),
++            Arc::new(history_cell::new_usage_warning_event(warning.to_string())),
++            Arc::new(AgentMessageCell::new(
++                vec![Line::from("DONE")],
++                /*is_first_line*/ false,
++            )),
++        ];
++        if warning_after_tail {
++            app.transcript_cells.swap(2, 3);
++        }
++        app.overlay = Some(Overlay::new_transcript(
++            app.transcript_cells.clone(),
++            crate::keymap::RuntimeKeymap::defaults().pager,
++            /*copy_on_select*/ false,
++        ));
++        app.handle_consolidate_agent_message(
++            &mut tui,
++            format!("{prefix}\n\nDONE"),
++            PathBuf::from("/tmp"),
++            /*inline_visualization_context*/ None,
++            crate::app_event::ConsolidationScrollbackReflow::IfResizeReflowRan,
++            /*deferred_history_cell*/ None,
++        )?;
++        assert!(app.transcript_reflow.has_pending_reflow());
++        for width in [120, 60, 120] {
++            let rendered = app
++                .render_transcript_lines_for_reflow(width)
++                .lines
++                .into_iter()
++                .map(|line| line.line.to_string())
++                .collect::<Vec<_>>()
++                .join("\n");
++            let Some(Overlay::Transcript(overlay)) = app.overlay.as_mut() else {
++                panic!("transcript overlay missing");
++            };
++            let area = ratatui::layout::Rect::new(0, 0, width, 30);
++            let mut buffer = ratatui::buffer::Buffer::empty(area);
++            overlay.render(area, &mut buffer);
++            let overlay_text = buffer
++                .content
++                .iter()
++                .map(ratatui::buffer::Cell::symbol)
++                .collect::<String>();
++            for text in [
++                "earlier history",
++                "A terminal accepts commands.",
++                "It runs programs.",
++                "It displays results.",
++                "DONE",
++                "Heads up",
++            ] {
++                assert_eq!(
++                    rendered.matches(text).count(),
++                    1,
++                    "width {width}: {rendered}"
++                );
++                assert_eq!(
++                    overlay_text.matches(text).count(),
++                    1,
++                    "overlay width {width}: {overlay_text}"
++                );
++            }
++        }
++    }
++    Ok(())
++}
+diff --git a/codex-rs/tui/src/bottom_pane/chat_composer.rs b/codex-rs/tui/src/bottom_pane/chat_composer.rs
+index 7272255..55edd40 100644
+--- a/codex-rs/tui/src/bottom_pane/chat_composer.rs
++++ b/codex-rs/tui/src/bottom_pane/chat_composer.rs
+@@ -599,6 +599,8 @@ impl ChatComposerConfig {
+ }
+ 
+ pub(crate) struct ChatComposer {
++    // Local opt-in presentation; never changes menus, history, or approval controls.
++    pub(super) herdr_reference_ui: bool,
+     draft: DraftState,
+     popups: PopupState,
+     app_event_tx: AppEventSender,
+@@ -733,6 +735,7 @@ impl ChatComposer {
+             draft: DraftState::new(),
+             popups: PopupState::default(),
+             app_event_tx,
++            herdr_reference_ui: std::env::var("CODEX_HERDR_REFERENCE_UI").is_ok_and(|v| v == "1"),
+             history: ChatComposerHistory::new(),
+             agents_navigation_enabled: false,
+             footer: FooterState {
+@@ -4922,8 +4925,22 @@ impl ChatComposer {
+         if let Some((warning_area, line)) = warning_notice {
+             line.render(warning_area, buf);
+         }
+-        let style = user_message_style();
++        let style = if self.herdr_reference_ui {
++            Style::default()
++                .fg(crate::style::ELECTRIC_TEXT)
++                .bg(crate::style::ELECTRIC_SURFACE)
++        } else {
++            user_message_style()
++        };
+         Block::default().style(style).render(composer_rect, buf);
++        if self.herdr_reference_ui && !composer_rect.is_empty() {
++            Line::from("─".repeat(usize::from(composer_rect.width)))
++                .fg(crate::style::ELECTRIC_PINK)
++                .render(
++                    Rect::new(composer_rect.x, composer_rect.y, composer_rect.width, 1),
++                    buf,
++                );
++        }
+         if !remote_images_rect.is_empty() {
+             Paragraph::new(self.attachments.remote_image_lines())
+                 .style(style)
+@@ -4945,6 +4962,8 @@ impl ChatComposer {
+                         .map(EffortIgnition::charge_alpha)
+                         .unwrap_or(1.0);
+                     tier.prompt(charge)
++                } else if self.herdr_reference_ui {
++                    "›".fg(crate::style::ELECTRIC_PINK).bold()
+                 } else {
+                     "›".bold()
+                 }
+@@ -5005,7 +5024,11 @@ impl ChatComposer {
+                     .to_string()
+             };
+             if !textarea_rect.is_empty() {
+-                let placeholder = Span::from(text).dim();
++                let placeholder = if self.herdr_reference_ui {
++                    Span::from(text).fg(crate::style::ELECTRIC_SECONDARY)
++                } else {
++                    Span::from(text).dim()
++                };
+                 Line::from(vec![placeholder]).render(textarea_rect.inner(Margin::new(0, 0)), buf);
+             }
+         }
+@@ -5115,6 +5138,60 @@ mod tests {
+         );
+     }
+ 
++    #[test]
++    fn herdr_reference_composer_snapshot() {
++        let (mut composer, _rx) = new_test_composer();
++        composer.herdr_reference_ui = true;
++        let area = Rect::new(0, 0, 48, 6);
++        let mut buffer = Buffer::empty(area);
++        composer.render(area, &mut buffer);
++        assert_eq!(buffer[(0, 1)].bg, ratatui::style::Color::Reset);
++        assert_eq!(buffer[(2, 0)].symbol(), "─");
++        insta::assert_snapshot!("herdr_reference_composer", format!("{buffer:?}"));
++
++        composer.draft.is_bash_mode = true;
++        let mut buffer = Buffer::empty(area);
++        composer.render(area, &mut buffer);
++        let bash_prompt = buffer
++            .content
++            .iter()
++            .find(|cell| cell.symbol() == "!")
++            .unwrap();
++        assert_eq!(bash_prompt.fg, Color::LightRed);
++
++        composer.draft.is_bash_mode = false;
++        composer.draft.input_enabled = false;
++        let mut buffer = Buffer::empty(area);
++        composer.render(area, &mut buffer);
++        let text: String = buffer
++            .content
++            .iter()
++            .map(ratatui::buffer::Cell::symbol)
++            .collect();
++        assert!(text.contains("Input disabled."));
++
++        composer.draft.input_enabled = true;
++        composer.set_text_content("abcdefghijklmnop".into(), Vec::new(), Vec::new());
++        for width in 1..=48 {
++            let area = Rect::new(0, 0, width, composer.desired_height(width));
++            let mut buffer = Buffer::empty(area);
++            composer.render(area, &mut buffer);
++            let textarea = composer
++                .layout_with_options(area, ComposerRenderOptions::default())
++                .textarea;
++            if !textarea.is_empty() {
++                let rendered: String = (textarea.y..textarea.bottom())
++                    .flat_map(|y| (textarea.x..textarea.right()).map(move |x| (x, y)))
++                    .map(|position| buffer[position].symbol())
++                    .collect::<String>()
++                    .replace(' ', "");
++                assert_eq!(rendered, "abcdefghijklmnop", "width {width}");
++                let (x, y) = composer.cursor_pos(area).unwrap();
++                assert!(textarea.contains((x, y).into()), "width {width}");
++            }
++        }
++    }
++
+     #[test]
+     fn light_terminal_palette_renders_light_composer_snapshot() {
+         let colors = crate::terminal_probe::DefaultColors {
+diff --git a/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs b/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
+index b79c28b..15ebc24 100644
+--- a/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
++++ b/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
+@@ -101,6 +101,11 @@ impl ChatComposer {
+             .areas(area);
+             (composer, popup, popup)
+         };
++        let composer_rect = if self.herdr_reference_ui {
++            composer_rect.inner(Margin::new(2, 0))
++        } else {
++            composer_rect
++        };
+         footer_rect.y = footer_rect.y.saturating_add(status.height);
+         // Keep the draft visible when clipped.
+         let voice_rows = voice_rows * u16::from(composer_rect.height >= voice_rows + 3);
+@@ -174,8 +179,9 @@ impl ChatComposer {
+     ) -> u16 {
+         let footer_hint_height = self.footer_hint_height(width, options);
+         const COLS_WITH_MARGIN: u16 = LIVE_PREFIX_COLS + 1;
+-        let inner_width =
+-            width.saturating_sub(COLS_WITH_MARGIN.saturating_add(options.textarea_right_reserve));
++        let composer_width = width.saturating_sub(if self.herdr_reference_ui { 4 } else { 0 });
++        let inner_width = composer_width
++            .saturating_sub(COLS_WITH_MARGIN.saturating_add(options.textarea_right_reserve));
+         let remote_images_height: u16 = self
+             .attachments
+             .remote_image_lines()
+diff --git a/codex-rs/tui/src/bottom_pane/chat_composer_effort_tests.rs b/codex-rs/tui/src/bottom_pane/chat_composer_effort_tests.rs
+index aaae8c2..cb946d0 100644
+--- a/codex-rs/tui/src/bottom_pane/chat_composer_effort_tests.rs
++++ b/codex-rs/tui/src/bottom_pane/chat_composer_effort_tests.rs
+@@ -3,6 +3,63 @@ use super::tests::snapshot_composer_state_with_width;
+ use super::*;
+ use pretty_assertions::assert_eq;
+ 
++#[test]
++fn herdr_reference_keeps_placeholder_and_effort_prompt() {
++    let (mut composer, _rx) = new_test_composer();
++    composer.herdr_reference_ui = true;
++    composer.placeholder_text = "Ask anything".to_string();
++    composer.set_active_reasoning_effort_baseline(Some(&ReasoningEffort::Ultra));
++    let area = Rect::new(0, 0, 60, 6);
++    let mut buf = Buffer::empty(area);
++    composer.render(area, &mut buf);
++    let textarea = composer
++        .layout_with_options(area, ComposerRenderOptions::default())
++        .textarea;
++    let text = (textarea.x..textarea.right())
++        .map(|x| buf[(x, textarea.y)].symbol())
++        .collect::<String>();
++    assert!(text.contains("Ask anything"));
++    assert_eq!(
++        buf[(textarea.x - LIVE_PREFIX_COLS, textarea.y)].symbol(),
++        "»"
++    );
++    assert_eq!(buf[(2, 0)].symbol(), "─");
++    assert_eq!(buf[(2, 0)].fg, crate::style::ELECTRIC_PINK);
++    assert_eq!(buf[(0, 1)].bg, Color::Reset);
++}
++
++#[test]
++fn herdr_reference_starts_effort_animation_without_changing_draft() {
++    crate::terminal_palette::with_test_default_colors(
++        crate::terminal_probe::DefaultColors {
++            fg: (205, 214, 244),
++            bg: (17, 17, 27),
++        },
++        || {
++            let (mut composer, _rx) = new_test_composer();
++            composer.herdr_reference_ui = true;
++            composer.set_text_content("keep this draft".to_string(), Vec::new(), Vec::new());
++            composer.set_active_reasoning_effort_baseline(Some(&ReasoningEffort::High));
++            composer.set_active_reasoning_effort(
++                Some(&ReasoningEffort::Ultra),
++                /*animations_enabled*/ true,
++            );
++            let area = Rect::new(0, 0, 60, 6);
++            let mut buf = Buffer::empty(area);
++            composer.render(area, &mut buf);
++            std::thread::sleep(Duration::from_millis(2));
++            assert!(composer.effort_ignition.as_ref().unwrap().charge_alpha() > 0.0);
++            let textarea = composer
++                .layout_with_options(area, ComposerRenderOptions::default())
++                .textarea;
++            let text = (textarea.x..textarea.right())
++                .map(|x| buf[(x, textarea.y)].symbol())
++                .collect::<String>();
++            assert!(text.contains("keep this draft"));
++        },
++    );
++}
++
+ #[test]
+ fn effort_composer_baseline_repeat_and_lowering_do_not_replay() {
+     let (mut composer, _rx) = new_test_composer();
+diff --git a/codex-rs/tui/src/bottom_pane/mod.rs b/codex-rs/tui/src/bottom_pane/mod.rs
+index 912880e..545af95 100644
+--- a/codex-rs/tui/src/bottom_pane/mod.rs
++++ b/codex-rs/tui/src/bottom_pane/mod.rs
+@@ -627,6 +627,15 @@ impl BottomPane {
+         self.request_redraw();
+     }
+ 
++    #[cfg(test)]
++    pub(crate) fn enable_herdr_reference_ui_for_test(&mut self) {
++        self.composer.herdr_reference_ui = true;
++    }
++
++    pub(crate) fn herdr_reference_ui(&self) -> bool {
++        self.composer.herdr_reference_ui
++    }
++
+     pub(crate) fn set_placeholder_text(&mut self, placeholder: String) {
+         self.composer.set_placeholder_text(placeholder);
+         self.request_redraw();
+diff --git a/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__chat_composer__tests__herdr_reference_composer.snap b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__chat_composer__tests__herdr_reference_composer.snap
+new file mode 100644
+index 0000000..a3e0cfd
+--- /dev/null
++++ b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__chat_composer__tests__herdr_reference_composer.snap
+@@ -0,0 +1,34 @@
++---
++source: tui/src/bottom_pane/chat_composer.rs
++assertion_line: 5150
++expression: "format!(\"{buffer:?}\")"
++---
++Buffer {
++    area: Rect { x: 0, y: 0, width: 48, height: 6 },
++    content: [
++        "  ────────────────────────────────────────────  ",
++        "  › Ask Codex to do anything                    ",
++        "                                                ",
++        "                                                ",
++        "                                                ",
++        "  ? for shortcuts            100% context left  ",
++    ],
++    styles: [
++        x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 0, fg: Rgb(255, 123, 194), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 46, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 1, fg: Rgb(255, 123, 194), bg: Rgb(24, 24, 37), underline: Reset, modifier: BOLD,
++        x: 3, y: 1, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 4, y: 1, fg: Rgb(164, 168, 188), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 28, y: 1, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 46, y: 1, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 2, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 46, y: 2, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 3, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 46, y: 3, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 4, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 46, y: 4, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 5, fg: Reset, bg: Reset, underline: Reset, modifier: BOLD,
++        x: 3, y: 5, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++    ]
++}
+diff --git a/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_reference.snap b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_reference.snap
+new file mode 100644
+index 0000000..5b8a5e5
+--- /dev/null
++++ b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_reference.snap
+@@ -0,0 +1,16 @@
++---
++source: tui/src/bottom_pane/status_line_style.rs
++assertion_line: 343
++expression: "format!(\"{buffer:?}\")"
++---
++Buffer {
++    area: Rect { x: 0, y: 0, width: 20, height: 1 },
++    content: [
++        "model · PR #1       ",
++    ],
++    styles: [
++        x: 0, y: 0, fg: Rgb(164, 168, 188), bg: Reset, underline: Reset, modifier: NONE,
++        x: 8, y: 0, fg: Rgb(164, 168, 188), bg: Reset, underline: Reset, modifier: UNDERLINED,
++        x: 13, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++    ]
++}
+diff --git a/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_standard.snap b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_standard.snap
+new file mode 100644
+index 0000000..1e0336c
+--- /dev/null
++++ b/codex-rs/tui/src/bottom_pane/snapshots/codex_tui__bottom_pane__status_line_style__tests__herdr_status_line_standard.snap
+@@ -0,0 +1,16 @@
++---
++source: tui/src/bottom_pane/status_line_style.rs
++assertion_line: 372
++expression: "format!(\"{buffer:?}\")"
++---
++Buffer {
++    area: Rect { x: 0, y: 0, width: 20, height: 1 },
++    content: [
++        "model · PR #1       ",
++    ],
++    styles: [
++        x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 8, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: UNDERLINED,
++        x: 13, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++    ]
++}
+diff --git a/codex-rs/tui/src/bottom_pane/status_line_style.rs b/codex-rs/tui/src/bottom_pane/status_line_style.rs
+index 8c44ce4..5715a01 100644
+--- a/codex-rs/tui/src/bottom_pane/status_line_style.rs
++++ b/codex-rs/tui/src/bottom_pane/status_line_style.rs
+@@ -96,9 +96,16 @@ pub(crate) fn status_line_from_segments<I>(
+ where
+     I: IntoIterator<Item = (StatusLineItem, String)>,
+ {
+-    status_line_from_segments_with_resolver(segments, use_theme_colors, thread_id, |accent| {
+-        foreground_style_for_scopes(accent.scopes())
+-    })
++    let mut line =
++        status_line_from_segments_with_resolver(segments, use_theme_colors, thread_id, |accent| {
++            foreground_style_for_scopes(accent.scopes())
++        })?;
++    if crate::style::herdr_reference_ui() && !use_theme_colors {
++        for span in &mut line.spans {
++            span.style = span.style.fg(crate::style::ELECTRIC_SECONDARY).not_dim();
++        }
++    }
++    Some(line)
+ }
+ 
+ fn status_line_from_segments_with_resolver<I, F>(
+@@ -334,6 +341,44 @@ mod tests {
+         assert_eq!(line.spans[0].style, secondary_text_style().underlined());
+     }
+ 
++    #[test]
++    fn herdr_status_line_is_readable_and_keeps_links() {
++        let line = status_line_from_segments(
++            [
++                (StatusLineItem::ModelName, "model".to_string()),
++                (StatusLineItem::PullRequestNumber, "PR #1".to_string()),
++            ],
++            /*use_theme_colors*/ false,
++            /*thread_id*/ None,
++        )
++        .expect("status line");
++        let style = if crate::style::herdr_reference_ui() {
++            secondary_text_style()
++                .fg(crate::style::ELECTRIC_SECONDARY)
++                .not_dim()
++        } else {
++            secondary_text_style()
++        };
++        assert_eq!(
++            line,
++            Line::from(vec![
++                Span::styled("model", style),
++                Span::styled(" · ", style),
++                Span::styled("PR #1", style.underlined()),
++            ])
++        );
++        let mut buffer = ratatui::buffer::Buffer::empty(ratatui::layout::Rect::new(0, 0, 20, 1));
++        ratatui::widgets::Widget::render(line, buffer.area, &mut buffer);
++        insta::assert_snapshot!(
++            if crate::style::herdr_reference_ui() {
++                "herdr_status_line_reference"
++            } else {
++                "herdr_status_line_standard"
++            },
++            format!("{buffer:?}")
++        );
++    }
++
+     #[test]
+     fn status_line_segments_return_none_when_empty() {
+         assert_eq!(
+diff --git a/codex-rs/tui/src/chatwidget/rendering.rs b/codex-rs/tui/src/chatwidget/rendering.rs
+index 36c8733..839cdc0 100644
+--- a/codex-rs/tui/src/chatwidget/rendering.rs
++++ b/codex-rs/tui/src/chatwidget/rendering.rs
+@@ -166,7 +166,11 @@ impl ChatWidget {
+             })),
+             None => RenderableItem::Owned(Box::new(())),
+         };
+-        let mut flex = FlexRenderable::new();
++        let mut flex = if self.bottom_pane.herdr_reference_ui() {
++            FlexRenderable::new().with_bottom_anchor()
++        } else {
++            FlexRenderable::new()
++        };
+         flex.push(/*flex*/ 1, active_cell_renderable);
+         for cell in self
+             .realtime_conversation
+diff --git a/codex-rs/tui/src/chatwidget/rendering_tests.rs b/codex-rs/tui/src/chatwidget/rendering_tests.rs
+index 624d587..67f0430 100644
+--- a/codex-rs/tui/src/chatwidget/rendering_tests.rs
++++ b/codex-rs/tui/src/chatwidget/rendering_tests.rs
+@@ -565,3 +565,94 @@ async fn external_writer_notice_offers_command_center_on_shared_servers() {
+         }
+     }
+ }
++
++#[tokio::test]
++async fn herdr_bottom_layout_keeps_content_above_composer_popups_and_approval() {
++    use crate::bottom_pane::ApprovalRequest;
++    use crate::bottom_pane::ExecApprovalRequest;
++    use crate::bottom_pane::SelectionItem;
++    use crate::bottom_pane::SelectionViewParams;
++    use crate::test_backend::VT100Backend;
++    use codex_app_server_protocol::CommandExecutionApprovalDecision;
++
++    let (mut widget, _sender, _events, _operations) = make_chatwidget_manual_with_sender().await;
++    widget.bottom_pane.enable_herdr_reference_ui_for_test();
++    widget.transcript.active_cell = Some(Box::new(history_cell::PlainHistoryCell::new(vec![
++        "active output".into(),
++    ])));
++    let mut terminal =
++        crate::custom_terminal::Terminal::with_options(VT100Backend::new(80, 24)).unwrap();
++    let area = Rect::new(0, 0, 80, 24);
++    terminal.set_viewport_area(area);
++    let mut captures = Vec::new();
++    for phase in ["startup", "multiline", "popup", "approval"] {
++        match phase {
++            "startup" => {
++                widget
++                    .bottom_pane
++                    .set_composer_text("input marker".into(), Vec::new(), Vec::new())
++            }
++            "multiline" => widget.bottom_pane.set_composer_text(
++                "line one\nline two\ninput marker".into(),
++                Vec::new(),
++                Vec::new(),
++            ),
++            "popup" => widget.bottom_pane.show_selection_view(SelectionViewParams {
++                view_id: Some("herdr-layout-test"),
++                title: Some("Select an option".into()),
++                items: vec![SelectionItem {
++                    name: "Choice marker".into(),
++                    ..Default::default()
++                }],
++                ..Default::default()
++            }),
++            "approval" => {
++                assert!(widget.bottom_pane.dismiss_view_by_id("herdr-layout-test"));
++                widget.bottom_pane.push_approval_request(
++                    ApprovalRequest::Exec(ExecApprovalRequest {
++                        kind: Default::default(),
++                        thread_id: codex_protocol::ThreadId::new(),
++                        thread_label: None,
++                        id: "layout-approval".into(),
++                        environment_id: None,
++                        command: vec!["echo".into(), "approval marker".into()],
++                        reason: None,
++                        available_decisions: vec![
++                            CommandExecutionApprovalDecision::Accept,
++                            CommandExecutionApprovalDecision::Cancel,
++                        ],
++                        network_approval_context: None,
++                        additional_permissions: None,
++                    }),
++                    &codex_features::Features::default(),
++                );
++            }
++            _ => unreachable!(),
++        }
++        terminal
++            .draw(|frame| {
++                let renderable = widget.as_renderable();
++                renderable.render(area, frame.buffer_mut());
++                if let Some(cursor) = renderable.cursor_pos(area) {
++                    frame.set_cursor_position(cursor);
++                }
++            })
++            .unwrap();
++        let screen = terminal.backend().vt100().screen();
++        let rows: Vec<_> = screen.rows(0, 80).collect();
++        assert!(rows[1].contains("active output"));
++        if matches!(phase, "startup" | "multiline") {
++            let input_row = rows
++                .iter()
++                .position(|row| row.contains("input marker"))
++                .unwrap();
++            assert!(
++                input_row >= 20,
++                "composer must be near the bottom: {rows:?}"
++            );
++            assert_eq!(usize::from(screen.cursor_position().0), input_row);
++        }
++        captures.push(format!("{phase}:\n{}", screen.contents()));
++    }
++    insta::assert_snapshot!(captures.join("\n\n"));
++}
+diff --git a/codex-rs/tui/src/chatwidget/snapshots/codex_tui__chatwidget__rendering__tests__herdr_bottom_layout_keeps_content_above_composer_popups_and_approval.snap b/codex-rs/tui/src/chatwidget/snapshots/codex_tui__chatwidget__rendering__tests__herdr_bottom_layout_keeps_content_above_composer_popups_and_approval.snap
+new file mode 100644
+index 0000000..59779c8
+--- /dev/null
++++ b/codex-rs/tui/src/chatwidget/snapshots/codex_tui__chatwidget__rendering__tests__herdr_bottom_layout_keeps_content_above_composer_popups_and_approval.snap
+@@ -0,0 +1,108 @@
++---
++source: tui/src/chatwidget/rendering_tests.rs
++assertion_line: 657
++expression: "captures.join(\"\\n\\n\")"
++---
++startup:
++ 
++active output
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  ────────────────────────────────────────────────────────────────────────────
++  › input marker                                                              
++                                                                              
++  GPT-5.6-Sol default · /tmp/project
++
++multiline:
++ 
++active output
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  ────────────────────────────────────────────────────────────────────────────
++  › line one                                                                  
++    line two                                                                  
++    input marker                                                              
++                                                                              
++  GPT-5.6-Sol default · /tmp/project
++
++popup:
++ 
++active output
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  Select an option
++
++
++› 1. Choice marker                                                              
++
++  enter select · esc back                                                       
++
++approval:
++ 
++active output
++
++
++
++
++
++
++
++
++
++
++
++
++
++  Would you like to run the following command?
++
++  $ echo 'approval marker'
++
++
++› 1. Yes, proceed (y)                                                           
++  2. No, and tell Codex what to do differently (esc)
++
++  Press enter to confirm or esc to cancel
+diff --git a/codex-rs/tui/src/custom_terminal.rs b/codex-rs/tui/src/custom_terminal.rs
+index 6008151..ade0979 100644
+--- a/codex-rs/tui/src/custom_terminal.rs
++++ b/codex-rs/tui/src/custom_terminal.rs
+@@ -154,6 +154,9 @@ where
+     pub last_known_cursor_pos: Position,
+     /// Count of visible history rows rendered above the viewport in inline mode.
+     visible_history_rows: u16,
++    /// Minimum active content height when the remaining viewport pads the composer to the bottom.
++    /// History insertion temporarily releases that padding before appending finalized rows.
++    pub(crate) bottom_aligned_min_height: Option<u16>,
+     #[cfg(test)]
+     screen_size_override: Option<Size>,
+ }
+@@ -234,6 +237,7 @@ where
+             last_known_screen_size: screen_size,
+             last_known_cursor_pos: cursor_pos,
+             visible_history_rows: 0,
++            bottom_aligned_min_height: None,
+             #[cfg(test)]
+             screen_size_override: None,
+         }
+diff --git a/codex-rs/tui/src/history_cell/messages.rs b/codex-rs/tui/src/history_cell/messages.rs
+index f80f311..f89abd3 100644
+--- a/codex-rs/tui/src/history_cell/messages.rs
++++ b/codex-rs/tui/src/history_cell/messages.rs
+@@ -4,7 +4,6 @@
+ use super::markdown_render_cache::MarkdownRenderCache;
+ use super::*;
+ use crate::style::accent_color_on;
+-use crate::style::history_prompt_style;
+ use crate::terminal_hyperlinks::annotate_web_urls;
+ use crate::terminal_hyperlinks::lines_with_sources_eq;
+ use crate::terminal_hyperlinks::remap_source_wrapped_line;
+@@ -199,7 +198,7 @@ impl HistoryCell for UserHistoryCell {
+             )
+             .max(/*other*/ 1);
+ 
+-        let style = history_prompt_style();
++        let style = transcript_user_message_style();
+         let element_style = style.fg(accent_color_on(style.bg));
+ 
+         let wrapped_images = plain_hyperlink_lines(adaptive_wrap_lines(
+@@ -215,7 +214,11 @@ impl HistoryCell for UserHistoryCell {
+             return Vec::new();
+         }
+ 
+-        let mut lines = vec![HyperlinkLine::new(Line::from("").style(style))];
++        let reference = crate::style::herdr_reference_ui();
++        let mut lines = Vec::new();
++        if !reference {
++            lines.push(HyperlinkLine::new(Line::from("").style(style)));
++        }
+ 
+         if !wrapped_images.is_empty() {
+             lines.extend(prefix_hyperlink_lines(
+@@ -234,13 +237,15 @@ impl HistoryCell for UserHistoryCell {
+                 if self.spoken {
+                     "› ".red().bold()
+                 } else {
+-                    "› ".bold().dim()
++                    Span::styled("› ", crate::style::transcript_marker_style().bold())
+                 },
+                 "  ".into(),
+             ));
+         }
+ 
+-        lines.push(HyperlinkLine::new(Line::from("").style(style)));
++        if !reference {
++            lines.push(HyperlinkLine::new(Line::from("").style(style)));
++        }
+         for source in lines.iter_mut().filter_map(|line| line.source.as_mut()) {
+             source.right_reserve = 1;
+             source.copy_as_prose = true;
+@@ -386,7 +391,7 @@ impl ReasoningSummaryCell {
+         crate::terminal_hyperlinks::adaptive_wrap_hyperlink_lines(
+             &summary_lines,
+             RtOptions::new(width as usize)
+-                .initial_indent("• ".dim().into())
++                .initial_indent(Span::styled("• ", crate::style::transcript_marker_style()).into())
+                 .subsequent_indent("  ".into()),
+         )
+     }
+@@ -454,7 +459,7 @@ impl HistoryCell for AgentMessageCell {
+         let mut wrapped = Vec::new();
+         for (index, line) in self.lines.iter().enumerate() {
+             let initial_indent = if index == 0 && self.is_first_line {
+-                "• ".dim().into()
++                Span::styled("• ", crate::style::transcript_marker_style()).into()
+             } else {
+                 "  ".into()
+             };
+@@ -555,6 +560,11 @@ impl AgentMarkdownCell {
+ 
+ fn normalize_whitespace_only_hyperlink_lines(mut lines: Vec<HyperlinkLine>) -> Vec<HyperlinkLine> {
+     for line in &mut lines {
++        if crate::style::herdr_reference_ui()
++            && line.line.style.bg == Some(crate::style::ELECTRIC_SURFACE)
++        {
++            continue;
++        }
+         if line
+             .line
+             .spans
+@@ -584,7 +594,7 @@ impl AgentMarkdownCell {
+             else {
+                 return prefix_hyperlink_lines(
+                     vec![HyperlinkLine::new(Line::default())],
+-                    "• ".dim(),
++                    Span::styled("• ", crate::style::transcript_marker_style()),
+                     "  ".into(),
+                 );
+             };
+@@ -607,7 +617,7 @@ impl AgentMarkdownCell {
+             };
+             normalize_whitespace_only_hyperlink_lines(prefix_hyperlink_lines(
+                 lines,
+-                "• ".dim(),
++                Span::styled("• ", crate::style::transcript_marker_style()),
+                 "  ".into(),
+             ))
+         };
+@@ -688,7 +698,7 @@ impl HistoryCell for StreamingAgentTailCell {
+         normalize_whitespace_only_hyperlink_lines(prefix_hyperlink_lines(
+             self.lines.clone(),
+             if self.is_first_line {
+-                "• ".dim()
++                Span::styled("• ", crate::style::transcript_marker_style())
+             } else {
+                 "  ".into()
+             },
+diff --git a/codex-rs/tui/src/history_cell/messages_tests.rs b/codex-rs/tui/src/history_cell/messages_tests.rs
+index 50d5d01..cbe783a 100644
+--- a/codex-rs/tui/src/history_cell/messages_tests.rs
++++ b/codex-rs/tui/src/history_cell/messages_tests.rs
+@@ -2,6 +2,7 @@ use super::*;
+ use crate::history_cell::markdown_render_cache::MarkdownRenderCacheKey;
+ use assert_matches::assert_matches;
+ use pretty_assertions::assert_eq;
++use ratatui::style::Modifier;
+ 
+ #[test]
+ fn user_prompt_urls_keep_destinations_across_widths() {
+@@ -383,3 +384,95 @@ fn spoken_windows_relative_paths_keep_original_text_and_link_the_workspace_file(
+     }));
+     insta::assert_snapshot!(line.line.to_string(), @"• Updated src\\lib.rs:42");
+ }
++
++#[test]
++fn herdr_transcript_colors_spacing_and_reflow() {
++    let reference = crate::style::herdr_reference_ui();
++    let user = new_user_prompt("one\n\ntwo".into(), vec![], vec![], vec![]);
++    let user_lines = user.display_lines(40);
++    assert_eq!(user_lines.len(), if reference { 3 } else { 5 });
++    let markdown = AgentMarkdownCell::new(
++        "## Electric\n\nBody **strong**\n\n1. Ordered\n2. Second\n\n- Unordered\n\n`code`\n\n> Quoted words wrap onto a second line.\n>\n> > Nested quote\n\n```python\nprint(1)\n\nprint(2)\n```\n\n```\nplain code\n```\n\nAfter code".into(),
++        Path::new("/tmp"),
++    );
++    let wide = markdown.display_lines(40);
++    let narrow = markdown.display_lines(16);
++    assert_eq!(markdown.display_lines(40), wide);
++    assert!(narrow.iter().all(|line| line.width() <= 16));
++    if reference {
++        assert_eq!(user_lines[0].style.bg, Some(Color::Rgb(17, 17, 27)));
++        let link_lines =
++            AgentMarkdownCell::new("[link](https://example.com)".into(), Path::new("/tmp"))
++                .display_lines(60);
++        let spans: Vec<_> = wide
++            .iter()
++            .chain(&link_lines)
++            .flat_map(|line| {
++                line.spans
++                    .iter()
++                    .map(|span| span.clone().style(line.style.patch(span.style)))
++            })
++            .collect();
++        assert!(spans.iter().any(|span| span.content.contains("Body")
++            && span.style.fg == Some(crate::style::ELECTRIC_TEXT)
++            && !span.style.add_modifier.contains(Modifier::DIM)));
++        assert!(spans.iter().any(|span| span.content.contains("1.")
++            && span.style.fg == Some(crate::style::ELECTRIC_PINK)));
++        assert!(spans.iter().any(
++            |span| span.content == "code" && span.style.fg == Some(crate::style::ELECTRIC_CYAN)
++        ));
++        assert!(spans.iter().any(|span| span.content.contains("Electric")
++            && span.style.fg == Some(crate::style::ELECTRIC_PINK)));
++        assert!(spans.iter().any(|span| span.content.contains("link")
++            && span.style.fg == Some(crate::style::ELECTRIC_CYAN)
++            && span.style.add_modifier.contains(Modifier::UNDERLINED)));
++        for line in &wide {
++            let text = line.to_string();
++            if text.contains("Quoted") || text.contains("Nested") {
++                assert_eq!(line.style.fg, Some(crate::style::ELECTRIC_TEXT));
++                assert!(
++                    line.spans
++                        .iter()
++                        .filter(|span| span.content.contains('>'))
++                        .all(|span| span.style.fg == Some(crate::style::ELECTRIC_CYAN))
++                );
++            }
++            if text.contains("print(") || text.contains("plain code") {
++                assert_eq!(line.style.bg, Some(crate::style::ELECTRIC_SURFACE));
++            }
++            if text.contains("After code") {
++                assert_eq!(line.style.bg, None);
++            }
++        }
++        let streamed = AgentMessageCell::new(wide.clone(), true).display_lines(60);
++        assert_eq!(
++            streamed[0].spans[0].style.fg,
++            Some(crate::style::ELECTRIC_PINK)
++        );
++    }
++    let mut lines = user_lines;
++    lines.push(Line::default());
++    lines.extend(wide);
++    let mut buffer = ratatui::buffer::Buffer::empty(ratatui::layout::Rect::new(0, 0, 40, 34));
++    ratatui::widgets::Widget::render(
++        ratatui::widgets::Paragraph::new(lines),
++        buffer.area,
++        &mut buffer,
++    );
++    if reference {
++        for y in [20, 21, 22, 24] {
++            for x in 0..40 {
++                assert_eq!(buffer[(x, y)].bg, crate::style::ELECTRIC_SURFACE);
++            }
++        }
++        assert_eq!(buffer[(0, 26)].bg, ratatui::style::Color::Reset);
++    }
++    insta::assert_snapshot!(
++        if reference {
++            "herdr_transcript_reference"
++        } else {
++            "herdr_transcript_standard"
++        },
++        format!("{buffer:?}")
++    );
++}
+diff --git a/codex-rs/tui/src/history_cell/mod.rs b/codex-rs/tui/src/history_cell/mod.rs
+index bbb0598..a016421 100644
+--- a/codex-rs/tui/src/history_cell/mod.rs
++++ b/codex-rs/tui/src/history_cell/mod.rs
+@@ -32,6 +32,7 @@ use crate::render::line_utils::push_owned_lines;
+ use crate::render::renderable::Renderable;
+ use crate::session_state::ThreadSessionState;
+ use crate::style::proposed_plan_style;
++use crate::style::transcript_user_message_style;
+ use crate::terminal_hyperlinks::HyperlinkLine;
+ use crate::terminal_hyperlinks::HyperlinkParagraph;
+ use crate::terminal_hyperlinks::plain_hyperlink_lines;
+diff --git a/codex-rs/tui/src/history_cell/session.rs b/codex-rs/tui/src/history_cell/session.rs
+index 11cce0e..6b2270b 100644
+--- a/codex-rs/tui/src/history_cell/session.rs
++++ b/codex-rs/tui/src/history_cell/session.rs
+@@ -49,7 +49,12 @@ pub(crate) fn codex_title(version: &str) -> Vec<Span<'static>> {
+     vec![
+         ">_ ".fg(accent_color()),
+         "OpenAI Codex".bold(),
+-        format!(" (v{version})").dim(),
++        // herdr-electrified ships this modified build; say so wherever its launcher runs it.
++        if std::env::var("CODEX_HERDR_REFERENCE_UI").is_ok_and(|v| v == "1") {
++            format!(" (v{version}, herdr-electrified build)").dim()
++        } else {
++            format!(" (v{version})").dim()
++        },
+     ]
+ }
+ 
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_reference.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_reference.snap
+new file mode 100644
+index 0000000..638c42d
+--- /dev/null
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_reference.snap
+@@ -0,0 +1,105 @@
++---
++source: tui/src/history_cell/messages_tests.rs
++assertion_line: 470
++expression: "format!(\"{buffer:?}\")"
++---
++Buffer {
++    area: Rect { x: 0, y: 0, width: 40, height: 34 },
++    content: [
++        "› one                                   ",
++        "                                        ",
++        "  two                                   ",
++        "                                        ",
++        "• ## Electric                           ",
++        "                                        ",
++        "  Body strong                           ",
++        "                                        ",
++        "  1. Ordered                            ",
++        "  2. Second                             ",
++        "                                        ",
++        "  • Unordered                           ",
++        "                                        ",
++        "  code                                  ",
++        "                                        ",
++        "  > Quoted words wrap onto a second     ",
++        "  > line.                               ",
++        "  >                                     ",
++        "  > > Nested quote                      ",
++        "                                        ",
++        "  print(1)                              ",
++        "                                        ",
++        "  print(2)                              ",
++        "                                        ",
++        "  plain code                            ",
++        "                                        ",
++        "  After code                            ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++    ],
++    styles: [
++        x: 0, y: 0, fg: Rgb(255, 123, 194), bg: Rgb(17, 17, 27), underline: Reset, modifier: BOLD,
++        x: 2, y: 0, fg: Rgb(199, 201, 216), bg: Rgb(17, 17, 27), underline: Reset, modifier: NONE,
++        x: 5, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 1, fg: Rgb(199, 201, 216), bg: Rgb(17, 17, 27), underline: Reset, modifier: NONE,
++        x: 2, y: 1, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 2, fg: Rgb(199, 201, 216), bg: Rgb(17, 17, 27), underline: Reset, modifier: NONE,
++        x: 5, y: 2, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 4, fg: Rgb(255, 123, 194), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 4, fg: Rgb(255, 123, 194), bg: Reset, underline: Reset, modifier: BOLD,
++        x: 13, y: 4, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 6, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 7, y: 6, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: BOLD,
++        x: 13, y: 6, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 8, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 8, fg: Rgb(255, 123, 194), bg: Reset, underline: Reset, modifier: NONE,
++        x: 5, y: 8, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 12, y: 8, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 9, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 9, fg: Rgb(255, 123, 194), bg: Reset, underline: Reset, modifier: NONE,
++        x: 5, y: 9, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 11, y: 9, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 11, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 11, fg: Rgb(255, 123, 194), bg: Reset, underline: Reset, modifier: NONE,
++        x: 4, y: 11, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 13, y: 11, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 13, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 13, fg: Rgb(126, 219, 230), bg: Reset, underline: Reset, modifier: NONE,
++        x: 6, y: 13, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 15, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 15, fg: Rgb(126, 219, 230), bg: Reset, underline: Reset, modifier: NONE,
++        x: 4, y: 15, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 35, y: 15, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 16, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 16, fg: Rgb(126, 219, 230), bg: Reset, underline: Reset, modifier: NONE,
++        x: 4, y: 16, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 9, y: 16, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 17, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 17, fg: Rgb(126, 219, 230), bg: Reset, underline: Reset, modifier: NONE,
++        x: 4, y: 17, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 18, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 18, fg: Rgb(126, 219, 230), bg: Reset, underline: Reset, modifier: NONE,
++        x: 6, y: 18, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 18, y: 18, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 20, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 2, y: 20, fg: Rgb(250, 179, 135), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 7, y: 20, fg: Rgb(147, 153, 178), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 8, y: 20, fg: Rgb(250, 179, 135), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 9, y: 20, fg: Rgb(147, 153, 178), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 10, y: 20, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 2, y: 22, fg: Rgb(250, 179, 135), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 7, y: 22, fg: Rgb(147, 153, 178), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 8, y: 22, fg: Rgb(250, 179, 135), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 9, y: 22, fg: Rgb(147, 153, 178), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 10, y: 22, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 0, y: 23, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 24, fg: Rgb(231, 232, 240), bg: Rgb(24, 24, 37), underline: Reset, modifier: NONE,
++        x: 0, y: 25, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 26, fg: Rgb(231, 232, 240), bg: Reset, underline: Reset, modifier: NONE,
++        x: 12, y: 26, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++    ]
++}
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_standard.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_standard.snap
+new file mode 100644
+index 0000000..d3a25f5
+--- /dev/null
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__messages__tests__herdr_transcript_standard.snap
+@@ -0,0 +1,78 @@
++---
++source: tui/src/history_cell/messages_tests.rs
++assertion_line: 470
++expression: "format!(\"{buffer:?}\")"
++---
++Buffer {
++    area: Rect { x: 0, y: 0, width: 40, height: 34 },
++    content: [
++        "                                        ",
++        "› one                                   ",
++        "                                        ",
++        "  two                                   ",
++        "                                        ",
++        "                                        ",
++        "• ## Electric                           ",
++        "                                        ",
++        "  Body strong                           ",
++        "                                        ",
++        "  1. Ordered                            ",
++        "  2. Second                             ",
++        "                                        ",
++        "  • Unordered                           ",
++        "                                        ",
++        "  code                                  ",
++        "                                        ",
++        "  > Quoted words wrap onto a second     ",
++        "  > line.                               ",
++        "  >                                     ",
++        "  > > Nested quote                      ",
++        "                                        ",
++        "  print(1)                              ",
++        "                                        ",
++        "  print(2)                              ",
++        "                                        ",
++        "  plain code                            ",
++        "                                        ",
++        "  After code                            ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++        "                                        ",
++    ],
++    styles: [
++        x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 1, fg: Reset, bg: Reset, underline: Reset, modifier: BOLD | DIM,
++        x: 2, y: 1, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 6, fg: Reset, bg: Reset, underline: Reset, modifier: DIM,
++        x: 2, y: 6, fg: Reset, bg: Reset, underline: Reset, modifier: BOLD,
++        x: 13, y: 6, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 7, y: 8, fg: Reset, bg: Reset, underline: Reset, modifier: BOLD,
++        x: 13, y: 8, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 10, fg: LightBlue, bg: Reset, underline: Reset, modifier: NONE,
++        x: 5, y: 10, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 11, fg: LightBlue, bg: Reset, underline: Reset, modifier: NONE,
++        x: 5, y: 11, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 15, fg: Rgb(166, 227, 161), bg: Reset, underline: Reset, modifier: NONE,
++        x: 6, y: 15, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 17, fg: Green, bg: Reset, underline: Reset, modifier: NONE,
++        x: 35, y: 17, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 18, fg: Green, bg: Reset, underline: Reset, modifier: NONE,
++        x: 9, y: 18, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 19, fg: Green, bg: Reset, underline: Reset, modifier: NONE,
++        x: 4, y: 19, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 0, y: 20, fg: Green, bg: Reset, underline: Reset, modifier: NONE,
++        x: 18, y: 20, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 22, fg: Rgb(250, 179, 135), bg: Reset, underline: Reset, modifier: NONE,
++        x: 7, y: 22, fg: Rgb(147, 153, 178), bg: Reset, underline: Reset, modifier: NONE,
++        x: 8, y: 22, fg: Rgb(250, 179, 135), bg: Reset, underline: Reset, modifier: NONE,
++        x: 9, y: 22, fg: Rgb(147, 153, 178), bg: Reset, underline: Reset, modifier: NONE,
++        x: 10, y: 22, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++        x: 2, y: 24, fg: Rgb(250, 179, 135), bg: Reset, underline: Reset, modifier: NONE,
++        x: 7, y: 24, fg: Rgb(147, 153, 178), bg: Reset, underline: Reset, modifier: NONE,
++        x: 8, y: 24, fg: Rgb(250, 179, 135), bg: Reset, underline: Reset, modifier: NONE,
++        x: 9, y: 24, fg: Rgb(147, 153, 178), bg: Reset, underline: Reset, modifier: NONE,
++        x: 10, y: 24, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
++    ]
++}
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
+index a9dd9ca..9f7c02d 100644
+--- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/history_cell/tests.rs
++assertion_line: 1394
+ expression: rendered
+ ---
+ ╭─────────────────────────────────────────────────╮
+-│ ✨ Update available! 0.0.0 -> 9.9.9             │
++│ ✨ Update available! 0.160.0 -> 9.9.9           │
+ │ Run pnpm add -g @openai/codex to update.        │
+ │                                                 │
+ │ See full release notes:                         │
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
+index e5cc9a0..de1a1a6 100644
+--- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
+@@ -4,7 +4,7 @@ assertion_line: 778
+ expression: rendered
+ ---
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+      /tmp/project
+ 
+   Tip: Model just became available
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
+index c8f352d..a5a689d 100644
+--- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/history_cell/tests.rs
++assertion_line: 1376
+ expression: rendered
+ ---
+ ╭─────────────────────────────────────────────────────────────────────────────────────────────────────╮
+-│ ✨ Update available! 0.0.0 -> 9.9.9                                                                 │
++│ ✨ Update available! 0.160.0 -> 9.9.9                                                               │
+ │ Run sh -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh' to update. │
+ │                                                                                                     │
+ │ See full release notes:                                                                             │
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
+index fb15a05..8161eaf 100644
+--- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/history_cell/tests.rs
++assertion_line: 1385
+ expression: rendered
+ ---
+ ╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+-│ ✨ Update available! 0.0.0 -> 9.9.9                                                                        │
++│ ✨ Update available! 0.160.0 -> 9.9.9                                                                      │
+ │ Run powershell -ExecutionPolicy Bypass -c '$env:CODEX_NON_INTERACTIVE=1; irm                               │
+ │ https://chatgpt.com/codex/install.ps1 | iex' to update.                                                    │
+ │                                                                                                            │
+diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
+index 1a2df82..aee7caa 100644
+--- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
++++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/history_cell/tests.rs
++assertion_line: 1405
+ expression: rendered
+ ---
+ ╭─────────────────────────────────────────────────╮
+-│ ✨ Update available! 0.0.0 -> 9.9.9             │
++│ ✨ Update available! 0.160.0 -> 9.9.9           │
+ │ Run vp install -g @openai/codex to update.      │
+ │                                                 │
+ │ See full release notes:                         │
+diff --git a/codex-rs/tui/src/insert_history.rs b/codex-rs/tui/src/insert_history.rs
+index d07d6cb..64235bd 100644
+--- a/codex-rs/tui/src/insert_history.rs
++++ b/codex-rs/tui/src/insert_history.rs
+@@ -118,6 +118,21 @@ where
+     let mut should_update_area = false;
+     let last_cursor_pos = terminal.last_known_cursor_pos;
+ 
++    if let Some(minimum) = terminal.bottom_aligned_min_height {
++        // Release only layout padding. Never scroll the previous composer into history.
++        terminal.clear_after_position(area.as_position())?;
++        area.height = minimum.min(screen_size.height);
++        should_update_area = true;
++    }
++
++    // Partial scroll regions discard overflow in some terminals. The reference layout uses
++    // the existing full-screen writer so finalized history survives even a one-row window.
++    let mode = if terminal.bottom_aligned_min_height.is_some() {
++        InsertHistoryMode::FullScreen
++    } else {
++        mode
++    };
++
+     // Pre-wrap lines for terminal scrollback. Three paths:
+     //
+     // - URL-only-ish lines are kept intact (no hard newlines inserted) so that
+@@ -218,8 +233,15 @@ where
+         }
+     }
+ 
++    if terminal.bottom_aligned_min_height.is_some() {
++        area.height = screen_size.height.saturating_sub(area.y);
++    }
++
+     if should_update_area {
+         terminal.set_viewport_area(area);
++        if terminal.bottom_aligned_min_height.is_some() {
++            terminal.invalidate_viewport();
++        }
+     }
+     if wrapped_lines > 0 {
+         terminal.note_history_rows_inserted(wrapped_lines);
+@@ -328,7 +350,7 @@ fn write_history_line<W: Write>(
+         .spans
+         .iter()
+         .map(|s| Span {
+-            style: s.style.patch(line.line.style),
++            style: crate::style::history_span_style(line.line.style, s.style),
+             content: s.content.clone(),
+         })
+         .collect();
+@@ -499,6 +521,7 @@ mod tests {
+     use crate::test_backend::VT100Backend;
+     use ratatui::layout::Rect;
+     use ratatui::style::Color;
++    use ratatui::style::Style;
+ 
+     #[test]
+     fn writes_bold_then_regular_spans() {
+@@ -612,6 +635,56 @@ mod tests {
+         }
+     }
+ 
++    #[test]
++    fn herdr_history_preserves_explicit_span_colors() {
++        for width in [40, 6] {
++            let line = Line::from(vec![
++                Span::styled("›", Style::default().fg(Color::Rgb(203, 166, 247))),
++                Span::raw("body"),
++                Span::styled("code", Style::default().fg(Color::Cyan)),
++            ])
++            .style(
++                Style::default()
++                    .fg(Color::Rgb(108, 112, 134))
++                    .bg(Color::Rgb(17, 17, 27)),
++            );
++            let backend = VT100Backend::new(width, /*height*/ 8);
++            let mut term = crate::custom_terminal::Terminal::with_options(backend).unwrap();
++            term.set_viewport_area(Rect::new(
++                /*x*/ 0, /*y*/ 7, width, /*height*/ 1,
++            ));
++            insert_history_lines(&mut term, vec![line]).unwrap();
++            let mut actual = Vec::new();
++            for row in 0..8 {
++                for col in 0..width {
++                    let cell = term.backend().vt100().screen().cell(row, col).unwrap();
++                    if cell.has_contents() && !cell.contents().trim().is_empty() {
++                        actual.push((cell.contents().to_string(), cell.fgcolor(), cell.bgcolor()));
++                    }
++                }
++            }
++            let body = vt100::Color::Rgb(108, 112, 134);
++            let background = vt100::Color::Rgb(17, 17, 27);
++            let expected: Vec<_> = "›bodycode"
++                .chars()
++                .enumerate()
++                .map(|(index, ch)| {
++                    let fg = if crate::style::herdr_reference_ui() {
++                        match index {
++                            0 => vt100::Color::Rgb(203, 166, 247),
++                            5..=8 => vt100::Color::Idx(6),
++                            _ => body,
++                        }
++                    } else {
++                        body
++                    };
++                    (ch.to_string(), fg, background)
++                })
++                .collect();
++            assert_eq!(actual, expected, "width {width}");
++        }
++    }
++
+     #[test]
+     fn vt100_blockquote_line_emits_green_fg() {
+         // Set up a small off-screen terminal
+diff --git a/codex-rs/tui/src/markdown_render.rs b/codex-rs/tui/src/markdown_render.rs
+index c5033f8..cf1821a 100644
+--- a/codex-rs/tui/src/markdown_render.rs
++++ b/codex-rs/tui/src/markdown_render.rs
+@@ -66,6 +66,7 @@ use pulldown_cmark::Parser;
+ use pulldown_cmark::Tag;
+ use pulldown_cmark::TagEnd;
+ use ratatui::style::Style;
++use ratatui::style::Stylize;
+ use ratatui::text::Line;
+ use ratatui::text::Span;
+ use ratatui::text::Text;
+@@ -133,28 +134,48 @@ impl Default for MarkdownStyles {
+ 
+ impl MarkdownStyles {
+     fn for_theme(theme: &syntect::highlighting::Theme) -> Self {
+-        Self {
+-            h1: Style::new().bold().underlined(),
+-            h2: Style::new().bold(),
+-            h3: Style::new().bold().italic(),
+-            h4: Style::new().italic(),
+-            h5: Style::new().italic(),
+-            h6: Style::new().italic(),
+-            code: foreground_style_for_scopes_with_theme(
++        let reference = crate::style::herdr_reference_ui();
++        let marker = crate::style::transcript_marker_style();
++        let heading = if reference { marker } else { Style::new() };
++        let code = if reference {
++            Style::new().fg(crate::style::ELECTRIC_CYAN)
++        } else {
++            foreground_style_for_scopes_with_theme(
+                 theme,
+                 &[
+                     "markup.inline.raw.string.markdown",
+                     "markup.raw.inline.markdown",
+                 ],
+             )
+-            .unwrap_or_else(|| Style::new().fg(accent_color())),
++            .unwrap_or_else(|| Style::new().fg(accent_color()))
++        };
++        Self {
++            h1: heading.bold().underlined(),
++            h2: heading.bold(),
++            h3: heading.bold().italic(),
++            h4: heading.italic(),
++            h5: heading.italic(),
++            h6: heading.italic(),
++            code,
+             emphasis: Style::new().italic(),
+             strong: Style::new().bold(),
+             strikethrough: Style::new().crossed_out(),
+-            ordered_list_marker: Style::new().light_blue(),
+-            unordered_list_marker: Style::new(),
+-            link: Style::new().fg(accent_color()).underlined(),
+-            blockquote: Style::new().green(),
++            ordered_list_marker: if reference {
++                marker
++            } else {
++                Style::new().light_blue()
++            },
++            unordered_list_marker: if reference { marker } else { Style::new() },
++            link: if reference {
++                code.underlined()
++            } else {
++                Style::new().fg(accent_color()).underlined()
++            },
++            blockquote: if reference {
++                Style::new().fg(crate::style::ELECTRIC_TEXT)
++            } else {
++                Style::new().green()
++            },
+         }
+     }
+ }
+@@ -790,7 +811,11 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+             self.needs_newline = false;
+         }
+         self.indent_stack.push(IndentContext::new(
+-            vec![Span::from("> ")],
++            vec![if crate::style::herdr_reference_ui() {
++                "> ".fg(crate::style::ELECTRIC_CYAN)
++            } else {
++                Span::from("> ")
++            }],
+             /*marker*/ None,
+             /*is_list*/ false,
+         ));
+@@ -2304,6 +2329,13 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+                         hyperlink.columns.start + shift..hyperlink.columns.end + shift;
+                 }
+                 line.line = Line::from_iter(spans);
++                if self.current_line_in_code_block
++                    && crate::style::herdr_reference_ui()
++                    && let Some(width) = self.wrap_width
++                {
++                    let padding = width.saturating_sub(Self::line_display_width(&line.line));
++                    line.line.spans.push(Span::raw(" ".repeat(padding)));
++                }
+                 self.push_output_line(line.style(style));
+             }
+             self.current_initial_indent.clear();
+@@ -2364,9 +2396,18 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+         let blockquote_active = self.is_blockquote_active();
+         let style = if blockquote_active {
+             self.styles.blockquote
++        } else if crate::style::herdr_reference_ui() {
++            Style::new()
++                .fg(crate::style::ELECTRIC_TEXT)
++                .patch(line.style)
+         } else {
+             line.style
+         };
++        let style = if self.in_code_block && crate::style::herdr_reference_ui() {
++            style.bg(crate::style::ELECTRIC_SURFACE)
++        } else {
++            style
++        };
+         let was_pending = self.pending_marker_line;
+ 
+         self.current_initial_indent = self.prefix_spans(was_pending);
+diff --git a/codex-rs/tui/src/render/renderable.rs b/codex-rs/tui/src/render/renderable.rs
+index 370da28..801fc2b 100644
+--- a/codex-rs/tui/src/render/renderable.rs
++++ b/codex-rs/tui/src/render/renderable.rs
+@@ -271,6 +271,7 @@ pub struct FlexChild<'a> {
+ 
+ pub struct FlexRenderable<'a> {
+     children: Vec<FlexChild<'a>>,
++    anchor_bottom: bool,
+ }
+ 
+ /// Lays out children in a column, with the ability to specify a flex factor for each child.
+@@ -279,7 +280,26 @@ pub struct FlexRenderable<'a> {
+ /// proportional to the flex factor.
+ impl<'a> FlexRenderable<'a> {
+     pub fn new() -> Self {
+-        Self { children: vec![] }
++        Self {
++            children: vec![],
++            anchor_bottom: false,
++        }
++    }
++
++    /// Keep the last child at the bottom without inflating the desired content height.
++    pub fn with_bottom_anchor(mut self) -> Self {
++        self.anchor_bottom = true;
++        self
++    }
++
++    fn allocate_for_render(&self, area: Rect) -> Vec<Rect> {
++        let mut allocated = self.allocate(area);
++        if self.anchor_bottom
++            && let Some(last) = allocated.last_mut()
++        {
++            last.y = area.bottom().saturating_sub(last.height);
++        }
++        allocated
+     }
+ 
+     pub fn push(&mut self, flex: i32, child: impl Into<RenderableItem<'a>>) {
+@@ -368,7 +388,7 @@ impl<'a> FlexRenderable<'a> {
+ 
+ impl<'a> Renderable for FlexRenderable<'a> {
+     fn render(&self, area: Rect, buf: &mut Buffer) {
+-        self.allocate(area)
++        self.allocate_for_render(area)
+             .into_iter()
+             .zip(self.children.iter())
+             .for_each(|(rect, child)| {
+@@ -384,14 +404,14 @@ impl<'a> Renderable for FlexRenderable<'a> {
+     }
+ 
+     fn cursor_pos(&self, area: Rect) -> Option<(u16, u16)> {
+-        self.allocate(area)
++        self.allocate_for_render(area)
+             .into_iter()
+             .zip(self.children.iter())
+             .find_map(|(rect, child)| child.child.cursor_pos(rect))
+     }
+ 
+     fn cursor_style(&self, area: Rect) -> SetCursorStyle {
+-        self.allocate(area)
++        self.allocate_for_render(area)
+             .into_iter()
+             .zip(self.children.iter())
+             .find_map(|(rect, child)| {
+diff --git a/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap b/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
+index 957e753..8b52d57 100644
+--- a/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
++++ b/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/startup_draft_layout_tests.rs
++assertion_line: 29
+ expression: "format!(\"cursor={:?}\\n{frame}\",\nlayout.cursor_pos(area)).replace(crate::version::CODEX_CLI_VERSION,\n\"<VERSION>\")"
+ ---
+ cursor=Some((13, 12))
+                                                 
+-  >_ OpenAI Codex (v<VERSION>)                      
++  >_ OpenAI Codex (v<VERSION>)                    
+      loading                                    
+                                                 
+   Pull up a prompt.                             
+diff --git a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
+index 53c8053..6414077 100644
+--- a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
++++ b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/update_prompt.rs
++assertion_line: 363
+ expression: rendered
+ ---
+ 
+-  Update available · 0.0.0
+-  → 9.9.9
++  Update available ·
++  0.160.0 → 9.9.9
+   Release notes:
+   https://github.com/opena
+   i/codex/releases/latest
+diff --git a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
+index b547642..c935025 100644
+--- a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
++++ b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
+@@ -1,9 +1,10 @@
+ ---
+ source: tui/src/update_prompt.rs
++assertion_line: 301
+ expression: terminal.backend()
+ ---
+ 
+-  Update available · 0.0.0 → 9.9.9
++  Update available · 0.160.0 → 9.9.9
+   Release notes: https://github.com/openai/codex/releases/latest
+ 
+ › 1. Update now (runs `npm install -g @openai/codex`)                           
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
+index a00c3ae..018a751 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 798
+ expression: rendered
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Model:           gpt-5.6-sol (reasoning none, summaries auto)
+   Model provider:  server-ollama
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
+index 6c856d5..3747704 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 829
+ expression: rendered
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
+index 4f55f6a..e7eef75 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 2247
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
+index 9d8fba7..fb4c70d 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1981
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
+index be84d82..27de908 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1130
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
+index a321135..b80234a 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 998
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
+index f2cc2fb..ea86c54 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1064
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
+index 06866b5..4643a83 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 348
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
+index 6cc0ff0..9190c80 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1754
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
+index 8478305..97220d9 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
+@@ -4,7 +4,7 @@ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
+index 01134f2..53e2aea 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 749
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
+index 7173c99..59e767d 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 898
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
+index e3b9bae..83dfeef 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 434
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
+index 9a948fe..8c37ec7 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1688
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
+index 49ac38b..e0a3193 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1823
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
+index 2474656..9474995 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 2173
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
+index 7d43405..e5c4adc 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 2042
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
+index 7d43405..d643055 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 2103
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
+index 23496e4..2bf61ea 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1637
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit
+   https://chatgpt.com/codex/settings/usage
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
+index ac59138..0d1ad57 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1601
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
+index bf5bb86..6058790 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1754
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
+index a1430ac..351518c 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1212
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
+index 950a3d4..6aa72ac 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1139
+ expression: sanitized
+ ---
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit
+   https://chatgpt.com/codex/settings/usage for
+diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
+index f7871d8..e8399e6 100644
+--- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
++++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
+@@ -1,12 +1,13 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1905
+ expression: "format!(\"before:\\n{before}\\n\\nafter:\\n{after}\")"
+ ---
+ before:
+ / T R A N S C R I P T / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+@@ -38,7 +39,7 @@ after:
+ / T R A N S C R I P T / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+ /status
+ 
+-  >_ OpenAI Codex (v0.0.0)
++  >_ OpenAI Codex (v0.160.0)
+ 
+   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   information on rate limits and credits
+diff --git a/codex-rs/tui/src/style.rs b/codex-rs/tui/src/style.rs
+index b9f6d45..69e1480 100644
+--- a/codex-rs/tui/src/style.rs
++++ b/codex-rs/tui/src/style.rs
+@@ -26,6 +26,12 @@ pub(crate) const CHATGPT_BLUE_200: (u8, u8, u8) = (99, 168, 248);
+ /// Shared accent for picker selection backgrounds and transcript foreground emphasis.
+ pub(crate) const UI_ACCENT: (u8, u8, u8) = CHATGPT_BLUE_200;
+ 
++pub(crate) const ELECTRIC_PINK: Color = Color::Rgb(255, 123, 194);
++pub(crate) const ELECTRIC_CYAN: Color = Color::Rgb(126, 219, 230);
++pub(crate) const ELECTRIC_TEXT: Color = Color::Rgb(231, 232, 240);
++pub(crate) const ELECTRIC_SECONDARY: Color = Color::Rgb(164, 168, 188);
++pub(crate) const ELECTRIC_SURFACE: Color = Color::Rgb(24, 24, 37);
++
+ #[derive(Clone, Copy)]
+ pub(crate) enum StatusTone {
+     Success,
+@@ -57,6 +63,26 @@ fn status_style_for(
+ // Decorative table rules should remain visible without competing with cell content.
+ const TABLE_SEPARATOR_FG_ALPHA: f32 = 0.20;
+ 
++pub(crate) fn herdr_reference_ui() -> bool {
++    std::env::var("CODEX_HERDR_REFERENCE_UI").is_ok_and(|value| value == "1")
++}
++
++pub(crate) fn history_span_style(line: Style, span: Style) -> Style {
++    if herdr_reference_ui() {
++        line.patch(span)
++    } else {
++        span.patch(line)
++    }
++}
++
++pub(crate) fn transcript_marker_style() -> Style {
++    if herdr_reference_ui() {
++        Style::default().fg(ELECTRIC_PINK)
++    } else {
++        Style::default().dim()
++    }
++}
++
+ pub fn user_message_style() -> Style {
+     user_message_style_for(default_bg())
+ }
+@@ -74,6 +100,16 @@ pub(crate) fn history_prompt_style() -> Style {
+     Style::default().bg(best_color(blend(foreground, background, alpha)))
+ }
+ 
++pub(crate) fn transcript_user_message_style() -> Style {
++    if herdr_reference_ui() {
++        Style::default()
++            .fg(Color::Rgb(199, 201, 216))
++            .bg(Color::Rgb(17, 17, 27))
++    } else {
++        history_prompt_style()
++    }
++}
++
+ pub fn proposed_plan_style() -> Style {
+     proposed_plan_style_for(default_bg())
+ }
+diff --git a/codex-rs/tui/src/test_backend.rs b/codex-rs/tui/src/test_backend.rs
+index a71bc52..5daae72 100644
+--- a/codex-rs/tui/src/test_backend.rs
++++ b/codex-rs/tui/src/test_backend.rs
+@@ -39,6 +39,15 @@ impl VT100Backend {
+         }
+     }
+ 
++    // This backend is also compiled by integration tests that do not resize it.
++    #[allow(dead_code)]
++    pub fn set_size(&mut self, size: Size) {
++        self.crossterm_backend
++            .writer_mut()
++            .screen_mut()
++            .set_size(size.height, size.width);
++    }
++
+     pub fn vt100(&self) -> &vt100::Parser {
+         self.crossterm_backend.writer()
+     }
+diff --git a/codex-rs/tui/src/tui.rs b/codex-rs/tui/src/tui.rs
+index 50b4e80..eb8eb81 100644
+--- a/codex-rs/tui/src/tui.rs
++++ b/codex-rs/tui/src/tui.rs
+@@ -81,6 +81,8 @@ mod screen_size;
+ mod scrollback;
+ mod selection_clipboard;
+ mod size_monitor;
++mod viewport;
++use viewport::ViewportAlignment;
+ #[cfg(all(test, unix))]
+ #[path = "tui_startup_tests.rs"]
+ mod startup_tests;
+@@ -675,6 +677,7 @@ pub struct Tui {
+     notification_backend: Option<DesktopNotificationBackend>,
+     notification_condition: NotificationCondition,
+     scrollback: ScrollbackStrategy,
++    viewport_alignment: ViewportAlignment,
+     // When false, overlays stay on the inline screen.
+     alt_screen_enabled: bool,
+     // Keep the alternate screen alive when an overlay closes.
+@@ -749,6 +752,12 @@ impl Tui {
+             notification_backend: Some(detect_backend(NotificationMethod::default())),
+             notification_condition: NotificationCondition::default(),
+             scrollback,
++            viewport_alignment: if std::env::var("CODEX_HERDR_REFERENCE_UI").is_ok_and(|v| v == "1")
++            {
++                ViewportAlignment::Bottom
++            } else {
++                ViewportAlignment::Inline
++            },
+             alt_screen_enabled: true,
+             owned_screen: false,
+             overlay_input: OverlayInput::Default,
+@@ -1192,48 +1201,6 @@ impl Tui {
+         self.clear_thread_switch_on_draw
+     }
+ 
+-    /// Resize the inline viewport for the resize-reflow path.
+-    ///
+-    /// Unlike the legacy draw path, this path does not scroll rows above the viewport when the
+-    /// terminal shrinks. Resize reflow owns rebuilding those rows from transcript source, so
+-    /// scrolling here would move the viewport once and then replay history into the wrong row.
+-    fn update_inline_viewport_for_resize_reflow(
+-        terminal: &mut Terminal,
+-        height: u16,
+-        screen_size: Size,
+-        scrollback: ScrollbackStrategy,
+-    ) -> Result<bool> {
+-        let terminal_height_shrank = screen_size.height < terminal.last_known_screen_size.height;
+-        let terminal_height_grew = screen_size.height > terminal.last_known_screen_size.height;
+-        let viewport_was_bottom_aligned =
+-            terminal.viewport_area.bottom() == terminal.last_known_screen_size.height;
+-        let previous_area = terminal.viewport_area;
+-
+-        let mut area = terminal.viewport_area;
+-        area.height = height.min(screen_size.height);
+-        area.width = screen_size.width;
+-        let mut needs_full_repaint = false;
+-
+-        if area.bottom() > screen_size.height {
+-            let scroll_by = area.bottom() - screen_size.height;
+-            if !terminal_height_shrank {
+-                scrollback.grow_viewport(terminal, area.top(), screen_size, scroll_by)?;
+-            }
+-            area.y = screen_size.height - area.height;
+-        } else if terminal_height_grew && viewport_was_bottom_aligned {
+-            area.y = screen_size.height - area.height;
+-        }
+-
+-        if area != terminal.viewport_area {
+-            let clear_position = Position::new(/*x*/ 0, previous_area.y.min(area.y));
+-            terminal.set_viewport_area(area);
+-            terminal.clear_after_position(clear_position)?;
+-            needs_full_repaint = true;
+-        }
+-
+-        Ok(needs_full_repaint)
+-    }
+-
+     /// Write any buffered history lines above the viewport and clear the buffer.
+     fn flush_pending_history_lines(
+         terminal: &mut Terminal,
+@@ -1452,12 +1419,9 @@ impl Tui {
+             }
+ 
+             let terminal = &mut self.terminal;
+-            let needs_full_repaint = Self::update_inline_viewport_for_resize_reflow(
+-                terminal,
+-                height,
+-                screen_size,
+-                self.scrollback,
+-            )?;
++            let needs_full_repaint =
++                self.viewport_alignment
++                    .update(terminal, height, screen_size, self.scrollback)?;
+             // A zero- or one-row history region cannot isolate raw history writes from the
+             // viewport, so replayed rows can leave stale cells inside the composer.
+             let history_can_overlap_viewport =
+diff --git a/codex-rs/tui/src/tui/history_tail_tests.rs b/codex-rs/tui/src/tui/history_tail_tests.rs
+index 9c1c3b0..b754f6d 100644
+--- a/codex-rs/tui/src/tui/history_tail_tests.rs
++++ b/codex-rs/tui/src/tui/history_tail_tests.rs
+@@ -176,3 +176,30 @@ fn replacing_soft_wrapped_history_counts_physical_terminal_rows() {
+     assert!(!contents.contains("old-long"), "{contents}");
+     assert!(!contents.contains("spanning"), "{contents}");
+ }
++
++#[test]
++fn bottom_layout_replaces_status_tail_without_losing_history_or_padding() {
++    let mut terminal = Terminal::with_options(VT100Backend::with_scrollback(40, 12, 32)).unwrap();
++    terminal.bottom_aligned_min_height = Some(3);
++    terminal.set_viewport_area(Rect::new(0, 0, 40, 12));
++    insert_history_lines(
++        &mut terminal,
++        vec!["earlier answer".into(), "old status".into()],
++    )
++    .unwrap();
++    assert!(
++        replace_visible_terminal_history_tail(
++            &mut terminal,
++            &plain_hyperlink_lines(vec!["old status".into()]),
++            &plain_hyperlink_lines(vec!["new status".into()]),
++            InsertHistoryMode::Standard,
++            HistoryLineWrapPolicy::PreWrap,
++        )
++        .unwrap()
++    );
++    let contents = terminal.backend().vt100().screen().contents();
++    assert_eq!(contents.matches("earlier answer").count(), 1);
++    assert_eq!(contents.matches("new status").count(), 1);
++    assert!(!contents.contains("old status"));
++    assert_eq!(terminal.viewport_area, Rect::new(0, 2, 40, 10));
++}
+diff --git a/codex-rs/tui/src/tui/viewport.rs b/codex-rs/tui/src/tui/viewport.rs
+new file mode 100644
+index 0000000..1868e3f
+--- /dev/null
++++ b/codex-rs/tui/src/tui/viewport.rs
+@@ -0,0 +1,81 @@
++//! Inline viewport placement, with an opt-in bottom anchor for the Herdr candidate.
++
++use super::scrollback::ScrollbackStrategy;
++use crate::custom_terminal::Terminal;
++use ratatui::backend::Backend;
++use ratatui::layout::Position;
++use ratatui::layout::Size;
++use std::io::Result;
++use std::io::Write;
++use std::io::{self};
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub(super) enum ViewportAlignment {
++    Inline,
++    Bottom,
++}
++
++impl ViewportAlignment {
++    /// Resize the inline viewport for the resize-reflow path.
++    ///
++    /// Unlike the legacy draw path, this path does not scroll rows above the viewport when the
++    /// terminal shrinks. Resize reflow owns rebuilding those rows from transcript source, so
++    /// scrolling here would move the viewport once and then replay history into the wrong row.
++    pub(super) fn update<B>(
++        self,
++        terminal: &mut Terminal<B>,
++        height: u16,
++        screen_size: Size,
++        scrollback: ScrollbackStrategy,
++    ) -> Result<bool>
++    where
++        B: Backend<Error = io::Error> + Write,
++    {
++        let scrollback = match self {
++            Self::Inline => scrollback,
++            Self::Bottom => ScrollbackStrategy::FullScreen,
++        };
++        let terminal_height_shrank = screen_size.height < terminal.last_known_screen_size.height;
++        let terminal_height_grew = screen_size.height > terminal.last_known_screen_size.height;
++        let viewport_was_bottom_aligned =
++            terminal.viewport_area.bottom() == terminal.last_known_screen_size.height;
++        let previous_area = terminal.viewport_area;
++
++        let mut area = terminal.viewport_area;
++        area.height = height.min(screen_size.height);
++        area.width = screen_size.width;
++        let mut needs_full_repaint = false;
++
++        if area.bottom() > screen_size.height {
++            let scroll_by = area.bottom() - screen_size.height;
++            if !terminal_height_shrank {
++                scrollback.grow_viewport(terminal, area.top(), screen_size, scroll_by)?;
++            }
++            area.y = screen_size.height - area.height;
++        } else if self == Self::Inline && terminal_height_grew && viewport_was_bottom_aligned {
++            area.y = screen_size.height - area.height;
++        }
++
++        terminal.bottom_aligned_min_height = match self {
++            Self::Inline => None,
++            Self::Bottom => {
++                let minimum = area.height;
++                area.height = screen_size.height.saturating_sub(area.y);
++                Some(minimum)
++            }
++        };
++
++        if area != terminal.viewport_area {
++            let clear_position = Position::new(/*x*/ 0, previous_area.y.min(area.y));
++            terminal.set_viewport_area(area);
++            terminal.clear_after_position(clear_position)?;
++            needs_full_repaint = true;
++        }
++
++        Ok(needs_full_repaint)
++    }
++}
++
++#[cfg(test)]
++#[path = "viewport_tests.rs"]
++mod tests;
+diff --git a/codex-rs/tui/src/tui/viewport_tests.rs b/codex-rs/tui/src/tui/viewport_tests.rs
+new file mode 100644
+index 0000000..db1cbca
+--- /dev/null
++++ b/codex-rs/tui/src/tui/viewport_tests.rs
+@@ -0,0 +1,207 @@
++use super::*;
++use crate::insert_history::insert_history_lines;
++use crate::test_backend::VT100Backend;
++use pretty_assertions::assert_eq;
++use ratatui::layout::Rect;
++use ratatui::text::Line;
++use ratatui::widgets::Paragraph;
++
++fn draw(terminal: &mut Terminal<VT100Backend>, height: u16, alignment: ViewportAlignment) {
++    let size = terminal.backend().size().unwrap();
++    alignment
++        .update(terminal, height, size, ScrollbackStrategy::Standard)
++        .unwrap();
++    terminal.invalidate_viewport();
++    terminal
++        .draw_with_size(size, |frame| {
++            let viewport = frame.area();
++            let area = Rect::new(
++                0,
++                viewport.bottom() - 3.min(viewport.height),
++                viewport.width,
++                3.min(viewport.height),
++            );
++            frame.render_widget_ref(&Paragraph::new("> input"), area);
++            frame.set_cursor_position((2, area.y));
++        })
++        .unwrap();
++}
++
++#[test]
++fn bottom_startup_and_completed_turn() {
++    let mut terminal = Terminal::with_options(VT100Backend::with_scrollback(24, 10, 64)).unwrap();
++    draw(&mut terminal, 3, ViewportAlignment::Bottom);
++    assert_eq!(terminal.viewport_area, Rect::new(0, 0, 24, 10));
++    insert_history_lines(
++        &mut terminal,
++        vec![Line::from("user turn"), Line::from("assistant answer")],
++    )
++    .unwrap();
++    draw(&mut terminal, 3, ViewportAlignment::Bottom);
++    assert_eq!(
++        terminal.backend().vt100().screen().cursor_position(),
++        (7, 2)
++    );
++    insta::assert_snapshot!(terminal.backend().vt100().screen().contents().lines().map(str::trim_end).collect::<Vec<_>>().join("\n"), @r"
++    user turn
++    assistant answer
++
++
++
++
++
++    > input
++    ");
++}
++
++#[test]
++fn bottom_multiline_growth_and_collapse_preserve_history_once() {
++    let mut terminal = Terminal::with_options(VT100Backend::with_scrollback(24, 12, 64)).unwrap();
++    draw(&mut terminal, 3, ViewportAlignment::Bottom);
++    insert_history_lines(
++        &mut terminal,
++        vec![Line::from("history A"), Line::from("history B")],
++    )
++    .unwrap();
++    for height in [6, 3, 8, 3] {
++        draw(&mut terminal, height, ViewportAlignment::Bottom);
++        let screen = terminal.backend().vt100().screen();
++        assert_eq!(terminal.viewport_area.bottom(), 12);
++        for marker in ["history A", "history B", "> input"] {
++            assert_eq!(screen.contents().matches(marker).count(), 1);
++        }
++        let rows: Vec<_> = screen.rows(0, 24).collect();
++        assert_eq!(rows[0], "history A");
++        assert_eq!(rows[1], "history B");
++    }
++}
++
++#[test]
++fn inline_startup_keeps_shell_cursor_anchor() {
++    let mut terminal =
++        Terminal::with_options_and_cursor_position(VT100Backend::new(24, 10), Position::new(0, 2))
++            .unwrap();
++    draw(&mut terminal, 3, ViewportAlignment::Inline);
++    assert_eq!(terminal.viewport_area, Rect::new(0, 2, 24, 3));
++}
++
++fn complete_history(terminal: &Terminal<VT100Backend>) -> Vec<String> {
++    let mut screen = terminal.backend().vt100().screen().clone();
++    let width = screen.size().1;
++    screen.set_scrollback(usize::MAX);
++    let mut rows = Vec::new();
++    for offset in (1..=screen.scrollback()).rev() {
++        screen.set_scrollback(offset);
++        rows.push(screen.rows(0, width).next().unwrap());
++    }
++    screen.set_scrollback(0);
++    rows.extend(screen.rows(0, width));
++    rows
++}
++
++#[test]
++fn bottom_overflow_and_resume_keep_each_history_row_once() {
++    use crate::insert_history::HistoryLineWrapPolicy;
++    use crate::insert_history::insert_history_lines_with_mode_and_wrap_policy;
++    for strategy in [ScrollbackStrategy::Standard, ScrollbackStrategy::FullScreen] {
++        for batch_size in [1, 40] {
++            let mut terminal =
++                Terminal::with_options(VT100Backend::with_scrollback(24, 10, 100)).unwrap();
++            draw(&mut terminal, 3, ViewportAlignment::Bottom);
++            let expected: Vec<_> = (0..40).map(|i| format!("history-{i:02}")).collect();
++            for batch in expected.chunks(batch_size) {
++                insert_history_lines_with_mode_and_wrap_policy(
++                    &mut terminal,
++                    batch.iter().cloned().map(Line::from).collect(),
++                    strategy.history_insertion_mode(HistoryLineWrapPolicy::PreWrap),
++                    HistoryLineWrapPolicy::PreWrap,
++                )
++                .unwrap();
++                draw(&mut terminal, 3, ViewportAlignment::Bottom);
++            }
++            for height in [6, 3, 7, 3] {
++                draw(&mut terminal, height, ViewportAlignment::Bottom);
++            }
++            let rows = complete_history(&terminal);
++            assert_eq!(
++                rows.iter()
++                    .filter(|row| row.starts_with("history-"))
++                    .cloned()
++                    .collect::<Vec<_>>(),
++                expected
++            );
++            assert_eq!(rows.iter().filter(|row| row.contains("> input")).count(), 1);
++            assert_eq!(
++                terminal.backend().vt100().screen().cursor_position(),
++                (7, 2)
++            );
++        }
++    }
++}
++
++#[test]
++fn bottom_resize_replay_retains_history_and_bottom_cursor() {
++    let mut terminal = Terminal::with_options(VT100Backend::with_scrollback(24, 12, 100)).unwrap();
++    draw(&mut terminal, 3, ViewportAlignment::Bottom);
++    let source = vec![
++        Line::from("first history row"),
++        Line::from("second history row"),
++    ];
++    insert_history_lines(&mut terminal, source.clone()).unwrap();
++    for size in [Size::new(24, 8), Size::new(32, 16), Size::new(12, 12)] {
++        terminal.backend_mut().set_size(size);
++        // Match source-backed reflow: purge rendered rows, reset insertion y, replay once.
++        terminal.clear_scrollback_and_visible_screen_ansi().unwrap();
++        let mut area = terminal.viewport_area;
++        area.y = 0;
++        terminal.set_viewport_area(area);
++        ViewportAlignment::Bottom
++            .update(&mut terminal, 3, size, ScrollbackStrategy::Standard)
++            .unwrap();
++        crate::insert_history::insert_history_hyperlink_lines_with_mode_and_wrap_policy(
++            &mut terminal,
++            &crate::terminal_hyperlinks::plain_hyperlink_lines(source.clone()),
++            crate::insert_history::InsertHistoryMode::Standard,
++            crate::insert_history::HistoryLineWrapPolicy::PreWrap,
++            size,
++        )
++        .unwrap();
++        draw(&mut terminal, 3, ViewportAlignment::Bottom);
++        let rows = complete_history(&terminal).join("\n");
++        assert_eq!(rows.matches("first").count(), 1);
++        assert_eq!(rows.matches("second").count(), 1);
++        assert_eq!(rows.matches("> input").count(), 1);
++        assert_eq!(terminal.viewport_area.bottom(), size.height);
++        assert_eq!(
++            terminal.backend().vt100().screen().cursor_position(),
++            (size.height - 3, 2)
++        );
++    }
++}
++
++#[test]
++fn bottom_tiny_screen_preserves_history_outside_full_height_composer() {
++    for height in [1, 2, 3, 4] {
++        let mut terminal =
++            Terminal::with_options(VT100Backend::with_scrollback(24, height, 64)).unwrap();
++        draw(&mut terminal, 3, ViewportAlignment::Bottom);
++        insert_history_lines(
++            &mut terminal,
++            vec![Line::from("tiny history A"), Line::from("tiny history B")],
++        )
++        .unwrap();
++        draw(&mut terminal, 3, ViewportAlignment::Bottom);
++        let rows = complete_history(&terminal).join("\n");
++        assert_eq!(
++            rows.matches("tiny history A").count(),
++            1,
++            "{height}: {rows}"
++        );
++        assert_eq!(
++            rows.matches("tiny history B").count(),
++            1,
++            "{height}: {rows}"
++        );
++        assert_eq!(rows.matches("> input").count(), 1, "{height}: {rows}");
++    }
++}

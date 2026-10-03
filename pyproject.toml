@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "herdr-electrified"
+version = "1.0.0"
+description = "Reversible supported Herdr appearance settings"
+readme = "README.md"
+license = "Apache-2.0 AND MIT"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.11"
+dependencies = ["tomlkit>=0.13,<1"]
+
+[project.urls]
+Repository = "https://github.com/rm0nroe/herdr-electrified"
+Issues = "https://github.com/rm0nroe/herdr-electrified/issues"
+
+[project.scripts]
+herdr-electrified = "herdr_electrified.cli:main"
+
+[tool.setuptools.package-data]
+herdr_electrified = ["data/*.toml", "data/*.json", "data/*.tmTheme", "data/*.conf", "data/*.py"]

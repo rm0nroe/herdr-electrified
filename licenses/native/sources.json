@@ -1,0 +1,166 @@
+[
+  {
+    "file": "native/v8/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/LICENSE"
+  },
+  {
+    "file": "native/v8/LICENSE.fdlibm",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/LICENSE.fdlibm"
+  },
+  {
+    "file": "native/v8/LICENSE.strongtalk",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/LICENSE.strongtalk"
+  },
+  {
+    "file": "native/v8/LICENSE.v8",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/LICENSE.v8"
+  },
+  {
+    "file": "native/v8/src/compiler/turboshaft/copying-phase.cc",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/src/compiler/turboshaft/copying-phase.cc"
+  },
+  {
+    "file": "native/v8/src/compiler/turboshaft/copying-phase.h",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/src/compiler/turboshaft/copying-phase.h"
+  },
+  {
+    "file": "native/v8/test/js-perf-test/SixSpeed/LICENSE.sixspeed",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/test/js-perf-test/SixSpeed/LICENSE.sixspeed"
+  },
+  {
+    "file": "native/v8/test/mjsunit/third_party/object-keys/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/test/mjsunit/third_party/object-keys/LICENSE"
+  },
+  {
+    "file": "native/v8/test/mjsunit/third_party/regexp-pcre/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/test/mjsunit/third_party/regexp-pcre/LICENSE"
+  },
+  {
+    "file": "native/v8/test/wasm-js/third_party/LICENSE.testharness",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/test/wasm-js/third_party/LICENSE.testharness"
+  },
+  {
+    "file": "native/v8/third_party/colorama/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/colorama/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/fp16/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/fp16/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/glibc/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/glibc/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/highway/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/highway/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/inspector_protocol/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/inspector_protocol/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/jsoncpp/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/jsoncpp/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/rapidhash-v8/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/rapidhash-v8/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/re2/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/re2/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/siphash/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/siphash/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/utf8-decoder/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/utf8-decoder/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/v8/builtins/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/v8/builtins/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/v8/codegen/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/v8/codegen/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/valgrind/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/valgrind/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/vtune/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/vtune/LICENSE"
+  },
+  {
+    "file": "native/v8/third_party/wasm-api/LICENSE",
+    "source": "https://github.com/denoland/v8/blob/ac1e23989121713ca642f6650b34deff7b686896/third_party/wasm-api/LICENSE"
+  },
+  {
+    "file": "native/rusty-v8/LICENSE",
+    "source": "https://github.com/denoland/rusty_v8/blob/5c15a6995c9bb4bacd3e341b59fff32c909c80bf/LICENSE"
+  },
+  {
+    "file": "native/zsh/LICENCE",
+    "source": "https://github.com/zsh-users/zsh/blob/77045ef899e53b9598bebc5a41db93a548a40ca6/LICENCE"
+  },
+  {
+    "file": "native/ripgrep/COPYING",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/COPYING"
+  },
+  {
+    "file": "native/ripgrep/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/cli/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/cli/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/globset/COPYING",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/globset/COPYING"
+  },
+  {
+    "file": "native/ripgrep/crates/globset/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/globset/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/grep/COPYING",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/grep/COPYING"
+  },
+  {
+    "file": "native/ripgrep/crates/grep/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/grep/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/ignore/COPYING",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/ignore/COPYING"
+  },
+  {
+    "file": "native/ripgrep/crates/ignore/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/ignore/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/matcher/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/matcher/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/pcre2/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/pcre2/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/printer/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/printer/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/regex/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/regex/LICENSE-MIT"
+  },
+  {
+    "file": "native/ripgrep/crates/searcher/LICENSE-MIT",
+    "source": "https://github.com/BurntSushi/ripgrep/blob/15.2.0/crates/searcher/LICENSE-MIT"
+  }
+]

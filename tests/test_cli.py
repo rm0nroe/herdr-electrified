@@ -1,0 +1,812 @@
+import contextlib
+import io
+import json
+import os
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+
+class NeverRead(io.StringIO):
+    def readline(self, *args):
+        raise AssertionError('stdin must not be read')
+
+    def isatty(self):
+        return False
+
+
+class CLI(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(lambda: self.assertFalse(Path(self.tmp.name).exists()))
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        # Hermetic: the developer machine's /Applications/Ghostty.app must not count as a host terminal.
+        apps = patch('herdr_electrified.electric.GHOSTTY_APPS', ())
+        apps.start()
+        self.addCleanup(apps.stop)
+        self.target = self.root / 'config/herdr/config.toml'
+        self.target.parent.mkdir(parents=True)
+        self.target.write_text('# keep me\n[ui]\nsidebar_width = 19 # original\n')
+        self.ledger = self.root / 'state/herdr-electrified/receipt.json'
+        self.bin = self.root / 'herdr'
+        self.bin.write_text('''#!/usr/bin/env python3
+import os, sys
+from pathlib import Path
+if sys.argv[1:] == ['--help']:
+ print('Config: ' + os.environ['XDG_CONFIG_HOME'] + '/herdr/config.toml')
+elif sys.argv[1:] == ['--version']: print('herdr 0.8.2')
+elif sys.argv[1:] == ['config', 'check']: print('config: ok')
+elif sys.argv[1:] == ['server', 'reload-config']: print('reloaded')
+else: sys.exit(2)
+''')
+        self.bin.chmod(0o700)
+        self.env = {'HERDR_CONFIG_PATH':str(self.target), 'HOME':str(self.root), 'XDG_CONFIG_HOME':str(self.root/'config'),
+                    'XDG_STATE_HOME':str(self.root/'state'), 'PATH':str(self.root)+os.pathsep+os.environ['PATH']}
+
+    def run_cli(self, *args, env=None, stdin=None):
+        from herdr_electrified.cli import main
+        out = io.StringIO()
+        with patch.dict(os.environ, self.env | (env or {}), clear=True), patch('sys.stdin', stdin or NeverRead()), contextlib.redirect_stdout(out):
+            code = main([*args, '--json'])
+        return code, json.loads(out.getvalue())
+
+    def test_first_preview_is_read_only_and_shows_diff_without_identity(self):
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--dry-run')
+        self.assertEqual(code, 0, result)
+        self.assertIn('sidebar_width', result['targets'][0]['diff'])
+        self.assertEqual(result['targets'][0]['validation'], 'not run: executable not selected')
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_apply_reapply_and_undo_preserve_original_and_unrelated_content(self):
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 0, result)
+        self.assertIn('sidebar_width = 31 # original', self.target.read_text())
+        self.assertIn('# keep me', self.target.read_text())
+        receipt = self.ledger.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--yes')[0], 0)
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+
+    def test_claude_invalid_json_blocks_all_selected_writes(self):
+        claude = self.root / '.claude'
+        claude.mkdir()
+        settings = claude / 'settings.json'
+        for invalid in ('{"theme":"dark","theme":"light"}', '{"other":NaN}', '{"other":1e999}', '[]', '', '{bad'):
+            with self.subTest(invalid=invalid):
+                settings.write_text(invalid)
+                before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+                code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+                self.assertEqual(code, 1, result)
+                self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+                self.assertFalse(self.ledger.parent.exists())
+
+    def test_claude_preview_and_decline_are_readonly_and_diff_is_key_only(self):
+        claude = self.root / '.claude'
+        claude.mkdir()
+        (claude / 'settings.json').write_text('{"theme":"dark","env":{"API_KEY":"synthetic-private-value"}}')
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        for command in [('check',), ('apply', '--dry-run')]:
+            code, result = self.run_cli(*command, '--agent', 'claude')
+            self.assertEqual(code, 0, result)
+            self.assertEqual(len(result['targets']), 3)
+            self.assertNotIn('synthetic-private-value', json.dumps(result))
+            self.assertIn('custom:herdr-electrified', result['targets'][2]['diff'])
+            self.assertIn('whole-file formatting', result['targets'][2]['notice'])
+            self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+            self.assertFalse(self.ledger.parent.exists())
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code, result = self.run_cli('apply', '--agent', 'claude', '--herdr-bin', str(self.bin), stdin=TTY('n\n'))
+        self.assertEqual(code, 0, result)
+        self.assertNotIn('synthetic-private-value', err.getvalue())
+        self.assertIn('whole-file formatting', err.getvalue())
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_claude_settings_write_notice_covers_apply_and_key_level_undo(self):
+        from herdr_electrified.cli import render
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        original = {'theme': 'dark', 'private': 'café ▸'}
+        settings.write_text(json.dumps(original, indent=4, ensure_ascii=False) + '\n')
+        for command in [('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin)), ('undo',)]:
+            code, result = self.run_cli(*command)
+            self.assertEqual(code, 0, result)
+            row = next(row for row in result['targets'] if row.get('component') == 'claude-settings')
+            for detail in ('whole-file formatting', 'Unicode escapes', 'key order'):
+                self.assertIn(detail, row['notice'])
+                self.assertIn(detail, render(result))
+            self.assertNotIn('private', row['diff'].split('@@', 2)[-1])
+            self.assertNotIn(json.dumps(original['private'])[1:-1], json.dumps(result))
+            current = json.loads(settings.read_text())
+            self.assertEqual(current['private'], original['private'])
+            if command[0] == 'apply':
+                self.assertEqual(self.run_cli('check')[1]['targets'][-1].get('notice'), None)
+                current['later'] = 'keep this edit'
+                settings.write_text(json.dumps(current, indent=4, ensure_ascii=False) + '\n')
+        self.assertEqual(json.loads(settings.read_text()), original | {'later': 'keep this edit'})
+
+    def test_claude_conflicts_require_confirmation_and_preserve_first_original(self):
+        claude = self.root / '.claude'
+        (claude / 'themes').mkdir(parents=True)
+        settings, theme = claude / 'settings.json', claude / 'themes/herdr-electrified.json'
+        settings.write_text('{"theme":null,"other":1}\n')
+        original_theme = '{"name":"Existing","base":"dark","overrides":{}}\n'
+        theme.write_text(original_theme)
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        settings.write_text('{"theme":"light","other":2}\n')
+        theme.write_text('{"name":"User edited","base":"dark","overrides":{}}\n')
+        before = (settings.read_bytes(), theme.read_bytes())
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertEqual((settings.read_bytes(), theme.read_bytes()), before)
+        self.assertEqual({tuple(row['conflicts']) for row in result['targets'] if row['conflicts']}, {('theme',), ('$file',)})
+        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertEqual((settings.read_bytes(), theme.read_bytes()), before)
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        with contextlib.redirect_stderr(io.StringIO()):
+            code, result = self.run_cli('apply', '--agent', 'claude', '--herdr-bin', str(self.bin), stdin=TTY('y\n'))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(json.loads(settings.read_text()), {'theme': None, 'other': 2})
+        self.assertEqual(theme.read_text(), original_theme)
+
+    def test_claude_existing_equivalent_theme_is_not_owned_or_reformatted(self):
+        from importlib.resources import files
+        claude = self.root / '.claude'
+        (claude / 'themes').mkdir(parents=True)
+        theme = claude / 'themes/herdr-electrified.json'
+        theme.write_text(json.dumps(json.loads(files('herdr_electrified').joinpath('data/claude.json').read_text())))
+        before = theme.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertEqual(theme.read_bytes(), before)
+        self.assertNotIn(str(theme.resolve()), json.loads(self.ledger.read_text())['targets'])
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(theme.read_bytes(), before)
+        self.assertFalse((claude / 'settings.json').exists())
+
+    def test_claude_receipt_cannot_restore_unowned_settings_keys(self):
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        settings = self.root / '.claude/settings.json'
+        settings.write_text('{"theme":"custom:herdr-electrified","other":2}')
+        receipt = json.loads(self.ledger.read_text())
+        receipt['targets'][str(settings.resolve())]['owned']['theme']['original'] = '{"other":999}'
+        self.ledger.write_text(json.dumps(receipt))
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertIn('receipt', result['error'])
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+
+    def test_claude_interrupted_apply_and_undo_recover_per_file(self):
+        settings = (self.root / '.claude/settings.json').resolve()
+        theme = (self.root / '.claude/themes/herdr-electrified.json').resolve()
+        replace = os.replace
+        unlink = Path.unlink
+        for operation, target, after_replace in [('apply', theme, False), ('undo', settings, True), ('apply', settings, False), ('undo', theme, True)]:
+            with self.subTest(operation=operation, target=target, after_replace=after_replace):
+                def interrupted(source, dest):
+                    if Path(dest) == target:
+                        if after_replace:
+                            replace(source, dest)
+                        raise OSError('simulated Claude replacement interruption')
+                    return replace(source, dest)
+                def interrupted_unlink(path, *args, **kwargs):
+                    if path == target:
+                        if after_replace:
+                            unlink(path, *args, **kwargs)
+                        raise OSError('simulated Claude deletion interruption')
+                    return unlink(path, *args, **kwargs)
+                args = (operation, '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+                with patch('os.replace', interrupted), patch.object(Path, 'unlink', interrupted_unlink):
+                    self.assertEqual(self.run_cli(*args)[0], 1)
+                receipt = self.ledger.read_bytes()
+                self.assertIn('pending', json.loads(receipt))
+                self.assertEqual(self.run_cli('check', '--agent', 'claude')[0], 0)
+                self.assertEqual(self.ledger.read_bytes(), receipt)
+                code, result = self.run_cli(*args)
+                self.assertEqual(code, 0, result)
+                self.assertNotIn('pending', json.loads(self.ledger.read_text()))
+        self.assertFalse(settings.exists())
+        self.assertFalse(theme.exists())
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+
+    def test_claude_deleted_files_stay_absent_with_unresolved_receipts(self):
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        settings = self.root / '.claude/settings.json'
+        theme = self.root / '.claude/themes/herdr-electrified.json'
+        settings.unlink()
+        theme.unlink()
+        entries = json.loads(self.ledger.read_text())['targets']
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertFalse(settings.exists())
+        self.assertFalse(theme.exists())
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {str(p.resolve()): entries[str(p.resolve())] for p in (settings, theme)})
+        receipt = self.ledger.read_bytes()
+        self.assertEqual(self.run_cli('undo')[0], 1)
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+
+    def test_claude_all_directories_undo_preserves_later_unrelated_settings(self):
+        for name in ('claude-a', 'claude-b'):
+            root = self.root / name
+            root.mkdir()
+            (root / 'settings.json').write_text('{"other":1}')
+            env = {'CLAUDE_CONFIG_DIR': str(root)}
+            self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin), env=env)[0], 0)
+            (root / 'settings.json').write_text('{"theme":"custom:herdr-electrified","other":2}')
+        self.assertEqual(self.run_cli('undo', env={'CLAUDE_CONFIG_DIR': str(self.root / 'unselected')})[0], 0)
+        for name in ('claude-a', 'claude-b'):
+            self.assertEqual(json.loads((self.root / name / 'settings.json').read_text()), {'other': 2})
+            self.assertFalse((self.root / name / 'themes/herdr-electrified.json').exists())
+        self.assertFalse((self.root / 'unselected').exists())
+
+    def test_claude_canonical_target_collision_blocks_all_writes(self):
+        claude = self.root / '.claude'
+        claude.mkdir()
+        (claude / 'settings.json').symlink_to(self.target)
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertIn('same target', result['error'])
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_readonly_identity_matrix_and_scripted_reselection(self):
+        for command in [('check',), ('apply', '--dry-run')]:
+            for flag in [(), ('--herdr-bin', str(self.bin))]:
+                with self.subTest(command=command, flag=flag):
+                    code, result = self.run_cli(*command, *flag)
+                    self.assertEqual(code, 0, result)
+                    self.assertEqual(result['targets'][0]['validation'], 'passed' if flag else 'not run: executable not selected')
+                    self.assertFalse(self.ledger.parent.exists())
+        self.assertEqual(self.run_cli('apply', '--yes')[0], 1)
+        self.assertFalse(self.ledger.parent.exists())
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        before = self.ledger.read_bytes()
+        for command in [('check',), ('apply', '--dry-run')]:
+            self.assertEqual(self.run_cli(*command)[1]['targets'][0]['validation'], 'passed')
+            self.assertEqual(self.ledger.read_bytes(), before)
+        self.bin.write_text(self.bin.read_text() + '\n# same version, different bytes\n')
+        for command in [('check',), ('apply', '--dry-run')]:
+            self.assertEqual(self.run_cli(*command)[1]['targets'][0]['validation'], 'not run: pin mismatch')
+            self.assertEqual(self.ledger.read_bytes(), before)
+        for command in [('apply', '--yes'), ('undo',), ('undo', '--yes')]:
+            self.assertEqual(self.run_cli(*command)[0], 1)
+            self.assertEqual(self.ledger.read_bytes(), before)
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertNotEqual(self.ledger.read_bytes(), before)
+        self.bin.unlink()
+        code, result = self.run_cli('check')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['validation'], 'not run: pin mismatch')
+
+    def test_undo_keeps_user_edits_arrays_and_all_owned_targets(self):
+        original = self.target.read_text()
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text().replace('sidebar_width = 31', 'sidebar_width = 44') + '\n[custom]\nanswer = 42\n')
+        second = self.root / 'second.toml'
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), '--herdr-config', str(second))[0], 0)
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertIn('sidebar_width = 44', self.target.read_text())
+        self.assertIn('answer = 42', self.target.read_text())
+        self.assertFalse(second.exists())
+        self.assertEqual(result['targets'][0]['conflicts'], ['ui.sidebar_width'])
+        # After a partial undo, retry must not restore unrelated values over a new edit.
+        self.target.write_text(self.target.read_text().replace('sidebar_width = 44', 'sidebar_width = 31'))
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertIn('sidebar_width = 19', self.target.read_text())
+        self.assertIn('answer = 42', self.target.read_text())
+
+    def test_reapply_requires_new_conflict_confirmation_and_preserves_first_original(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text().replace('sidebar_width = 31', 'sidebar_width = 44'))
+        code, result = self.run_cli('apply', '--yes')
+        self.assertEqual(code, 1, result)
+        self.assertIn('sidebar_width = 44', self.target.read_text())
+
+    def test_interrupted_apply_and_undo_recover_from_journal(self):
+        original = self.target.read_bytes()
+        replace = os.replace
+        for operation, after_replace in [('apply', False), ('undo', True)]:
+            with self.subTest(operation=operation):
+                def interrupted(source, dest):
+                    if Path(dest) == self.target.resolve():
+                        if after_replace:
+                            replace(source, dest)
+                        raise OSError('simulated interruption at target replacement')
+                    return replace(source, dest)
+                args = (operation, '--yes', '--herdr-bin', str(self.bin))
+                with patch('os.replace', interrupted):
+                    self.assertEqual(self.run_cli(*args)[0], 1)
+                receipt = self.ledger.read_bytes()
+                self.assertIn('pending', json.loads(receipt))
+                self.assertEqual(self.run_cli('check')[0], 0)
+                self.assertEqual(self.ledger.read_bytes(), receipt)
+                code, result = self.run_cli(*args)
+                self.assertEqual(code, 0, result)
+                self.assertNotIn('pending', json.loads(self.ledger.read_bytes()))
+        self.assertEqual(self.target.read_bytes(), original)
+
+    def test_reapply_does_not_make_later_unrelated_edits_owned(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text() + '\n[custom]\nanswer = 42\n')
+        self.assertEqual(self.run_cli('apply', '--yes')[0], 0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertIn('answer = 42', self.target.read_text())
+        self.assertIn('sidebar_width = 19', self.target.read_text())
+
+    def test_reload_requires_complete_matching_association(self):
+        triple = {'HERDR_ENV':'1', 'HERDR_BIN_PATH':str(self.bin), 'HERDR_SOCKET_PATH':str(self.root/'herdr.sock')}
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), env=triple)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['reload'], 'requested')
+        self.assertEqual(result['targets'][0]['loaded'], 'unknown')
+        other = self.root / 'other.toml'
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), '--herdr-config', str(other), env=triple)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['reload'], 'skipped')
+        self.assertEqual(self.run_cli('undo')[1]['targets'][0]['reload'], 'skipped')
+
+    def test_unknown_native_diagnostics_are_compared_and_malformed_input_blocks(self):
+        self.bin.write_text(self.bin.read_text().replace("print('config: ok')", """\n text = Path(os.environ['HERDR_CONFIG_PATH']).read_text()
+ if 'unknown_option' in text:
+  print('config: issues found\\nunknown config key ui.unknown_option; ignoring key'); sys.exit(1)
+ print('config: ok')"""))
+        self.target.write_text(self.target.read_text() + 'unknown_option = 1\n')
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.target.write_text('[ui\n')
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertEqual(self.target.read_bytes(), before)
+
+    def test_new_native_diagnostic_leaves_target_and_state_untouched(self):
+        self.bin.write_text(self.bin.read_text().replace("print('config: ok')", """\n text = Path(os.environ['HERDR_CONFIG_PATH']).read_text()
+ if 'sidebar_max_width' in text:
+  print('config: issues found\\nunknown config key ui.sidebar_max_width; ignoring key'); sys.exit(1)
+ print('config: ok')"""))
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertIn('new or worsened', result['error'])
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_array_override_is_reported_without_silent_replacement(self):
+        self.target.write_text(self.target.read_text() + '\n[ui.sidebar.agents.rows_by_agent]\nclaude = [["agent"]]\n')
+        code, result = self.run_cli('apply', '--dry-run', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 0, result)
+        self.assertIn('partial coverage', result['targets'][0]['notice'])
+
+    def test_interactive_decline_never_validates_hint_or_creates_state(self):
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        self.bin.write_text(self.bin.read_text().replace("elif sys.argv[1:] == ['config', 'check']: print('config: ok')", "elif sys.argv[1:] == ['config', 'check']: raise AssertionError('unconfirmed hint ran')"))
+        triple = {'HERDR_ENV':'1', 'HERDR_BIN_PATH':str(self.bin), 'HERDR_SOCKET_PATH':str(self.root/'herdr.sock')}
+        with contextlib.redirect_stderr(io.StringIO()):
+            code, result = self.run_cli('apply', env=triple, stdin=TTY('n\n'))
+        self.assertEqual(code, 0, result)
+        self.assertFalse(self.ledger.parent.exists())
+        self.assertEqual(result['notice'], 'declined; nothing written')
+
+    def test_interactive_accept_and_undo_reselection_use_one_confirmation(self):
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        triple = {'HERDR_ENV':'1', 'HERDR_BIN_PATH':str(self.bin), 'HERDR_SOCKET_PATH':str(self.root/'herdr.sock')}
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code, result = self.run_cli('apply', env=triple, stdin=TTY('y\n'))
+            self.assertEqual(code, 0, result)
+            preview = json.JSONDecoder().raw_decode(err.getvalue())[0]['targets'][0]
+            self.assertEqual((preview['identity'], preview['confirmation_required']), ('hint unconfirmed', True))
+            row = result['targets'][0]
+            self.assertEqual((row['identity'], row['confirmation_required']), ('pinned', False))
+            self.assertEqual(self.run_cli('check')[1]['targets'][0]['identity'], 'pinned')
+            self.bin.write_text(self.bin.read_text()+'\n# update\n')
+            before = self.ledger.read_bytes()
+            self.assertEqual(self.run_cli('undo', stdin=TTY('n\n'))[0], 0)
+            self.assertEqual(before, self.ledger.read_bytes())
+            code, result = self.run_cli('undo', stdin=TTY('y\n'))
+            self.assertEqual(code, 0, result)
+            row = result['targets'][0]
+            self.assertEqual((row['identity'], row['confirmation_required']), ('explicit, not pinned', False))
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+
+    def test_busy_check_does_not_take_lock_or_change_receipt(self):
+        import fcntl
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        lock = self.ledger.with_name('lock')
+        lock.write_text(str(os.getpid()))
+        before = self.ledger.read_bytes()
+        with lock.open('r+') as stream:
+            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            for command in [('check',), ('apply','--dry-run')]:
+                code, result = self.run_cli(*command)
+                self.assertEqual(code, 0, result)
+                self.assertEqual(result['notice'], 'busy, results may be stale')
+                self.assertEqual(lock.read_text(), str(os.getpid()))
+                self.assertEqual(self.ledger.read_bytes(), before)
+
+    def test_state_symlink_is_rejected_before_writes(self):
+        outside = self.root/'outside'
+        outside.mkdir()
+        self.ledger.parent.parent.mkdir()
+        self.ledger.parent.symlink_to(outside, target_is_directory=True)
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertEqual(list(outside.iterdir()), [])
+        self.assertEqual(self.target.read_bytes(), before)
+
+    def test_receipt_failure_and_target_race_never_overwrite_unjournaled_content(self):
+        replace = os.replace
+        before = self.target.read_bytes()
+        def receipt_failure(source, dest):
+            if Path(dest) == self.ledger.resolve(): raise OSError('disk full')
+            return replace(source, dest)
+        with patch('os.replace', receipt_failure):
+            self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 1)
+        self.assertEqual(self.target.read_bytes(), before)
+        def changed_after_journal(source, dest):
+            value = replace(source, dest)
+            if Path(dest) == self.ledger.resolve(): self.target.write_text('# concurrent writer\n')
+            return value
+        with patch('os.replace', changed_after_journal):
+            self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 1)
+        self.assertEqual(self.target.read_text(), '# concurrent writer\n')
+        receipt = self.ledger.read_bytes()
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertIn('conflicts with user edit', result['error'])
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+
+    def test_pin_path_change_and_incomplete_hint_do_not_select_a_validator(self):
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        other = self.root/'other-herdr'
+        other.write_bytes(self.bin.read_bytes())
+        other.chmod(0o700)
+        before = self.ledger.read_bytes()
+        code, result = self.run_cli('check','--herdr-bin',str(other))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['validation'], 'not run: pin mismatch')
+        self.assertEqual(self.ledger.read_bytes(), before)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        for hint in ({'HERDR_BIN_PATH':str(other)}, {'HERDR_ENV':'1','HERDR_BIN_PATH':str(other)}):
+            code, result = self.run_cli('check', env=hint)
+            self.assertEqual(result['targets'][0]['identity'], 'none')
+            self.assertEqual(result['targets'][0]['validation'], 'not run: executable not selected')
+
+    def test_already_styled_without_owned_keys_does_not_create_pin(self):
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        self.ledger.unlink()
+        self.ledger.with_name('lock').unlink()
+        self.ledger.parent.rmdir()
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_default_target_comes_from_installed_help_and_reload_is_skipped(self):
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.bin), env={'HERDR_CONFIG_PATH':''})
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['path'], str(self.target.resolve()))
+        self.assertEqual(result['targets'][0]['reload'], 'skipped')
+
+    def test_malformed_receipt_is_reported_without_traceback_or_target_changes(self):
+        self.ledger.parent.mkdir(parents=True)
+        self.ledger.write_text('{"version":1,"targets":{"/bad":{}}}')
+        before = self.target.read_bytes()
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertIn('receipt', result['error'])
+        self.assertEqual(self.target.read_bytes(), before)
+
+    def test_partial_undo_reports_completed_files_and_preserves_pending_journal(self):
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        second = self.root/'second.toml'
+        second.write_text('[ui]\nsidebar_width = 17\n')
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin),'--herdr-config',str(second))[0], 0)
+        replace = os.replace
+        def fail_second(source, dest):
+            if Path(dest) == second.resolve(): raise OSError('second file write failed')
+            return replace(source, dest)
+        with patch('os.replace', fail_second):
+            code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertEqual(result['targets'][0]['saved'], True)
+        self.assertIn('partial', result['error'])
+        self.assertIn('sidebar_width = 19', self.target.read_text())
+        self.assertIn('sidebar_width = 31', second.read_text())
+        self.assertIn('pending', json.loads(self.ledger.read_text()))
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertIn('sidebar_width = 17', second.read_text())
+
+    def test_array_conflict_is_indivisible_and_edited_new_file_remains(self):
+        self.target.unlink()
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text().replace('"branch", "git_status"', '"workspace"') + '\n# later note\n')
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertIn('ui.sidebar.spaces.rows', result['targets'][0]['conflicts'])
+        self.assertIn('"workspace"', self.target.read_text())
+        self.assertIn('# later note', self.target.read_text())
+
+    def test_readonly_missing_and_matching_pin_matrix_with_and_without_flag(self):
+        for state in ('absent', 'matching', 'mismatch'):
+            if state == 'matching': self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+            if state == 'mismatch': self.bin.write_text(self.bin.read_text()+'\n# drift\n')
+            before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+            for command in [('check',), ('apply','--dry-run')]:
+                for flags in [(), ('--herdr-bin',str(self.bin))]:
+                    with self.subTest(state=state,command=command,flags=flags):
+                        code, result = self.run_cli(*command,*flags)
+                        self.assertEqual(code, 0, result)
+                        expected = 'not run: pin mismatch' if state=='mismatch' else 'passed' if state=='matching' or flags else 'not run: executable not selected'
+                        self.assertEqual(result['targets'][0]['validation'], expected)
+                        self.assertEqual({str(p):p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+
+    def test_native_execution_failure_and_nonregular_target_block_without_writes(self):
+        self.bin.write_text(self.bin.read_text().replace("print('config: ok')", "sys.exit(9)"))
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.bin))
+        self.assertEqual(code, 1, result)
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertFalse(self.ledger.parent.exists())
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.bin),'--herdr-config',str(self.target.parent))
+        self.assertEqual(code, 1, result)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_existing_mode_preserved_and_new_receipt_is_private(self):
+        self.target.chmod(0o640)
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        self.assertEqual(self.target.stat().st_mode & 0o777, 0o640)
+        self.assertEqual(self.ledger.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(self.ledger.parent.stat().st_mode & 0o777, 0o700)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(self.target.stat().st_mode & 0o777, 0o640)
+
+    def test_reload_failure_keeps_saved_receipt_and_safe_undo(self):
+        self.bin.write_text(self.bin.read_text().replace("print('reloaded')", "sys.exit(1)"))
+        triple = {'HERDR_ENV':'1','HERDR_BIN_PATH':str(self.bin),'HERDR_SOCKET_PATH':str(self.root/'herdr.sock')}
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.bin),env=triple)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['reload'], 'failed')
+        self.assertIn('saved-but-not-loaded', result['targets'][0]['notice'])
+        self.assertTrue(self.ledger.exists())
+        self.assertEqual(self.run_cli('undo')[0], 0)
+
+    def test_invalid_explicit_executable_cannot_replace_existing_pin(self):
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        before = self.ledger.read_bytes()
+        code, result = self.run_cli('apply','--yes','--herdr-bin',str(self.root/'missing'))
+        self.assertEqual(code, 1, result)
+        self.assertEqual(self.ledger.read_bytes(), before)
+
+    def test_undo_preserves_original_line_endings(self):
+        before = b'# keep CRLF\r\n[ui]\r\nsidebar_width = 19\r\n'
+        self.target.write_bytes(before)
+        self.assertEqual(self.run_cli('apply','--yes','--herdr-bin',str(self.bin))[0], 0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(self.target.read_bytes(), before)
+
+    def test_undo_preserves_deleted_target_and_receipt(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.unlink()
+        receipt = self.ledger.read_bytes()
+        entry = json.loads(receipt)['targets'][str(self.target.resolve())]
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertFalse(self.target.exists())
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+        self.assertEqual(result['targets'][0]['conflicts'], list(entry['owned']))
+        second = self.root / 'second.toml'
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), '--herdr-config', str(second))[0], 0)
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertFalse(self.target.exists())
+        self.assertFalse(second.exists())
+        self.assertNotIn('saved', result['targets'][0])
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {str(self.target.resolve()): entry})
+
+    def test_already_styled_unpinned_apply_needs_no_executable(self):
+        from importlib.resources import files
+        self.target.write_text(files('herdr_electrified').joinpath('data/herdr.toml').read_text())
+        before = self.target.read_bytes()
+        code, result = self.run_cli('apply', '--yes')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['targets'][0]['diff'], '')
+        self.assertEqual(result['targets'][0]['validation'], 'not run: executable not selected')
+        self.assertEqual(self.target.read_bytes(), before)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_foreign_live_lock_pid_is_busy_and_readonly(self):
+        self.ledger.parent.mkdir(parents=True)
+        lock = self.ledger.with_name('lock')
+        lock.write_text('1')
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        with patch('herdr_electrified.config.os.kill', side_effect=PermissionError('Operation not permitted')):
+            for command in [('check',), ('apply', '--dry-run')]:
+                code, result = self.run_cli(*command)
+                self.assertEqual(code, 0, result)
+                self.assertEqual(result['notice'], 'busy, results may be stale')
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+
+    def test_claude_opt_in_preserves_other_settings_and_undo_covers_all_components(self):
+        claude = self.root / 'alternate-claude'
+        claude.mkdir()
+        settings = claude / 'settings.json'
+        original = '{"theme":"dark", "statusLine":{"type":"command","command":"keep-me"}, "hooks":{}}\n'
+        settings.write_text(original)
+        env = {'CLAUDE_CONFIG_DIR': str(claude)}
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), env=env)[0], 0)
+        self.assertEqual(settings.read_text(), original)
+        theme = claude / 'themes/herdr-electrified.json'
+        self.assertFalse(theme.exists())
+        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(json.loads(settings.read_text()), json.loads(original) | {'theme': 'custom:herdr-electrified'})
+        preset = json.loads(theme.read_text())
+        self.assertEqual(preset['name'], 'Herdr Electrified')
+        self.assertEqual(preset['overrides']['text'], '#6c7086')
+        self.assertEqual(preset['overrides']['autoAccept'], '#ff6b80')
+        self.assertFalse((self.root / '.claude').exists())
+        receipt = self.ledger.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', env=env)[0], 0)
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+        code, result = self.run_cli('check', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(len(result['targets']), 3)
+        self.assertTrue(all(row['configured'] for row in result['targets']))
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(settings.read_text(), original)
+        self.assertFalse(theme.exists())
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+
+    def statusline(self):
+        import shlex
+        script = (self.root / '.local/share/herdr-electrified/claude-statusline.py').resolve()
+        return script, {'type': 'command', 'command': 'python3 ' + shlex.quote(str(script))}
+
+    def test_statusline_opt_in_check_and_undo_restore_exact_bytes(self):
+        import subprocess
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        original = '{"other": 1,\n    "theme": "dark"}\n'
+        settings.write_text(original)
+        script, value = self.statusline()
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        code, result = self.run_cli('apply', '--dry-run', '--claude-statusline')
+        self.assertEqual(code, 0, result)
+        self.assertIn('statusLine', next(row for row in result['targets'] if row.get('component') == 'claude-settings')['diff'])
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+        code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(json.loads(settings.read_text()), {'other': 1, 'theme': 'dark', 'statusLine': value})
+        self.assertFalse((self.root / '.claude/themes').exists())
+        line = subprocess.run(value['command'], shell=True, input='{"context_window":{"used_percentage":42}}', capture_output=True, text=True, env={'PATH': os.environ['PATH']})
+        self.assertEqual((line.returncode, line.stderr), (0, ''), line)
+        self.assertIn('42%', line.stdout)
+        receipt = self.ledger.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes')[0], 0)
+        self.assertEqual(self.ledger.read_bytes(), receipt)
+        code, result = self.run_cli('check')
+        rows = {row.get('component'): row for row in result['targets']}
+        self.assertTrue(rows['claude-statusline']['configured'] and rows['claude-settings']['configured'], result)
+        script.write_text('# edited\n')
+        rows = {row.get('component'): row for row in self.run_cli('check')[1]['targets']}
+        self.assertEqual(rows['claude-statusline']['conflicts'], ['$file'])
+        script.unlink()
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes')[0], 1)
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(self.run_cli('apply', '--claude-statusline', stdin=type('TTY', (io.StringIO,), {'isatty': lambda self: True})('y\n'))[0], 0)
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(settings.read_text(), original)
+        self.assertFalse(script.parent.exists())
+        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+
+    def test_statusline_never_replaces_foreign_statusline_without_review(self):
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        original = '{"statusLine": {"type": "command", "command": "~/mine.sh"}}\n'
+        settings.write_text(original)
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        for command in [('check', '--claude-statusline'), ('apply', '--dry-run', '--claude-statusline')]:
+            code, result = self.run_cli(*command)
+            row = next(row for row in result['targets'] if row.get('component') == 'claude-settings')
+            self.assertEqual(row['conflicts'], ['statusLine'])
+            self.assertIn('existing statusLine', row['notice'])
+        for stdin in (None, TTY('y\n')):
+            code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin), stdin=stdin)
+            self.assertEqual(code, 1, result)
+            self.assertIn('review the diff interactively', result['error'])
+        with contextlib.redirect_stderr(io.StringIO()):
+            self.assertEqual(self.run_cli('apply', '--claude-statusline', '--herdr-bin', str(self.bin), stdin=TTY('n\n'))[0], 0)
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+        self.assertFalse(self.ledger.parent.exists())
+        with contextlib.redirect_stderr(io.StringIO()):
+            code, result = self.run_cli('apply', '--claude-statusline', '--herdr-bin', str(self.bin), stdin=TTY('y\n'))
+        self.assertEqual(code, 0, result)
+        self.assertEqual(json.loads(settings.read_text())['statusLine'], self.statusline()[1])
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(settings.read_text(), original)
+
+    def test_statusline_joins_claude_theme_and_user_edits_are_undo_conflicts(self):
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        settings.write_text('{"theme":"dark","other":1}')
+        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes')[0], 0)
+        script, value = self.statusline()
+        self.assertEqual(json.loads(settings.read_text()), {'theme': 'custom:herdr-electrified', 'other': 1, 'statusLine': value})
+        self.assertEqual(set(json.loads(self.ledger.read_text())['targets'][str(settings.resolve())]['owned']), {'theme', 'statusLine'})
+        rows = self.run_cli('check')[1]['targets']
+        self.assertEqual(len(rows), 4)
+        self.assertTrue(all(row['configured'] for row in rows), rows)
+        settings.write_text(json.dumps({'theme': 'custom:herdr-electrified', 'other': 2, 'statusLine': {'type': 'command', 'command': 'mine'}}))
+        self.assertEqual(next(row for row in self.run_cli('check')[1]['targets'] if row.get('component') == 'claude-settings')['conflicts'], ['statusLine'])
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 1, result)
+        self.assertEqual(json.loads(settings.read_text()), {'theme': 'dark', 'other': 2, 'statusLine': {'type': 'command', 'command': 'mine'}})
+        self.assertFalse(script.exists())
+        self.assertEqual(next(row for row in result['targets'] if row.get('component') == 'claude-settings')['conflicts'], ['statusLine'])
+        receipt = json.loads(self.ledger.read_text())['targets']
+        self.assertEqual(list(receipt[str(settings.resolve())]['owned']), ['statusLine'])
+
+    def test_identical_preexisting_statusline_script_stays_managed_through_settings(self):
+        script, value = self.statusline()
+        script.parent.mkdir(parents=True)
+        from importlib.resources import files
+        script.write_text(files('herdr_electrified').joinpath('data/claude-statusline.py').read_text())
+        settings = self.root / '.claude/settings.json'
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertEqual(json.loads(settings.read_text())['statusLine'], value)
+        code, result = self.run_cli('apply', '--agent', 'claude', '--yes')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(json.loads(settings.read_text())['statusLine'], value)
+        self.assertTrue(all(row['configured'] for row in self.run_cli('check')[1]['targets']))
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertNotIn('statusLine', json.loads(settings.read_text()) if settings.exists() else {})
+        self.assertTrue(script.exists())
+
+    def test_statusline_requires_python3_on_path(self):
+        with patch('herdr_electrified.cli.shutil.which', return_value=None):
+            code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
+            self.assertEqual(code, 1, result)
+            self.assertIn('python3', result['error'])
+            self.assertFalse(self.ledger.exists())
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        with patch('herdr_electrified.cli.shutil.which', return_value=None):
+            row = next(row for row in self.run_cli('check')[1]['targets'] if row.get('component') == 'claude-statusline')
+            self.assertFalse(row['configured'])
+            self.assertIn('python3', row['conflicts'])
+            self.assertEqual(self.run_cli('undo')[0], 0)
+
+    def test_statusline_receipt_cannot_install_or_restore_foreign_commands(self):
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        settings = (self.root / '.claude/settings.json').resolve()
+        good = self.ledger.read_text()
+        for field, value in [('installed', {'type': 'command', 'command': 'curl evil'}), ('original', '{"other":1}')]:
+            with self.subTest(field=field):
+                receipt = json.loads(good)
+                receipt['targets'][str(settings)]['owned']['statusLine'][field] = value
+                self.ledger.write_text(json.dumps(receipt))
+                code, result = self.run_cli('check')
+                self.assertEqual(code, 1, result)
+                self.assertIn('receipt', result['error'])
