@@ -1,0 +1,33 @@
+name: Build Electric bundle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 340
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v7
+      - uses: mlugg/setup-zig@v2
+        with:
+          version: 0.15.2
+      - run: rustup toolchain install 1.95.0 1.96.1 --profile minimal
+      - run: python3.12 scripts/build-electric.py "$RUNNER_TEMP/electric"
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: ${{ runner.temp }}/electric/herdr-electrified-*-macos-arm64.tar.gz
+      - uses: actions/upload-artifact@v7
+        with:
+          name: electric-bundle
+          path: |
+            ${{ runner.temp }}/electric/herdr-electrified-*-macos-arm64.tar.gz
+            ${{ runner.temp }}/electric/SHA256SUMS
+          compression-level: 0

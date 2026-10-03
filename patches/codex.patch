@@ -3052,6 +3052,25 @@ index d07d6cb..64235bd 100644
      #[test]
      fn vt100_blockquote_line_emits_green_fg() {
          // Set up a small off-screen terminal
+diff --git a/codex-rs/tui/src/lib.rs b/codex-rs/tui/src/lib.rs
+index 2697cba..8a5afc1 100644
+--- a/codex-rs/tui/src/lib.rs
++++ b/codex-rs/tui/src/lib.rs
+@@ -1431,9 +1431,11 @@ async fn run_ratatui_app(
+     // Startup pickers need the current theme before selection can reload config.
+     // Leave the one-time override initialization below to use the final config.
+     if (cli.resume_picker || cli.fork_picker)
+-        && let Some(name) = config.tui_theme.as_deref()
+-        && let Some(theme) =
+-            crate::render::highlight::resolve_theme_by_name(name, Some(config.codex_home.as_path()))
++        && let Some(name) = crate::render::highlight::electric_theme(config.tui_theme.clone())
++        && let Some(theme) = crate::render::highlight::resolve_theme_by_name(
++            &name,
++            Some(config.codex_home.as_path()),
++        )
+     {
+         crate::render::highlight::set_syntax_theme(theme);
+     }
 diff --git a/codex-rs/tui/src/markdown_render.rs b/codex-rs/tui/src/markdown_render.rs
 index c5033f8..cf1821a 100644
 --- a/codex-rs/tui/src/markdown_render.rs
@@ -3172,6 +3191,34 @@ index c5033f8..cf1821a 100644
          let was_pending = self.pending_marker_line;
  
          self.current_initial_indent = self.prefix_spans(was_pending);
+diff --git a/codex-rs/tui/src/render/highlight.rs b/codex-rs/tui/src/render/highlight.rs
+index 41b1d23..a2cc8e5 100644
+--- a/codex-rs/tui/src/render/highlight.rs
++++ b/codex-rs/tui/src/render/highlight.rs
+@@ -107,6 +107,7 @@ pub(crate) fn set_theme_override(
+     name: Option<String>,
+     codex_home: Option<PathBuf>,
+ ) -> Option<String> {
++    let name = electric_theme(name);
+     let warning = validate_theme_name(name.as_deref(), codex_home.as_deref());
+     let override_set_ok = THEME_OVERRIDE.set(name.clone()).is_ok();
+     let codex_home_set_ok = CODEX_HOME.set(codex_home.clone()).is_ok();
+@@ -129,6 +130,15 @@ pub(crate) fn set_theme_override(
+     warning
+ }
+ 
++/// Electric pins its theme here: a `-c tui.theme` override would force embedded mode.
++pub(crate) fn electric_theme(name: Option<String>) -> Option<String> {
++    if crate::style::herdr_reference_ui() {
++        Some("herdr-electric".to_string())
++    } else {
++        name
++    }
++}
++
+ /// Check whether a theme name resolves to a bundled theme or a custom
+ /// `.tmTheme` file.  Returns a user-facing warning when it does not.
+ pub(crate) fn validate_theme_name(name: Option<&str>, codex_home: Option<&Path>) -> Option<String> {
 diff --git a/codex-rs/tui/src/render/renderable.rs b/codex-rs/tui/src/render/renderable.rs
 index 370da28..801fc2b 100644
 --- a/codex-rs/tui/src/render/renderable.rs
@@ -3289,6 +3336,63 @@ index b547642..c935025 100644
    Release notes: https://github.com/openai/codex/releases/latest
  
  › 1. Update now (runs `npm install -g @openai/codex`)                           
+diff --git a/codex-rs/tui/src/startup_orchestration.rs b/codex-rs/tui/src/startup_orchestration.rs
+index a0ff9cb..e98e964 100644
+--- a/codex-rs/tui/src/startup_orchestration.rs
++++ b/codex-rs/tui/src/startup_orchestration.rs
+@@ -494,7 +494,10 @@ pub(super) async fn run_main_inner(
+     let auto_start_daemon = config.features.enabled(Feature::DaemonAutoStart)
+         && !cli.agents_overview
+         && !cli.no_daemon
+-        && !app_server_target.uses_remote_workspace();
++        && !app_server_target.uses_remote_workspace()
++        // A first start copies the invoking package into CODEX_HOME as the shared server,
++        // so Electric only starts a daemon the user has already installed.
++        && (!crate::style::herdr_reference_ui() || daemon_installed(config.codex_home.as_path()));
+     if auto_start_daemon
+         && daemon_exclusion.is_none()
+         && should_show_bedrock_setup_wizard(
+@@ -922,3 +925,40 @@ pub(super) async fn run_main_inner(
+ 
+     app_result
+ }
++
++/// Mirrors the daemon's own checks for an existing package or state before it installs one.
++fn daemon_installed(codex_home: &std::path::Path) -> bool {
++    let state = codex_home.join("app-server-daemon");
++    codex_home
++        .join("packages/app-server-daemon/current")
++        .symlink_metadata()
++        .is_ok()
++        || [
++            "daemon.pid",
++            "daemon.stderr.log",
++            "daemon-updater.pid",
++            "daemon-updater.stderr.log",
++            "app-server.pid",
++            "app-server.stderr.log",
++            "app-server-updater.pid",
++            "app-server-updater.stderr.log",
++        ]
++        .iter()
++        .any(|name| state.join(name).symlink_metadata().is_ok())
++}
++
++#[cfg(test)]
++mod daemon_installed_tests {
++    #[test]
++    fn detects_package_or_state_only() -> std::io::Result<()> {
++        let home = tempfile::tempdir()?;
++        assert!(!super::daemon_installed(home.path()));
++        std::fs::create_dir_all(home.path().join("app-server-daemon"))?;
++        std::fs::write(home.path().join("app-server-daemon/daemon.stderr.log"), "")?;
++        assert!(super::daemon_installed(home.path()));
++        let other = tempfile::tempdir()?;
++        std::fs::create_dir_all(other.path().join("packages/app-server-daemon/current"))?;
++        assert!(super::daemon_installed(other.path()));
++        Ok(())
++    }
++}
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
 index a00c3ae..018a751 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap

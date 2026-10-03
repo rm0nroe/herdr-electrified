@@ -21,7 +21,7 @@ REQUIRED = {'herdr', 'codex/bin/codex', 'codex/bin/codex-code-mode-host',
             'codex/codex-path/rg', 'codex/codex-resources/zsh/bin/zsh', 'themes/codex-electric.tmTheme'}
 GHOSTTY_APPS = ('/Applications', '~/Applications')
 # Pinned at release: install trusts only these exact archives.
-BUNDLE = 'herdr-electrified-0.3.0-macos-arm64'
+BUNDLE = 'herdr-electrified-0.4.0-macos-arm64'
 BUNDLE_URL = f'https://github.com/rm0nroe/herdr-electrified/releases/download/v{__version__}/{BUNDLE}.tar.gz'
 BUNDLE_SHA = '1ef0c3f12d9ff8a25d5b977d16c12ab53380ef08dd09f80c1d03e9d2367a61fb'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
@@ -282,7 +282,7 @@ def targets(root, config, codex_home, agents=('codex',)):
     for path in [codex_home / 'themes/herdr-electric.tmTheme', bin_dir / 'codex-electric', bin_dir / 'herdr-electric', commands / 'codex', zdotdir / '.zshenv']:
         if path.is_symlink():
             raise ValueError(f'Electric target must not be a symlink: {path}')
-    codex = '#!/bin/sh\nexport CODEX_HOME=' + shlex.quote(str(codex_home)) + '\nexport CODEX_HERDR_REFERENCE_UI=1\nexec ' + shlex.quote(str(root / 'codex/bin/codex')) + ' -c \'tui.theme="herdr-electric"\' "$@"\n'
+    codex = '#!/bin/sh\nexport CODEX_HOME=' + shlex.quote(str(codex_home)) + '\nexport CODEX_HERDR_REFERENCE_UI=1\nexec ' + shlex.quote(str(root / 'codex/bin/codex')) + ' "$@"\n'
     # Pane shells re-run the user's profile, which can put stock codex first again; zsh gets a
     # ZDOTDIR shim (the Ghostty shell-integration pattern) that restores order after it.
     path = ('export PATH=' + shlex.quote(str(commands)) + ':"$PATH"\nunset HERDR_ELECTRIFIED_ZDOTDIR\n'

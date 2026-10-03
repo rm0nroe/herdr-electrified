@@ -45,6 +45,8 @@ class Electric(unittest.TestCase):
         self.assertEqual(code, 0, result)
         launcher = self.root / '.local/bin/codex-electric'
         self.assertIn('CODEX_HERDR_REFERENCE_UI=1', launcher.read_text())
+        # Any -c override forces Codex off the shared background server.
+        self.assertNotIn(' -c ', launcher.read_text())
         self.assertTrue(launcher.stat().st_mode & 0o100)
         electric_config = self.root / 'config/herdr-electrified/electric/config.toml'
         self.assertEqual(self.target.read_bytes(), before)
