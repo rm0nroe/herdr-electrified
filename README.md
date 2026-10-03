@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="herdr-electrified: reversible Herdr appearance, plus custom Herdr and Codex renderers" width="100%">
+  <img src="https://raw.githubusercontent.com/rm0nroe/herdr-electrified/main/assets/banner.svg" alt="herdr-electrified: reversible Herdr appearance, plus custom Herdr and Codex renderers" width="100%">
 </p>
 
 # Herdr Electrified
@@ -27,7 +27,7 @@ and font. When Claude Code is present, Electric also installs the Claude theme.
 
 Electric is verified on macOS 26.6 and 26.5.2 (and with Claude Code only on
 macOS 27.0). The settings preset and plugin are verified with stock Herdr 0.8.2
-and 0.9.3. Evidence is in [acceptance](docs/parity.md).
+and 0.9.3. Evidence is in [acceptance](https://github.com/rm0nroe/herdr-electrified/blob/main/docs/parity.md).
 
 ## Install Electric
 
@@ -136,7 +136,7 @@ the downloaded bundle and fonts in `~/.local/share/herdr-electrified` for you to
 delete. If the bundle is already gone, pass any Herdr executable:
 `herdr-electrified undo --herdr-bin /path/to/herdr`.
 
-Details on targets, conflicts and recovery are in [reference](docs/reference.md).
+Details on targets, conflicts and recovery are in [reference](https://github.com/rm0nroe/herdr-electrified/blob/main/docs/reference.md).
 
 ## Herdr plugin
 
@@ -151,7 +151,7 @@ Run its actions from Herdr's plugin menu. Output goes to
 ## Limitations
 
 - The Electric binaries are built on the maintainer's Mac from the pinned
-  sources and the patches in [`patches/`](patches), not in public CI. A
+  sources and the patches in [`patches/`](https://github.com/rm0nroe/herdr-electrified/tree/main/patches), not in public CI. A
   bit-identical rebuild has not been established. Electric Codex shows
   "herdr-electrified build" in its header so it is not mistaken for OpenAI's
   release.
@@ -162,7 +162,7 @@ Run its actions from Herdr's plugin menu. Output goes to
 - A single automatic Herdr tab can omit its title by design; a named tab shows
   it.
 
-Build instructions are in [building](docs/building.md).
+Build instructions are in [building](https://github.com/rm0nroe/herdr-electrified/blob/main/docs/building.md).
 
 ## Develop
 
@@ -176,8 +176,8 @@ The tests use temporary configs. The native check only runs `config check`.
 
 ## License
 
-Apache-2.0, see [LICENSE](LICENSE). Colors from
+Apache-2.0, see [LICENSE](https://github.com/rm0nroe/herdr-electrified/blob/main/LICENSE). Colors from
 [Catppuccin](https://github.com/catppuccin/catppuccin) (MIT) and the Rye
-wordmark (SIL OFL 1.1) are credited in [NOTICE](NOTICE). The Electric archive
+wordmark (SIL OFL 1.1) are credited in [NOTICE](https://github.com/rm0nroe/herdr-electrified/blob/main/NOTICE). The Electric archive
 includes third-party notices under `licenses/`. This project is independent of
 the Herdr, Codex and Claude maintainers.
