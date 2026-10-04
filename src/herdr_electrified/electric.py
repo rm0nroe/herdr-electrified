@@ -288,6 +288,21 @@ fi
 '''
 
 
+# Claude Code has no theme env var, but --settings outranks the user's own settings for this run only.
+CLAUDE = '''#!/bin/sh
+# herdr-electrified: Claude Code with the Electric theme, inside Herdr Electric panes only.
+commands=@COMMANDS@
+IFS=:
+set -f
+for dir in $PATH; do
+  case "${dir%/}" in ""|"$commands") continue ;; esac
+  [ -f "$dir/claude" ] && [ -x "$dir/claude" ] && exec "$dir/claude" --settings '{"theme":"custom:herdr-electrified"}' "$@"
+done
+echo 'herdr-electric: claude not found on PATH' >&2
+exit 127
+'''
+
+
 def targets(root, config, codex_home, agents=('codex',)):
     home = Path.home()
     codex_home = Path(codex_home)
@@ -298,7 +313,7 @@ def targets(root, config, codex_home, agents=('codex',)):
     for directory in (commands, zdotdir):
         if directory.resolve() != home.resolve() / '.local/share/herdr-electrified' / directory.name:
             raise ValueError('Electric command directory must not redirect through symlinks')
-    for path in [codex_home / 'themes/herdr-electric.tmTheme', bin_dir / 'codex-electric', bin_dir / 'herdr-electric', commands / 'codex', zdotdir / '.zshenv',
+    for path in [codex_home / 'themes/herdr-electric.tmTheme', bin_dir / 'codex-electric', bin_dir / 'herdr-electric', commands / 'codex', commands / 'claude', zdotdir / '.zshenv',
                  opencode_config() / 'themes/herdr-electrified.json']:
         if path.is_symlink():
             raise ValueError(f'Electric target must not be a symlink: {path}')
@@ -307,7 +322,7 @@ def targets(root, config, codex_home, agents=('codex',)):
     # ZDOTDIR shim (the Ghostty shell-integration pattern) that restores order after it.
     path = ('export PATH=' + shlex.quote(str(commands)) + ':"$PATH"\nunset HERDR_ELECTRIFIED_ZDOTDIR\n'
             'if [ -n "${ZDOTDIR+x}" ]; then export HERDR_ELECTRIFIED_ZDOTDIR="$ZDOTDIR"; fi\n'
-            'export ZDOTDIR=' + shlex.quote(str(zdotdir)) + '\n') if 'codex' in agents else ''
+            'export ZDOTDIR=' + shlex.quote(str(zdotdir)) + '\n') if {'codex', 'claude'} & set(agents) else ''
     # OpenCode loads themes only from its own config dir, but layers these two files over the user's
     # settings, so the theme is selected (and the Build accent set) only inside Herdr Electric panes.
     opencode = Path(config).parent / 'opencode'
@@ -319,8 +334,11 @@ def targets(root, config, codex_home, agents=('codex',)):
     if 'codex' in agents:
         files |= {c.canonical(codex_home / 'themes/herdr-electric.tmTheme'): (root / 'themes/codex-electric.tmTheme').read_text(),
                   c.canonical(bin_dir / 'codex-electric'): codex,
-                  c.canonical(commands / 'codex'): codex,
-                  c.canonical(zdotdir / '.zshenv'): ZSHENV.replace('@COMMANDS@', shlex.quote(str(commands)))}
+                  c.canonical(commands / 'codex'): codex}
+    if {'codex', 'claude'} & set(agents):
+        files[c.canonical(zdotdir / '.zshenv')] = ZSHENV.replace('@COMMANDS@', shlex.quote(str(commands)))
+    if 'claude' in agents:
+        files[c.canonical(commands / 'claude')] = CLAUDE.replace('@COMMANDS@', shlex.quote(str(commands)))
     if 'ghostty' in agents:
         files[c.canonical(Path(config).parent / 'ghostty.conf')] = c.files('herdr_electrified').joinpath('data/ghostty.conf').read_text()
     if 'opencode' in agents:

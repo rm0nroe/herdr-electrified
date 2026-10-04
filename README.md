@@ -34,7 +34,7 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.5
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.6
 herdr-electrified install
 ```
 
@@ -55,8 +55,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.5/herdr-electrified-0.4.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.5/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.6/herdr-electrified-0.4.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.6/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.4.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.4.0-macos-arm64.tar.gz
@@ -89,7 +89,13 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.4.0-macos-arm64
   one itself. Its patch also fixes an upstream bug where a notice arriving
   mid-stream duplicated the answer on resize.
 - **Claude Code** (when `claude` is on PATH, `CLAUDE_CONFIG_DIR` is set, or
-  `~/.claude` exists): the Claude theme.
+  `~/.claude` exists): the Claude theme in `~/.claude/themes`, selected only
+  inside Electric panes by a `claude` command that adds
+  `--settings '{"theme":"custom:herdr-electrified"}'`. Your `settings.json` is
+  not edited, so `claude` elsewhere keeps your own theme. Installs from before
+  v1.0.6 set the theme globally; reinstalling restores your previous theme.
+  Running `/theme` inside a pane changes your global choice, while Electric panes
+  stay Electric.
 - **OpenCode** (when `opencode` is on PATH or `~/.config/opencode` exists): the
   OpenCode theme in `~/.config/opencode/themes`, selected (with a mauve Build
   accent) only inside Electric panes. Your own OpenCode settings are not edited.
@@ -98,9 +104,11 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.4.0-macos-arm64
   `~/Library/Fonts`. Keybindings and behavior are not touched. Reload Ghostty
   (cmd+shift+,) and restart it once after the font is first installed.
 
-In zsh panes, `codex` runs Electric Codex even when your profile puts another
-`codex` first on PATH. Bash and fish panes don't get this; use `codex-electric`
-there. Shell profiles are never edited.
+In zsh panes, `codex` and `claude` run the Electric versions even when your
+profile puts another `codex` or `claude` first on PATH. Bash and fish panes don't
+get this; use `codex-electric`, or run
+`~/.local/share/herdr-electrified/commands/claude`, there. A shell alias named
+`claude` also bypasses it. Shell profiles are never edited.
 
 After upgrading herdr-electrified, run `herdr-electric server stop` so new panes
 pick up the new launcher.
@@ -110,7 +118,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.5
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.6
 herdr-electrified install --settings-only
 ```
 
@@ -122,8 +130,8 @@ herdr-electrified apply --dry-run --herdr-bin "$(command -v herdr)"
 herdr-electrified apply --herdr-bin "$(command -v herdr)"
 ```
 
-Add `--agent claude` to also set the Claude theme, or `--claude-statusline` for
-the optional statusline (needs a Python 3.9+ `python3` on PATH).
+Add `--claude-statusline` for the optional Claude statusline (needs a Python
+3.9+ `python3` on PATH). The Claude theme comes only with Electric.
 
 ## Check and undo
 
@@ -151,7 +159,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.5 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.6 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.

@@ -78,11 +78,22 @@ are preserved and reported as partial coverage.
 
 ## Claude theme
 
-`--agent claude` additionally installs `themes/herdr-electrified.json` and sets only
-`theme` to `custom:herdr-electrified` in `settings.json`, under `CLAUDE_CONFIG_DIR` or
-`~/.claude`. Default (non-Electric) apply does not touch Claude; Electric apply
-installs it when Claude Code is detected. Existing hooks, permissions,
-statuslines and other settings retain their values. Settings must be a strict
+Electric apply installs `themes/herdr-electrified.json` under `CLAUDE_CONFIG_DIR`
+or `~/.claude` when Claude Code is detected, plus
+`~/.local/share/herdr-electrified/commands/claude`, which Electric panes find
+first on PATH. It runs the next `claude` on PATH with
+`--settings '{"theme":"custom:herdr-electrified"}'`; Claude Code ranks command-line
+settings above your own, so only Claude in an Electric pane changes and
+`settings.json` is not written for the theme. Passing your own `--settings`
+replaces Electric's for that run. `--agent claude` is accepted but does nothing.
+
+Before v1.0.6 the theme was set globally through `theme` in `settings.json`. The
+next apply releases that key: it is restored if it still holds
+`custom:herdr-electrified`, and left alone if you changed it. A settings-only
+install also removes the theme file it owned.
+
+Settings writes (now only `statusLine`, below) keep hooks, permissions and other
+settings at their values. Settings must be a strict
 JSON object with unique keys and finite numbers. Settings previews show only the
 managed keys (`theme`, `statusLine`) and disclose that writes can change whole-file formatting, Unicode
 escapes and key order while preserving unrelated values. This applies to both
@@ -90,8 +101,7 @@ apply and key-level undo; byte-for-byte formatting preservation is not promised.
 The namespaced theme file is owned
 as a whole; later file edits or deletion are preserved as undo conflicts.
 
-`check` includes previously owned Claude targets; `check --agent claude` also
-previews the current Claude directory. `undo` covers every recorded component
+`check` includes previously owned Claude targets. `undo` covers every recorded component
 and directory, even when `CLAUDE_CONFIG_DIR` changes. It restores the selection
 before removing the theme file. Journal recovery is per file, so an interruption
 can leave a partial apply/undo that must be retried. Claude uses JSON validation,
@@ -104,7 +114,7 @@ recordings are ANSI captures, not desktop screenshots.
 
 `--claude-statusline` (with `install`, `apply`, `preview-apply` or `check`) installs
 `${XDG_DATA_HOME:-~/.local/share}/herdr-electrified/claude-statusline.py` and sets
-only `statusLine` in the same `settings.json`. It works with or without `--agent claude`.
+only `statusLine` in the same `settings.json`, with or without Electric.
 The script is standard-library Python 3.9+, run as `python3`, with no network access.
 Claude Code runs it with the `python3` on your `PATH`, not uv's interpreter, so apply
 refuses and `check` reports a `python3` conflict when no Python 3.9+ `python3` is found.

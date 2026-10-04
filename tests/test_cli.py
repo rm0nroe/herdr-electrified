@@ -52,6 +52,21 @@ else: sys.exit(2)
             code = main([*args, '--json'])
         return code, json.loads(out.getvalue())
 
+    def legacy_theme(self, env=None):
+        """Own the global Claude theme the way v1.0.5 did, for migration tests."""
+        from herdr_electrified import config as c
+        with patch.dict(os.environ, self.env | (env or {}), clear=True):
+            receipt = c.receipt_path()
+            data = c.load_receipt(receipt)
+            root = Path(os.environ.get('CLAUDE_CONFIG_DIR') or str(self.root / '.claude'))
+            for path, kind in ((root / 'themes/herdr-electrified.json', 'claude-theme'), (root / 'settings.json', 'claude-settings')):
+                path = c.canonical(path)
+                entry = data['targets'].get(str(path))
+                values = {'theme': 'custom:herdr-electrified'} | {k: v['installed'] for k, v in (entry or {}).get('owned', {}).items() if k != '$file'}
+                before, after, updated, _ = c.claude_plan(path, entry, kind, False, values, {'theme'})
+                if before != after:
+                    c.transact(receipt, data, path, before, after, updated, None, kind)
+
     def test_first_preview_is_read_only_and_shows_diff_without_identity(self):
         before = self.target.read_bytes()
         code, result = self.run_cli('apply', '--dry-run')
@@ -83,7 +98,7 @@ else: sys.exit(2)
             with self.subTest(invalid=invalid):
                 settings.write_text(invalid)
                 before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
-                code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+                code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
                 self.assertEqual(code, 1, result)
                 self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
                 self.assertFalse(self.ledger.parent.exists())
@@ -94,11 +109,11 @@ else: sys.exit(2)
         (claude / 'settings.json').write_text('{"theme":"dark","env":{"API_KEY":"synthetic-private-value"}}')
         before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
         for command in [('check',), ('apply', '--dry-run')]:
-            code, result = self.run_cli(*command, '--agent', 'claude')
+            code, result = self.run_cli(*command, '--claude-statusline')
             self.assertEqual(code, 0, result)
             self.assertEqual(len(result['targets']), 3)
             self.assertNotIn('synthetic-private-value', json.dumps(result))
-            self.assertIn('custom:herdr-electrified', result['targets'][2]['diff'])
+            self.assertIn('claude-statusline.py', result['targets'][2]['diff'])
             self.assertIn('whole-file formatting', result['targets'][2]['notice'])
             self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
             self.assertFalse(self.ledger.parent.exists())
@@ -106,7 +121,7 @@ else: sys.exit(2)
             def isatty(self): return True
         err = io.StringIO()
         with contextlib.redirect_stderr(err):
-            code, result = self.run_cli('apply', '--agent', 'claude', '--herdr-bin', str(self.bin), stdin=TTY('n\n'))
+            code, result = self.run_cli('apply', '--claude-statusline', '--herdr-bin', str(self.bin), stdin=TTY('n\n'))
         self.assertEqual(code, 0, result)
         self.assertNotIn('synthetic-private-value', err.getvalue())
         self.assertIn('whole-file formatting', err.getvalue())
@@ -117,19 +132,19 @@ else: sys.exit(2)
         from herdr_electrified.cli import render
         settings = self.root / '.claude/settings.json'
         settings.parent.mkdir()
-        original = {'theme': 'dark', 'private': 'café ▸'}
+        original = {'theme': 'dark', 'secret_note': 'café ▸'}
         settings.write_text(json.dumps(original, indent=4, ensure_ascii=False) + '\n')
-        for command in [('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin)), ('undo',)]:
+        for command in [('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin)), ('undo',)]:
             code, result = self.run_cli(*command)
             self.assertEqual(code, 0, result)
             row = next(row for row in result['targets'] if row.get('component') == 'claude-settings')
             for detail in ('whole-file formatting', 'Unicode escapes', 'key order'):
                 self.assertIn(detail, row['notice'])
                 self.assertIn(detail, render(result))
-            self.assertNotIn('private', row['diff'].split('@@', 2)[-1])
-            self.assertNotIn(json.dumps(original['private'])[1:-1], json.dumps(result))
+            self.assertNotIn('secret_note', row['diff'].split('@@', 2)[-1])
+            self.assertNotIn(json.dumps(original['secret_note'])[1:-1], json.dumps(result))
             current = json.loads(settings.read_text())
-            self.assertEqual(current['private'], original['private'])
+            self.assertEqual(current['secret_note'], original['secret_note'])
             if command[0] == 'apply':
                 self.assertEqual(self.run_cli('check')[1]['targets'][-1].get('notice'), None)
                 current['later'] = 'keep this edit'
@@ -137,62 +152,36 @@ else: sys.exit(2)
         self.assertEqual(json.loads(settings.read_text()), original | {'later': 'keep this edit'})
 
     def test_claude_conflicts_require_confirmation_and_preserve_first_original(self):
-        claude = self.root / '.claude'
-        (claude / 'themes').mkdir(parents=True)
-        settings, theme = claude / 'settings.json', claude / 'themes/herdr-electrified.json'
-        settings.write_text('{"theme":null,"other":1}\n')
-        original_theme = '{"name":"Existing","base":"dark","overrides":{}}\n'
-        theme.write_text(original_theme)
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
-        settings.write_text('{"theme":"light","other":2}\n')
-        theme.write_text('{"name":"User edited","base":"dark","overrides":{}}\n')
-        before = (settings.read_bytes(), theme.read_bytes())
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        settings.write_text('{"other":1}\n')
+        script, value = self.statusline()
+        script.parent.mkdir(parents=True)
+        original_script = '# my own script\n'
+        script.write_text(original_script)
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        settings.write_text('{"statusLine":{"type":"command","command":"mine"},"other":2}\n')
+        script.write_text('# user edited\n')
+        before = (settings.read_bytes(), script.read_bytes())
         code, result = self.run_cli('undo')
         self.assertEqual(code, 1, result)
-        self.assertEqual((settings.read_bytes(), theme.read_bytes()), before)
-        self.assertEqual({tuple(row['conflicts']) for row in result['targets'] if row['conflicts']}, {('theme',), ('$file',)})
-        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+        self.assertEqual((settings.read_bytes(), script.read_bytes()), before)
+        self.assertEqual({tuple(row['conflicts']) for row in result['targets'] if row['conflicts']}, {('statusLine',), ('$file',)})
+        code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
         self.assertEqual(code, 1, result)
-        self.assertEqual((settings.read_bytes(), theme.read_bytes()), before)
+        self.assertEqual((settings.read_bytes(), script.read_bytes()), before)
         class TTY(io.StringIO):
             def isatty(self): return True
         with contextlib.redirect_stderr(io.StringIO()):
-            code, result = self.run_cli('apply', '--agent', 'claude', '--herdr-bin', str(self.bin), stdin=TTY('y\n'))
+            code, result = self.run_cli('apply', '--claude-statusline', '--herdr-bin', str(self.bin), stdin=TTY('y\n'))
         self.assertEqual(code, 0, result)
         self.assertEqual(self.run_cli('undo')[0], 0)
-        self.assertEqual(json.loads(settings.read_text()), {'theme': None, 'other': 2})
-        self.assertEqual(theme.read_text(), original_theme)
-
-    def test_claude_existing_equivalent_theme_is_not_owned_or_reformatted(self):
-        from importlib.resources import files
-        claude = self.root / '.claude'
-        (claude / 'themes').mkdir(parents=True)
-        theme = claude / 'themes/herdr-electrified.json'
-        theme.write_text(json.dumps(json.loads(files('herdr_electrified').joinpath('data/claude.json').read_text())))
-        before = theme.read_bytes()
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
-        self.assertEqual(theme.read_bytes(), before)
-        self.assertNotIn(str(theme.resolve()), json.loads(self.ledger.read_text())['targets'])
-        self.assertEqual(self.run_cli('undo')[0], 0)
-        self.assertEqual(theme.read_bytes(), before)
-        self.assertFalse((claude / 'settings.json').exists())
-
-    def test_claude_receipt_cannot_restore_unowned_settings_keys(self):
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
-        settings = self.root / '.claude/settings.json'
-        settings.write_text('{"theme":"custom:herdr-electrified","other":2}')
-        receipt = json.loads(self.ledger.read_text())
-        receipt['targets'][str(settings.resolve())]['owned']['theme']['original'] = '{"other":999}'
-        self.ledger.write_text(json.dumps(receipt))
-        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
-        code, result = self.run_cli('undo')
-        self.assertEqual(code, 1, result)
-        self.assertIn('receipt', result['error'])
-        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+        self.assertEqual(json.loads(settings.read_text()), {'other': 2})
+        self.assertEqual(script.read_text(), original_script)
 
     def test_claude_interrupted_apply_and_undo_recover_per_file(self):
         settings = (self.root / '.claude/settings.json').resolve()
-        theme = (self.root / '.claude/themes/herdr-electrified.json').resolve()
+        theme = self.statusline()[0]
         replace = os.replace
         unlink = Path.unlink
         for operation, target, after_replace in [('apply', theme, False), ('undo', settings, True), ('apply', settings, False), ('undo', theme, True)]:
@@ -209,12 +198,12 @@ else: sys.exit(2)
                             unlink(path, *args, **kwargs)
                         raise OSError('simulated Claude deletion interruption')
                     return unlink(path, *args, **kwargs)
-                args = (operation, '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+                args = (operation, '--claude-statusline', '--yes', '--herdr-bin', str(self.bin)) if operation == 'apply' else (operation,)
                 with patch('os.replace', interrupted), patch.object(Path, 'unlink', interrupted_unlink):
                     self.assertEqual(self.run_cli(*args)[0], 1)
                 receipt = self.ledger.read_bytes()
                 self.assertIn('pending', json.loads(receipt))
-                self.assertEqual(self.run_cli('check', '--agent', 'claude')[0], 0)
+                self.assertEqual(self.run_cli('check')[0], 0)
                 self.assertEqual(self.ledger.read_bytes(), receipt)
                 code, result = self.run_cli(*args)
                 self.assertEqual(code, 0, result)
@@ -224,9 +213,9 @@ else: sys.exit(2)
         self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
 
     def test_claude_deleted_files_stay_absent_with_unresolved_receipts(self):
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
         settings = self.root / '.claude/settings.json'
-        theme = self.root / '.claude/themes/herdr-electrified.json'
+        theme = self.statusline()[0]
         settings.unlink()
         theme.unlink()
         entries = json.loads(self.ledger.read_text())['targets']
@@ -240,17 +229,18 @@ else: sys.exit(2)
         self.assertEqual(self.ledger.read_bytes(), receipt)
 
     def test_claude_all_directories_undo_preserves_later_unrelated_settings(self):
+        value = self.statusline()[1]
         for name in ('claude-a', 'claude-b'):
             root = self.root / name
             root.mkdir()
             (root / 'settings.json').write_text('{"other":1}')
             env = {'CLAUDE_CONFIG_DIR': str(root)}
-            self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin), env=env)[0], 0)
-            (root / 'settings.json').write_text('{"theme":"custom:herdr-electrified","other":2}')
+            self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin), env=env)[0], 0)
+            (root / 'settings.json').write_text(json.dumps({'statusLine': value, 'other': 2}))
         self.assertEqual(self.run_cli('undo', env={'CLAUDE_CONFIG_DIR': str(self.root / 'unselected')})[0], 0)
         for name in ('claude-a', 'claude-b'):
             self.assertEqual(json.loads((self.root / name / 'settings.json').read_text()), {'other': 2})
-            self.assertFalse((self.root / name / 'themes/herdr-electrified.json').exists())
+        self.assertFalse(self.statusline()[0].exists())
         self.assertFalse((self.root / 'unselected').exists())
 
     def test_claude_canonical_target_collision_blocks_all_writes(self):
@@ -258,7 +248,7 @@ else: sys.exit(2)
         claude.mkdir()
         (claude / 'settings.json').symlink_to(self.target)
         before = self.target.read_bytes()
-        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))
+        code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
         self.assertEqual(code, 1, result)
         self.assertIn('same target', result['error'])
         self.assertEqual(self.target.read_bytes(), before)
@@ -755,36 +745,84 @@ else: sys.exit(2)
                 self.assertEqual(result['notice'], 'busy, results may be stale')
         self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
 
-    def test_claude_opt_in_preserves_other_settings_and_undo_covers_all_components(self):
+    def test_agent_claude_is_a_deprecated_noop_outside_electric(self):
         claude = self.root / 'alternate-claude'
         claude.mkdir()
         settings = claude / 'settings.json'
-        original = '{"theme":"dark", "statusLine":{"type":"command","command":"keep-me"}, "hooks":{}}\n'
+        original = '{"theme":"dark", "hooks":{}}\n'
         settings.write_text(original)
         env = {'CLAUDE_CONFIG_DIR': str(claude)}
-        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin), env=env)[0], 0)
+        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin), env=env)
+        self.assertEqual(code, 0, result)
+        self.assertIn('--agent claude is deprecated', result['notice'])
         self.assertEqual(settings.read_text(), original)
-        theme = claude / 'themes/herdr-electrified.json'
-        self.assertFalse(theme.exists())
-        code, result = self.run_cli('apply', '--agent', 'claude', '--yes', env=env)
+        self.assertFalse((claude / 'themes').exists())
+        self.assertEqual([row['path'] for row in result['targets']], [str(self.target.resolve())])
+
+    def test_legacy_global_theme_is_released_on_reapply(self):
+        for case in ('untouched-new', 'untouched-existing', 'user-changed'):
+            with self.subTest(case=case):
+                self.tearDown_state()
+                settings = self.root / '.claude/settings.json'
+                theme = self.root / '.claude/themes/herdr-electrified.json'
+                if case != 'untouched-new':
+                    settings.parent.mkdir(parents=True)
+                    settings.write_text('{"theme": "custom:herdr-reference", "other": 1}\n')
+                original = settings.read_bytes() if settings.exists() else None
+                self.legacy_theme()
+                self.assertEqual(json.loads(settings.read_text())['theme'], 'custom:herdr-electrified')
+                if case == 'user-changed':
+                    settings.write_text('{"theme": "light", "other": 1}\n')
+                code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
+                self.assertEqual(code, 0, result)
+                targets = json.loads(self.ledger.read_text())['targets']
+                self.assertNotIn(str(settings.resolve()), targets)
+                self.assertNotIn(str(theme.resolve()), targets)
+                self.assertFalse(theme.exists())
+                if case == 'untouched-new':
+                    self.assertFalse(settings.exists())
+                elif case == 'untouched-existing':
+                    self.assertEqual(settings.read_bytes(), original)
+                else:
+                    self.assertEqual(json.loads(settings.read_text()), {'theme': 'light', 'other': 1})
+                self.assertEqual(self.run_cli('apply', '--yes')[0], 0)
+                self.assertEqual(self.run_cli('undo')[0], 0)
+
+    def tearDown_state(self):
+        import shutil
+        for path in (self.root / '.claude', self.root / 'state'):
+            shutil.rmtree(path, ignore_errors=True)
+
+    def test_legacy_theme_release_keeps_owned_statusline(self):
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        settings.write_text('{"theme":"dark","other":1}')
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.legacy_theme()
+        script, value = self.statusline()
+        self.assertEqual(set(json.loads(self.ledger.read_text())['targets'][str(settings.resolve())]['owned']), {'theme', 'statusLine'})
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        code, result = self.run_cli('check')
         self.assertEqual(code, 0, result)
-        self.assertEqual(json.loads(settings.read_text()), json.loads(original) | {'theme': 'custom:herdr-electrified'})
-        preset = json.loads(theme.read_text())
-        self.assertEqual(preset['name'], 'Herdr Electrified')
-        self.assertEqual(preset['overrides']['text'], '#6c7086')
-        self.assertEqual(preset['overrides']['autoAccept'], '#ff6b80')
-        self.assertFalse((self.root / '.claude').exists())
-        receipt = self.ledger.read_bytes()
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', env=env)[0], 0)
-        self.assertEqual(self.ledger.read_bytes(), receipt)
-        code, result = self.run_cli('check', env=env)
-        self.assertEqual(code, 0, result)
-        self.assertEqual(len(result['targets']), 3)
-        self.assertTrue(all(row['configured'] for row in result['targets']))
+        self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
+        self.assertEqual(self.run_cli('apply', '--yes')[0], 0)
+        self.assertEqual(json.loads(settings.read_text()), {'theme': 'dark', 'other': 1, 'statusLine': value})
+        self.assertEqual(list(json.loads(self.ledger.read_text())['targets'][str(settings.resolve())]['owned']), ['statusLine'])
+        self.assertTrue(all(row['configured'] for row in self.run_cli('check')[1]['targets']))
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(json.loads(settings.read_text()), {'theme': 'dark', 'other': 1})
+        self.assertFalse(script.exists())
+
+    def test_legacy_theme_undo_still_restores(self):
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        original = '{"theme": "custom:herdr-reference"}\n'
+        settings.write_text(original)
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.legacy_theme()
         self.assertEqual(self.run_cli('undo')[0], 0)
         self.assertEqual(settings.read_text(), original)
-        self.assertFalse(theme.exists())
-        self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
+        self.assertFalse((self.root / '.claude/themes/herdr-electrified.json').exists())
 
     def statusline(self):
         import shlex
@@ -857,25 +895,18 @@ else: sys.exit(2)
         self.assertEqual(self.run_cli('undo')[0], 0)
         self.assertEqual(settings.read_text(), original)
 
-    def test_statusline_joins_claude_theme_and_user_edits_are_undo_conflicts(self):
+    def test_statusline_user_edits_are_undo_conflicts(self):
         settings = self.root / '.claude/settings.json'
         settings.parent.mkdir()
         settings.write_text('{"theme":"dark","other":1}')
-        self.assertEqual(self.run_cli('apply', '--agent', 'claude', '--yes', '--herdr-bin', str(self.bin))[0], 0)
-        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes')[0], 0)
+        self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
         script, value = self.statusline()
-        self.assertEqual(json.loads(settings.read_text()), {'theme': 'custom:herdr-electrified', 'other': 1, 'statusLine': value})
-        self.assertEqual(set(json.loads(self.ledger.read_text())['targets'][str(settings.resolve())]['owned']), {'theme', 'statusLine'})
-        rows = self.run_cli('check')[1]['targets']
-        self.assertEqual(len(rows), 4)
-        self.assertTrue(all(row['configured'] for row in rows), rows)
-        settings.write_text(json.dumps({'theme': 'custom:herdr-electrified', 'other': 2, 'statusLine': {'type': 'command', 'command': 'mine'}}))
+        settings.write_text(json.dumps({'theme': 'dark', 'other': 2, 'statusLine': {'type': 'command', 'command': 'mine'}}))
         self.assertEqual(next(row for row in self.run_cli('check')[1]['targets'] if row.get('component') == 'claude-settings')['conflicts'], ['statusLine'])
         code, result = self.run_cli('undo')
         self.assertEqual(code, 1, result)
         self.assertEqual(json.loads(settings.read_text()), {'theme': 'dark', 'other': 2, 'statusLine': {'type': 'command', 'command': 'mine'}})
         self.assertFalse(script.exists())
-        self.assertEqual(next(row for row in result['targets'] if row.get('component') == 'claude-settings')['conflicts'], ['statusLine'])
         receipt = json.loads(self.ledger.read_text())['targets']
         self.assertEqual(list(receipt[str(settings.resolve())]['owned']), ['statusLine'])
 
@@ -887,7 +918,7 @@ else: sys.exit(2)
         settings = self.root / '.claude/settings.json'
         self.assertEqual(self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))[0], 0)
         self.assertEqual(json.loads(settings.read_text())['statusLine'], value)
-        code, result = self.run_cli('apply', '--agent', 'claude', '--yes')
+        code, result = self.run_cli('apply', '--yes')
         self.assertEqual(code, 0, result)
         self.assertEqual(json.loads(settings.read_text())['statusLine'], value)
         self.assertTrue(all(row['configured'] for row in self.run_cli('check')[1]['targets']))

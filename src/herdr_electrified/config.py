@@ -382,15 +382,26 @@ def settings_plan(before, entry, undo, values, requested):
             doc.pop(key, None)
             doc.update(json.loads(owned.pop(key)['original']))
         return before, json.dumps(doc, indent=2) + '\n', dict(copy.deepcopy(entry), owned=owned) if owned else None, conflicts
-    wanted = {key: values[key] for key in SETTINGS if key in owned or key in requested}
+    # Keys no longer managed (the global theme before v1.0.6) are released: restored if still ours, else left as the user set them.
+    released = [key for key in owned if key not in values]
+    for key in released:
+        value = owned.pop(key)
+        if doc.get(key) == value['installed']:
+            doc.pop(key, None)
+            doc.update(json.loads(value['original']))
+    wanted = {key: value for key, value in values.items() if key in owned or key in requested}
     conflicts = [key for key in wanted if key in owned and doc.get(key) != owned[key]['installed']
                  or key == 'statusLine' and key not in owned and key in doc and doc[key] != wanted[key]]
-    if all(doc.get(key) == value for key, value in wanted.items()):
+    if not released and all(doc.get(key) == value for key, value in wanted.items()):
         return before, before, copy.deepcopy(entry), conflicts
     for key, value in wanted.items():
         if doc.get(key) != value:
             owned.setdefault(key, {'original': json.dumps({key: doc[key]} if key in doc else {})})['installed'] = value
             doc[key] = value
+    if entry and not owned:
+        if entry.get('exact_restore', True) and digest(before) == entry['installed_hash']:
+            return before, entry['original_file'], None, conflicts
+        return before, before if doc == json_object(before) else json.dumps(doc, indent=2) + '\n', None, conflicts
     after = json.dumps(doc, indent=2) + '\n'
     updated = {'kind': 'claude-settings', 'pin': None, 'original_file': entry['original_file'] if entry else before,
                'installed_hash': digest(after),

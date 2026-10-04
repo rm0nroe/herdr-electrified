@@ -27,13 +27,13 @@ class Native(CLI):
     def test_native_with_optional_claude_and_all_component_undo(self):
         original = self.target.read_bytes()
         for command in [('apply', '--dry-run'), ('apply', '--yes'), ('check',), ('undo',)]:
-            code, result = self.run_cli(*command, '--agent', 'claude', '--herdr-bin', BINARY)
+            code, result = self.run_cli(*command, *(('--claude-statusline',) if command[0] != 'undo' else ()), '--herdr-bin', BINARY)
             self.assertEqual(code, 0, result)
             herdr = next(row for row in result['targets'] if row['path'] == str(self.target.resolve()))
             self.assertEqual(herdr['validation'], 'passed')
         self.assertEqual(self.target.read_bytes(), original)
         self.assertFalse((self.root / '.claude/settings.json').exists())
-        self.assertFalse((self.root / '.claude/themes/herdr-electrified.json').exists())
+        self.assertFalse((self.root / '.local/share/herdr-electrified/claude-statusline.py').exists())
 
 
 class NativeElectric(Electric):

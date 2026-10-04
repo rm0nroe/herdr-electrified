@@ -252,11 +252,15 @@ class Agents(unittest.TestCase):
         self.assertEqual(result['agents'], ['claude'])
         self.assertFalse((self.root / '.codex').exists())
         self.assertFalse((self.root / '.local/bin/codex-electric').exists())
-        self.assertFalse((self.root / '.local/share/herdr-electrified').exists())
+        commands = self.root / '.local/share/herdr-electrified/commands'
+        self.assertFalse((commands / 'codex').exists())
+        self.assertEqual((commands / 'claude').stat().st_mode & 0o777, 0o700)
         herdr = (self.root / '.local/bin/herdr-electric').read_text()
-        self.assertNotIn('export PATH=', herdr)
-        self.assertIn('custom:herdr-electrified', (self.root / '.claude/settings.json').read_text())
-        self.assertTrue((self.root / '.claude/themes/herdr-electrified.json').exists())
+        self.assertIn('export PATH=', herdr)
+        # The theme is selected per pane; the user's settings.json is never written.
+        self.assertFalse((self.root / '.claude/settings.json').exists())
+        preset = json.loads((self.root / '.claude/themes/herdr-electrified.json').read_text())
+        self.assertEqual(preset['name'], 'Herdr Electrified')
         self.assertEqual(self.run_cli('check', env=env)[0], 0)
         # Runtime files the bundled Herdr writes on first launch.
         notes = self.root / 'config/herdr-electrified/electric/release-notes.json'
@@ -304,16 +308,67 @@ class Agents(unittest.TestCase):
         self.assertEqual(self.run_cli('undo', env=env)[0], 0)
         self.assertEqual(self.files() - {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}, before)
 
+    def test_pane_claude_wrapper_selects_electric_theme_and_skips_itself(self):
+        import subprocess
+        root = self.bundle()
+        env = self.hermetic(claude=True)
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        tools = self.root / 'tools'
+        (tools / 'claude').write_text('#!/bin/sh\nfor a in "$@"; do echo "$a"; done\n')
+        commands = self.root / '.local/share/herdr-electrified/commands'
+        run = lambda path: subprocess.run([str(commands / 'claude'), 'a', 'b c'], env={'PATH': path}, capture_output=True, text=True, timeout=10)
+        out = run(f'{commands}:{commands}/:{tools}:/usr/bin:/bin')
+        self.assertEqual(out.stdout.splitlines(), ['--settings', '{"theme":"custom:herdr-electrified"}', 'a', 'b c'], out)
+        out = run(f'{commands}:/usr/bin:/bin')
+        self.assertEqual(out.returncode, 127)
+        self.assertIn('claude not found', out.stderr)
+        self.assertEqual(self.run_cli('undo', env=env)[0], 0)
+        self.assertFalse(commands.exists())
+
+    def test_existing_equivalent_claude_theme_is_not_owned_or_reformatted(self):
+        from importlib.resources import files
+        root = self.bundle()
+        env = self.hermetic(claude=True)
+        theme = self.root / '.claude/themes/herdr-electrified.json'
+        theme.parent.mkdir(parents=True)
+        theme.write_text(json.dumps(json.loads(files('herdr_electrified').joinpath('data/claude.json').read_text())))
+        before = theme.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        self.assertEqual(theme.read_bytes(), before)
+        self.assertNotIn(str(theme.resolve()), json.loads(self.ledger.read_text())['targets'])
+        self.assertEqual(self.run_cli('undo', env=env)[0], 0)
+        self.assertEqual(theme.read_bytes(), before)
+
+    def test_legacy_global_claude_theme_moves_into_panes_on_reinstall(self):
+        root = self.bundle()
+        env = self.hermetic(claude=True)
+        settings = self.root / '.claude/settings.json'
+        settings.parent.mkdir()
+        original = '{\n  "theme": "custom:herdr-reference",\n  "hooks": {}\n}\n'
+        settings.write_text(original)
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        test_cli.CLI.legacy_theme(self)
+        self.assertIn('custom:herdr-electrified', settings.read_text())
+        code, result = self.run_cli('apply', '--yes', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(settings.read_text(), original)
+        targets = json.loads(self.ledger.read_text())['targets']
+        self.assertNotIn(str(settings.resolve()), targets)
+        self.assertIn(str((self.root / '.claude/themes/herdr-electrified.json').resolve()), targets)
+        self.assertEqual(self.run_cli('undo', env=env)[0], 0)
+        self.assertEqual(settings.read_text(), original)
+
     @unittest.skipUnless(Path('/bin/zsh').exists(), 'needs zsh')
     def test_pane_codex_beats_a_profile_that_prepends_stock_codex(self):
         import subprocess
         root = self.bundle()
-        env = self.hermetic(codex=True)
+        env = self.hermetic(codex=True, claude=True)
         self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
         stock = self.root / 'stock'
         stock.mkdir()
-        (stock / 'codex').write_text('#!/bin/sh\nexit 0\n')
-        (stock / 'codex').chmod(0o700)
+        for name in ('codex', 'claude'):
+            (stock / name).write_text('#!/bin/sh\nexit 0\n')
+            (stock / name).chmod(0o700)
         for name in ('.zshenv', '.zshrc'):
             (self.root / name).write_text(f'export PATH="{stock}:$PATH"\n')
         # Run the real launcher, but start the pane shell where it would exec Herdr.
@@ -322,10 +377,11 @@ class Agents(unittest.TestCase):
         pane.write_text('\n'.join(launcher[:-1] + ['exec /bin/zsh -i -l']) + '\n')
         out = self.root / 'which'
         shell_env = {'HOME': str(self.root), 'PATH': '/usr/bin:/bin', 'TERM': 'dumb'}
-        subprocess.run(['/bin/sh', str(pane)], input=f'command -v codex > {out}\necho "${{ZDOTDIR-unset}}" >> {out}\nexit\n',
+        subprocess.run(['/bin/sh', str(pane)], input=f'command -v codex > {out}\ncommand -v claude >> {out}\necho "${{ZDOTDIR-unset}}" >> {out}\nexit\n',
                        env=shell_env, capture_output=True, text=True, timeout=20)
         lines = out.read_text().splitlines()
-        self.assertEqual(lines, [str(self.root / '.local/share/herdr-electrified/commands/codex'), 'unset'])
+        commands = self.root / '.local/share/herdr-electrified/commands'
+        self.assertEqual(lines, [str(commands / 'codex'), str(commands / 'claude'), 'unset'])
         # A user ZDOTDIR is honored and restored for nested shells.
         (self.root / 'zd').mkdir()
         (self.root / 'zd/.zshrc').write_text(f'export PATH="{stock}:$PATH"\n')

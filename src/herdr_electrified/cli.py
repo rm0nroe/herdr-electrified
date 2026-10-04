@@ -81,6 +81,8 @@ def execute(args):
     if bundle:
         result['agents'] = sorted(agents)
         result['bundle'] = manifest['version']
+    if args.agent == 'claude':
+        result['notice'] = '--agent claude is deprecated and does nothing: Claude Code gets the Electric theme only inside herdr-electric panes.'
     fonts = data.get('electric', {}).get('fonts', []) + data.get('ghostty', {}).get('fonts', [])
     if fonts:
         result['fonts'] = electric.font_status(fonts)
@@ -94,6 +96,7 @@ def execute(args):
                     raise ValueError('receipt changed; retry')
                 c.recover(receipt, data)
             result['pending'] = 'recovered'
+    release = set()
     if args.command == 'undo':
         paths = [(c.canonical(p), e.get('kind', 'herdr')) for p, e in data['targets'].items()]
         paths.sort(key=lambda item: item[1] != 'claude-settings')
@@ -105,22 +108,25 @@ def execute(args):
         owned = [c.canonical(p) for p, e in data['targets'].items() if e.get('kind') == 'claude-statusline']
         # An identical pre-existing script stays unowned, so the owned settings key also keeps it managed.
         statusline = args.claude_statusline or bool(owned) or any('statusLine' in e['owned'] for e in data['targets'].values() if e.get('kind') == 'claude-settings')
-        if args.agent == 'claude' or 'claude' in agents or statusline:
-            root = Path(os.environ.get('CLAUDE_CONFIG_DIR') or str(Path.home() / '.claude')).expanduser()
-            if args.agent == 'claude' or 'claude' in agents:
-                paths.append((c.canonical(root / 'themes/herdr-electrified.json'), 'claude-theme'))
-            if statusline:
-                paths.append((owned[0] if owned else c.canonical(Path(os.environ.get('XDG_DATA_HOME') or str(Path.home() / '.local/share')).expanduser() / 'herdr-electrified/claude-statusline.py'), 'claude-statusline'))
+        # Before v1.0.6 the Claude theme was global; re-applying releases it (the theme now rides on the pane-only claude wrapper).
+        legacy = [(c.canonical(p), e['kind']) for p, e in data['targets'].items()
+                  if e.get('kind') == 'claude-theme' or e.get('kind') == 'claude-settings' and 'theme' in e['owned']]
+        root = Path(os.environ.get('CLAUDE_CONFIG_DIR') or str(Path.home() / '.claude')).expanduser()
+        if 'claude' in agents:
+            paths.append((c.canonical(root / 'themes/herdr-electrified.json'), 'claude-theme'))
+        if statusline:
+            paths.append((owned[0] if owned else c.canonical(Path(os.environ.get('XDG_DATA_HOME') or str(Path.home() / '.local/share')).expanduser() / 'herdr-electrified/claude-statusline.py'), 'claude-statusline'))
             paths.append((c.canonical(root / 'settings.json'), 'claude-settings'))
+        release = {path for path, kind in legacy if kind == 'claude-theme'} - {path for path, kind in paths}
+        paths.extend(legacy)
         if 'ghostty' in agents or layer:
             owned = [c.canonical(p) for p, e in data['targets'].items() if e.get('kind') == 'ghostty-config']
             paths.append((owned[0] if owned else electric.ghostty_config(), 'ghostty-config'))
         paths.extend((p, 'electric-file') for p in electric_targets)
         paths = list(dict.fromkeys(paths))
     script = next((path for path, kind in paths if kind == 'claude-statusline'), None)
-    values = {'theme': 'custom:herdr-electrified', 'statusLine': {'type': 'command', 'command': 'python3 ' + shlex.quote(str(script))}}
-    requested = {'theme'} if args.agent == 'claude' or 'claude' in agents else set()
-    requested |= {'statusLine'} if args.claude_statusline else set()
+    values = {'statusLine': {'type': 'command', 'command': 'python3 ' + shlex.quote(str(script))}}
+    requested = {'statusLine'} if args.claude_statusline else set()
     if len({path for path, kind in paths}) != len(paths):
         raise ValueError('selected components resolve to the same target')
     plans = []
@@ -145,7 +151,7 @@ def execute(args):
             plans.append((path, before, after, updated, None, kind))
             continue
         if kind != 'herdr':
-            before, after, updated, conflicts = c.claude_plan(path, entry, kind, args.command == 'undo', values, requested)
+            before, after, updated, conflicts = c.claude_plan(path, entry, kind, args.command == 'undo' or path in release, values, requested)
             c.validate(None, before, after, kind)
             if kind == 'claude-statusline' and args.command != 'undo' and not python3_ok():
                 if not readonly:
