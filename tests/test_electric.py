@@ -231,10 +231,10 @@ class Agents(unittest.TestCase):
     run_cli = test_cli.CLI.run_cli
     bundle = Electric.bundle
 
-    def hermetic(self, codex=False, claude=False):
+    def hermetic(self, codex=False, claude=False, opencode=False):
         tools = self.root / 'tools'
         tools.mkdir(exist_ok=True)
-        for name, wanted in (('codex', codex), ('claude', claude)):
+        for name, wanted in (('codex', codex), ('claude', claude), ('opencode', opencode)):
             if wanted:
                 (tools / name).write_text('#!/bin/sh\nexit 0\n')
                 (tools / name).chmod(0o700)
@@ -278,6 +278,29 @@ class Agents(unittest.TestCase):
         self.assertTrue((self.root / '.codex/themes/herdr-electric.tmTheme').exists())
         self.assertTrue((self.root / '.local/share/herdr-electrified/commands/codex').exists())
         self.assertFalse((self.root / '.claude').exists())
+        self.assertEqual(self.run_cli('undo', env=env)[0], 0)
+        self.assertEqual(self.files() - {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}, before)
+
+    def test_opencode_host_gets_pane_only_theme_and_undo_leaves_nothing(self):
+        import subprocess
+        root = self.bundle()
+        env = self.hermetic(opencode=True)
+        before = self.files()
+        code, result = self.run_cli('apply', '--electric', str(root), '--yes', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['agents'], ['opencode'])
+        theme = self.root / 'config/opencode/themes/herdr-electrified.json'
+        self.assertEqual(theme.read_bytes(), (Path(electric.__file__).parent / 'data/opencode.json').read_bytes())
+        # Selection lives beside Electric's config, never in the user's own OpenCode settings.
+        self.assertEqual(set(p.name for p in (self.root / 'config/opencode').rglob('*')), {'themes', 'herdr-electrified.json'})
+        launcher = self.root / '.local/bin/herdr-electric'
+        pane = self.root / 'pane.sh'
+        pane.write_text('\n'.join(launcher.read_text().splitlines()[:-1] + ['echo "$OPENCODE_TUI_CONFIG"', 'echo "$OPENCODE_CONFIG"']) + '\n')
+        tui, config = subprocess.run(['/bin/sh', str(pane)], capture_output=True, text=True, timeout=10).stdout.splitlines()
+        pane.unlink()
+        self.assertEqual(json.loads(Path(tui).read_text())['theme'], 'herdr-electrified')
+        self.assertEqual(json.loads(Path(config).read_text())['agent']['build']['color'], '#b481d4')
+        self.assertEqual(self.run_cli('check', env=env)[0], 0)
         self.assertEqual(self.run_cli('undo', env=env)[0], 0)
         self.assertEqual(self.files() - {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}, before)
 

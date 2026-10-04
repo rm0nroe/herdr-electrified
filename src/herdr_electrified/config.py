@@ -157,7 +157,7 @@ def validate_receipt(data):
             bundle = data['electric']
             valid = valid and isinstance(bundle, dict) and all(isinstance(bundle[k], str) and Path(bundle[k]).is_absolute() for k in ('root', 'config', 'codex_home'))
             valid = valid and isinstance(bundle['manifest_hash'], str) and len(bundle['manifest_hash']) == 64
-            valid = valid and set(bundle.get('agents', [])) <= {'codex', 'claude', 'ghostty'}
+            valid = valid and set(bundle.get('agents', [])) <= {'codex', 'claude', 'ghostty', 'opencode'}
             valid = valid and all(isinstance(f['path'], str) and Path(f['path']).is_absolute() and len(f['sha256']) == 64 for f in bundle.get('fonts', []))
             valid = valid and (bundle.get('session') is None or isinstance(bundle['session'], str) and Path(bundle['session']).is_absolute())
             valid = valid and all(isinstance(d, str) and Path(d).is_absolute() for d in bundle.get('created_dirs', []))

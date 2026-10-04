@@ -475,10 +475,10 @@ else: sys.exit(2)
     def test_summary_names_themes_and_only_asks_about_an_executable_to_pin(self):
         from herdr_electrified.cli import summary
         exe = {'path': '/b/herdr', 'sha256': 'x'}
-        result = {'bundle': '0.4.0', 'agents': ['claude', 'codex', 'ghostty'], 'targets': [
+        result = {'bundle': '0.4.0', 'agents': ['claude', 'codex', 'ghostty', 'opencode'], 'targets': [
             {'path': '/h/c.toml', 'component': 'herdr', 'change': 'changed', 'conflicts': [], 'executable': exe, 'version': 'herdr 0.8.2', 'confirmation_required': False}]}
         text = summary(result, io.StringIO())
-        self.assertIn('Themes: Claude Code, Codex, Ghostty', text)
+        self.assertIn('Themes: Claude Code, Codex, Ghostty, OpenCode', text)
         self.assertNotIn('Detected', text)
         self.assertNotIn('/b/herdr', text)
         self.assertIn("Untouched: stock herdr and codex binaries, other terminals' settings, your shell profiles. Undo: herdr-electrified undo", text)

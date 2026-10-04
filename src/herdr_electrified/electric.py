@@ -154,7 +154,13 @@ def detect(codex_home):
         agents.add('claude')
     if ghostty_installed(path):
         agents.add('ghostty')
+    if shutil.which('opencode', path=path) or opencode_config().is_dir():
+        agents.add('opencode')
     return agents
+
+
+def opencode_config():
+    return Path(os.environ.get('XDG_CONFIG_HOME') or str(Path.home() / '.config')) / 'opencode'
 
 
 def ghostty_config():
@@ -292,7 +298,8 @@ def targets(root, config, codex_home, agents=('codex',)):
     for directory in (commands, zdotdir):
         if directory.resolve() != home.resolve() / '.local/share/herdr-electrified' / directory.name:
             raise ValueError('Electric command directory must not redirect through symlinks')
-    for path in [codex_home / 'themes/herdr-electric.tmTheme', bin_dir / 'codex-electric', bin_dir / 'herdr-electric', commands / 'codex', zdotdir / '.zshenv']:
+    for path in [codex_home / 'themes/herdr-electric.tmTheme', bin_dir / 'codex-electric', bin_dir / 'herdr-electric', commands / 'codex', zdotdir / '.zshenv',
+                 opencode_config() / 'themes/herdr-electrified.json']:
         if path.is_symlink():
             raise ValueError(f'Electric target must not be a symlink: {path}')
     codex = '#!/bin/sh\nexport CODEX_HOME=' + shlex.quote(str(codex_home)) + '\nexport CODEX_HERDR_REFERENCE_UI=1\nexec ' + shlex.quote(str(root / 'codex/bin/codex')) + ' "$@"\n'
@@ -301,6 +308,12 @@ def targets(root, config, codex_home, agents=('codex',)):
     path = ('export PATH=' + shlex.quote(str(commands)) + ':"$PATH"\nunset HERDR_ELECTRIFIED_ZDOTDIR\n'
             'if [ -n "${ZDOTDIR+x}" ]; then export HERDR_ELECTRIFIED_ZDOTDIR="$ZDOTDIR"; fi\n'
             'export ZDOTDIR=' + shlex.quote(str(zdotdir)) + '\n') if 'codex' in agents else ''
+    # OpenCode loads themes only from its own config dir, but layers these two files over the user's
+    # settings, so the theme is selected (and the Build accent set) only inside Herdr Electric panes.
+    opencode = Path(config).parent / 'opencode'
+    if 'opencode' in agents:
+        path += ('export OPENCODE_TUI_CONFIG=' + shlex.quote(str(opencode / 'tui.json')) + '\n'
+                 'export OPENCODE_CONFIG=' + shlex.quote(str(opencode / 'opencode.json')) + '\n')
     herdr = '#!/bin/sh\nunset HERDR_SOCKET_PATH HERDR_CLIENT_SOCKET_PATH HERDR_SESSION CLAUDE_CODE_CHILD_SESSION\n' + path + 'export HERDR_CONFIG_PATH=' + shlex.quote(str(config)) + '\nexec ' + shlex.quote(str(root / 'herdr')) + ' --session herdr-electrified "$@"\n'
     files = {c.canonical(bin_dir / 'herdr-electric'): herdr}
     if 'codex' in agents:
@@ -310,6 +323,10 @@ def targets(root, config, codex_home, agents=('codex',)):
                   c.canonical(zdotdir / '.zshenv'): ZSHENV.replace('@COMMANDS@', shlex.quote(str(commands)))}
     if 'ghostty' in agents:
         files[c.canonical(Path(config).parent / 'ghostty.conf')] = c.files('herdr_electrified').joinpath('data/ghostty.conf').read_text()
+    if 'opencode' in agents:
+        files |= {c.canonical(opencode_config() / 'themes/herdr-electrified.json'): c.files('herdr_electrified').joinpath('data/opencode.json').read_text(),
+                  c.canonical(opencode / 'tui.json'): '{\n  "$schema": "https://opencode.ai/tui.json",\n  "theme": "herdr-electrified"\n}\n',
+                  c.canonical(opencode / 'opencode.json'): '{\n  "$schema": "https://opencode.ai/config.json",\n  "agent": {\n    "build": {\n      "color": "#b481d4"\n    }\n  }\n}\n'}
     return files
 
 

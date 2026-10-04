@@ -367,7 +367,7 @@ def main(argv=None):
 
 COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty windows',
               'claude-theme': 'Claude Code', 'claude-settings': 'Claude Code', 'claude-statusline': 'Claude Code'}
-THEMES = {'claude': 'Claude Code', 'codex': 'Codex', 'ghostty': 'Ghostty'}
+THEMES = {'claude': 'Claude Code', 'codex': 'Codex', 'ghostty': 'Ghostty', 'opencode': 'OpenCode'}
 
 
 def component(row):

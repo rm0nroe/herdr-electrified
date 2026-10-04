@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "herdr-electrified"
-version = "1.0.4"
+version = "1.0.5"
 description = "Reversible supported Herdr appearance settings"
 readme = "README.md"
 license = "Apache-2.0 AND MIT"

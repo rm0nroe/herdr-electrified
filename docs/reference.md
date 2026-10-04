@@ -144,6 +144,14 @@ is not rewritten. Stop and restart your own Electric session when changing the
 bundle. The installer does not restart running sessions or request reloads from
 stock sessions.
 
+OpenCode reads custom themes only from its own config directory, so Electric adds
+`herdr-electrified.json` to `${XDG_CONFIG_HOME:-~/.config}/opencode/themes`, where it
+only appears in OpenCode's theme list. The `herdr-electric` launcher sets
+`OPENCODE_TUI_CONFIG` and `OPENCODE_CONFIG` to two files beside the Electric config
+that select that theme and the Build accent; OpenCode layers them over your global
+settings, so only OpenCode in an Electric pane changes. A project's own `tui.json`
+still wins over the theme selection. Undo removes all three files.
+
 ## Removing the plugin after undo
 
 Undo removes the `herdr-electric` launcher. If you already ran undo, remove the

@@ -4,7 +4,7 @@
 
 # Herdr Electrified
 
-A reversible Electric look for Herdr, Codex, Claude Code and Ghostty. The
+A reversible Electric look for Herdr, Codex, Claude Code, OpenCode and Ghostty. The
 Electric bundle adds custom Herdr and Codex renderers: pane inset, tab
 separators, a compact composer, pink markers, and readable code surfaces while
 streaming. A settings-only option styles stock Herdr without the bundle.
@@ -16,14 +16,14 @@ streaming. A settings-only option styles stock Herdr without the bundle.
 | Herdr plugin | Preview, check and undo actions from Herdr's menu |
 
 With Ghostty installed, both install options also add the Ghostty appearance
-and font. When Claude Code is present, Electric also installs the Claude theme.
+and font. When Claude Code or OpenCode is present, Electric also installs its theme.
 
 ## Requirements
 
 - macOS arm64. Linux, Windows and Intel Macs are unsupported.
 - Git and [uv](https://docs.astral.sh/uv/). uv provides Python 3.12; no Rust,
   Zig or Xcode needed.
-- Codex and Claude Code are optional and keep their own sign-in.
+- Codex, Claude Code and OpenCode are optional and keep their own sign-in.
 
 Electric is verified on macOS 26.6 and 26.5.2 (and with Claude Code only on
 macOS 27.0). The settings preset and plugin are verified with stock Herdr 0.8.2
@@ -34,7 +34,7 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.4
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.5
 herdr-electrified install
 ```
 
@@ -55,8 +55,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.4/herdr-electrified-0.4.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.4/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.5/herdr-electrified-0.4.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.5/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.4.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.4.0-macos-arm64.tar.gz
@@ -90,6 +90,9 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.4.0-macos-arm64
   mid-stream duplicated the answer on resize.
 - **Claude Code** (when `claude` is on PATH, `CLAUDE_CONFIG_DIR` is set, or
   `~/.claude` exists): the Claude theme.
+- **OpenCode** (when `opencode` is on PATH or `~/.config/opencode` exists): the
+  OpenCode theme in `~/.config/opencode/themes`, selected (with a mauve Build
+  accent) only inside Electric panes. Your own OpenCode settings are not edited.
 - **Ghostty** (when installed): an appearance include (Catppuccin Mocha, the
   Nerd Font, small padding) in the Ghostty config, plus the font in
   `~/Library/Fonts`. Keybindings and behavior are not touched. Reload Ghostty
@@ -107,7 +110,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.4
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.5
 herdr-electrified install --settings-only
 ```
 
@@ -148,7 +151,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.4 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.5 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.
@@ -168,8 +171,7 @@ Run its actions from Herdr's plugin menu. Output goes to
   not been established. Electric Codex shows "herdr-electrified build" in its
   header so it is not mistaken for OpenAI's release.
 - The bundled Herdr reports the same `--version` as stock Herdr 0.8.2.
-- OpenCode is out of scope. The Claude statusline has not been captured in a
-  signed-in session yet.
+- The Claude statusline has not been captured in a signed-in session yet.
 - A single automatic Herdr tab can omit its title by design; a named tab shows
   it.
 
