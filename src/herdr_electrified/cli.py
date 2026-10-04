@@ -395,8 +395,8 @@ def summary(result, stream=sys.stdout, written=False):
             lines.extend([paint('31', f"Conflicts in {r['path']}: " + ', '.join(r['conflicts'])), r['diff']])
         if r.get('instruction'):
             lines.append(r['instruction'])
-    # After writing, only reload instructions still apply; the settings.json formatting note was a preview caveat.
-    lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and not (written and r.get('component') == 'claude-settings')))
+    # After writing, outcome() gives the Ghostty reload as a next step, and the settings.json formatting note was a preview caveat.
+    lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and not (written and r.get('component') in ('claude-settings', 'ghostty-config'))))
     if rows and not written:
         lines.append('Untouched: stock herdr and codex, your shell profiles. Undo any time: herdr-electrified undo')
     return '\n'.join(lines)
@@ -411,8 +411,12 @@ def outcome(result, dry_run):
     if not saved:
         return summary(result)
     lines = [summary(result, written=True), f"Done: {saved} file{'s' * (saved != 1)} written. Undo: herdr-electrified undo"]
-    if result.get('bundle'):
-        lines.append('Next: run herdr-electric from a new terminal window (not inside a Herdr pane).')
+    # Either the include or the owned ghostty.conf it points at; an upgrade can change only the latter.
+    ghostty = any(r.get('saved') and (r.get('component') == 'ghostty-config' or r['path'].endswith('/ghostty.conf')) for r in result['targets'])
+    steps = (['reload Ghostty (cmd+shift+,; restart it once if fonts were installed)'] if ghostty else []) + \
+            (['run herdr-electric from a new terminal window (not inside a Herdr pane)'] if result.get('bundle') else [])
+    if steps:
+        lines.append('Next: ' + ', then '.join(steps) + '.')
     return '\n'.join(lines)
 
 

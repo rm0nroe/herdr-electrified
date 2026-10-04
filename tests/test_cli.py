@@ -443,6 +443,19 @@ else: sys.exit(2)
         self.assertNotIn('+++', text)
         self.assertNotIn('\033[', text)
 
+    def test_done_says_to_reload_ghostty_whenever_a_ghostty_file_was_written(self):
+        from herdr_electrified.cli import outcome
+        reload = 'reload Ghostty (cmd+shift+,; restart it once if fonts were installed)'
+        def row(path, component='electric-file', **extra):
+            return {'path': path, 'component': component, 'change': 'changed', 'saved': True, **extra}
+        upgrade = outcome({'bundle': '0.4.0', 'targets': [row('/h/.config/herdr-electrified/electric/ghostty.conf')]}, False)
+        self.assertIn(f'Next: {reload}, then run herdr-electric from a new terminal window', upgrade)
+        notice = 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'
+        settings = outcome({'targets': [row('/h/.config/ghostty/config.ghostty', 'ghostty-config', notice=notice)]}, False)
+        self.assertIn(f'Next: {reload}.', settings)
+        self.assertNotIn(notice, settings)
+        self.assertNotIn('Ghostty', outcome({'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}, False))
+
     def test_unanswered_prompt_times_out_without_writing(self):
         class TTY(io.StringIO):
             def isatty(self): return True
