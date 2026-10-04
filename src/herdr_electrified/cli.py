@@ -235,6 +235,7 @@ def execute(args):
         if answer not in ('y', 'yes'):
             result['notice'] = 'declined; nothing written'
             return result, 0
+        args.prompted = True  # the summary is already on screen
     for row, (path, before, after, updated, binary, kind) in zip(result['targets'], plans):
         if row['confirmation_required']:
             row['diagnostics'] = c.validate(binary, before, after)
@@ -296,6 +297,7 @@ def execute(args):
                 data[record]['fonts'] = fonts
                 c.save(receipt, data)
             electric.install_fonts(font_root, data[record]['fonts'], save_fonts)
+            result['fonts_installed'] = True
         if args.command == 'undo' and not data['targets'] and 'electric' in data:
             # Clean up first: if it fails, the record stays and a retried undo finishes the job.
             electric.cleanup(data['electric'])
@@ -335,7 +337,7 @@ def main(argv=None):
         parser.error('--settings-only is only valid for install')
     if args.command == 'install' and args.electric:
         parser.error('install fetches its own bundle; use apply --electric for a local one')
-    args.ghostty, args.fonts, args.writing = False, None, False
+    args.ghostty, args.fonts, args.writing, args.prompted = False, None, False, False
     try:
         if args.command == 'install':
             args.command = 'apply'
@@ -357,14 +359,20 @@ def main(argv=None):
     if args.json:
         print(json.dumps(result, indent=2))
     elif args.command == 'apply' and not args.diff:
-        print(outcome(result, args.dry_run))
+        print(outcome(result, args))
     else:
         print(render(result))
     return code
 
 
-COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty',
+COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty windows',
               'claude-theme': 'Claude Code', 'claude-settings': 'Claude Code', 'claude-statusline': 'Claude Code'}
+THEMES = {'claude': 'Claude Code', 'codex': 'Codex', 'ghostty': 'Ghostty'}
+
+
+def component(row):
+    # Electric owns the appearance file the Ghostty include points at; it only affects Ghostty windows.
+    return 'Ghostty windows' if row['path'].endswith('/ghostty.conf') else COMPONENTS[row.get('component', 'herdr')]
 
 
 def summary(result, stream=sys.stdout, written=False):
@@ -377,46 +385,57 @@ def summary(result, stream=sys.stdout, written=False):
     lines.extend(result[key] for key in ('pending', 'notice') if result.get(key))
     lines.append(paint('1', 'herdr-electrified ' + __version__) + (f" · Electric bundle {result['bundle']} verified" if result.get('bundle') else ''))
     if result.get('agents'):
-        lines.append('Detected: ' + ', '.join(result['agents']))
+        lines.append('Themes: ' + ', '.join(THEMES[a] for a in result['agents']))
     rows = [r for r in result.get('targets', []) if (r.get('saved') if written else r.get('change', 'unchanged') != 'unchanged')]
     lines.append(('Wrote:' if written else 'Will write:') if rows else 'Nothing to change; already applied.')
     for label in dict.fromkeys(COMPONENTS.values()):
-        group = [r for r in rows if COMPONENTS[r.get('component', 'herdr')] == label]
+        group = [r for r in rows if component(r) == label]
         if group:
             lines.append('  ' + label)
         for r in group:
             path = '~/' + r['path'][len(home):] if r['path'].startswith(home) else r['path']
-            lines.append('    ' + paint({'new': '32', 'removed': '31'}.get(r.get('change'), '33'), r.get('change', 'changed').ljust(8)) + path)
+            # Bold, not yellow: yellow is unreadable on a light terminal background.
+            lines.append('    ' + paint({'new': '32', 'removed': '31'}.get(r.get('change'), '1'), r.get('change', 'changed').ljust(8)) + path)
     for r in result.get('targets', []):
-        if r.get('executable') and rows and not written:
-            lines.append(f"Herdr executable: {r['executable']['path']}" + (f" ({r['version']})" if r.get('version') else '')
-                         + (', ' + r['identity'] if r.get('confirmation_required') else ''))
+        if r.get('executable') and (r.get('confirmation_required') or 'old_identity' in r) and not written:
+            lines.append(f"Herdr executable to pin: {r['executable']['path']}" + (f" ({r['version']})" if r.get('version') else ''))
         if r.get('conflicts'):
             lines.extend([paint('31', f"Conflicts in {r['path']}: " + ', '.join(r['conflicts'])), r['diff']])
         if r.get('instruction'):
             lines.append(r['instruction'])
-    # After writing, outcome() gives the Ghostty reload as a next step, and the settings.json formatting note was a preview caveat.
-    lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and not (written and r.get('component') in ('claude-settings', 'ghostty-config'))))
+    # outcome() gives the Ghostty reload as a terminal-aware next step; the settings.json formatting note is a preview caveat.
+    lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and r.get('component') != 'ghostty-config'
+                               and not (written and r.get('component') == 'claude-settings')))
     if rows and not written:
-        lines.append('Untouched: stock herdr and codex, your shell profiles. Undo any time: herdr-electrified undo')
+        lines.append("Untouched: stock herdr and codex binaries, other terminals' settings, your shell profiles. Undo: herdr-electrified undo")
     return '\n'.join(lines)
 
 
-def outcome(result, dry_run):
-    if dry_run or 'error' in result:
+def outcome(result, args):
+    if args.dry_run or 'error' in result:
         return summary(result)
     if result.get('notice') == 'declined; nothing written':
         return 'Declined; nothing written.'
     saved = sum(1 for r in result.get('targets', []) if r.get('saved'))
-    if not saved:
+    fonts = result.get('fonts_installed')
+    if not saved and not fonts:
         return summary(result)
-    lines = [summary(result, written=True), f"Done: {saved} file{'s' * (saved != 1)} written. Undo: herdr-electrified undo"]
-    # Either the include or the owned ghostty.conf it points at; an upgrade can change only the latter.
-    ghostty = any(r.get('saved') and (r.get('component') == 'ghostty-config' or r['path'].endswith('/ghostty.conf')) for r in result['targets'])
-    steps = (['reload Ghostty (cmd+shift+,; restart it once if fonts were installed)'] if ghostty else []) + \
-            (['run herdr-electric from a new terminal window (not inside a Herdr pane)'] if result.get('bundle') else [])
-    if steps:
-        lines.append('Next: ' + ', then '.join(steps) + '.')
+    lines = [] if args.prompted else [summary(result, written=True)]
+    lines.append(f"Wrote {saved} file{'s' * (saved != 1)}" + (' and installed the font' if fonts else '') + '. Undo: herdr-electrified undo')
+    ghostty = fonts or any(r.get('saved') and component(r) == 'Ghostty windows' for r in result['targets'])
+    restart = 'restart Ghostty once so it loads the new font' if fonts else 'reload Ghostty (cmd+shift+,)'
+    run = 'run herdr-electric from a new {} window (not inside a Herdr pane)'
+    if os.environ.get('TERM_PROGRAM') == 'ghostty':
+        steps = ([restart] if ghostty else []) + ([run.format('Ghostty')] if result.get('bundle') else [])
+        if steps:
+            lines.append('Next: ' + ', then '.join(steps) + '.')
+    else:
+        # Electric styles Ghostty only; elsewhere the terminal's own background shows through.
+        if result.get('bundle'):
+            lines.append('Next: ' + run.format('terminal') + '.')
+        if ghostty:
+            lines.append('Ghostty: ' + ('restart it once so it loads the new font.' if fonts else 'open Ghostty windows pick up the new look after cmd+shift+,.'))
+        lines.append("This terminal isn't styled by Electric; give it a dark background until v1.1.")
     return '\n'.join(lines)
 
 

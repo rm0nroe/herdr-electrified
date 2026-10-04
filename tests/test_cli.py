@@ -439,22 +439,54 @@ else: sys.exit(2)
             self.assertEqual(main(['apply', '--yes', '--herdr-bin', str(self.bin)]), 0)
         text = out.getvalue()
         self.assertIn('Wrote:\n  Herdr config\n    changed ~/config/herdr/config.toml', text)
-        self.assertIn('Done: 1 file written. Undo: herdr-electrified undo', text)
+        self.assertIn('Wrote 1 file. Undo: herdr-electrified undo', text)
         self.assertNotIn('+++', text)
         self.assertNotIn('\033[', text)
 
-    def test_done_says_to_reload_ghostty_whenever_a_ghostty_file_was_written(self):
+    def test_done_next_steps_follow_the_terminal_it_runs_in(self):
+        from types import SimpleNamespace
         from herdr_electrified.cli import outcome
-        reload = 'reload Ghostty (cmd+shift+,; restart it once if fonts were installed)'
+        args = SimpleNamespace(dry_run=False, prompted=True)
         def row(path, component='electric-file', **extra):
             return {'path': path, 'component': component, 'change': 'changed', 'saved': True, **extra}
-        upgrade = outcome({'bundle': '0.4.0', 'targets': [row('/h/.config/herdr-electrified/electric/ghostty.conf')]}, False)
-        self.assertIn(f'Next: {reload}, then run herdr-electric from a new terminal window', upgrade)
+        upgrade = {'bundle': '0.4.0', 'targets': [row('/h/.config/herdr-electrified/electric/ghostty.conf')]}
+        def run(result, terminal):
+            with patch.dict(os.environ, {'TERM_PROGRAM': terminal} if terminal else {}, clear=True):
+                return outcome(result, args)
+        self.assertEqual(run(upgrade, 'ghostty'), 'Wrote 1 file. Undo: herdr-electrified undo\n'
+                         'Next: reload Ghostty (cmd+shift+,), then run herdr-electric from a new Ghostty window (not inside a Herdr pane).')
+        note = "This terminal isn't styled by Electric; give it a dark background until v1.1."
+        for terminal in ('iTerm.app', None):
+            self.assertEqual(run(upgrade, terminal), 'Wrote 1 file. Undo: herdr-electrified undo\n'
+                             'Next: run herdr-electric from a new terminal window (not inside a Herdr pane).\n'
+                             'Ghostty: open Ghostty windows pick up the new look after cmd+shift+,.\n' + note)
+        self.assertNotIn('Ghostty', run({'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}, 'iTerm.app'))
+        fonts = dict(upgrade, fonts_installed=True)
+        self.assertIn('installed the font', run(fonts, 'ghostty'))
+        self.assertIn('Next: restart Ghostty once so it loads the new font, then run herdr-electric', run(fonts, 'ghostty'))
+        self.assertIn('Ghostty: restart it once so it loads the new font.', run(fonts, 'iTerm.app'))
         notice = 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'
-        settings = outcome({'targets': [row('/h/.config/ghostty/config.ghostty', 'ghostty-config', notice=notice)]}, False)
-        self.assertIn(f'Next: {reload}.', settings)
-        self.assertNotIn(notice, settings)
-        self.assertNotIn('Ghostty', outcome({'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}, False))
+        settings = run({'targets': [row('/h/.config/ghostty/config.ghostty', 'ghostty-config', notice=notice)]}, 'ghostty')
+        self.assertEqual(settings, 'Wrote 1 file. Undo: herdr-electrified undo\nNext: reload Ghostty (cmd+shift+,).')
+        # Without a prompt (--yes), the written files are listed once.
+        listed = outcome(upgrade, SimpleNamespace(dry_run=False, prompted=False))
+        self.assertIn('Wrote:\n  Ghostty windows\n    changed /h/.config/herdr-electrified/electric/ghostty.conf', listed)
+
+    def test_summary_names_themes_and_only_asks_about_an_executable_to_pin(self):
+        from herdr_electrified.cli import summary
+        exe = {'path': '/b/herdr', 'sha256': 'x'}
+        result = {'bundle': '0.4.0', 'agents': ['claude', 'codex', 'ghostty'], 'targets': [
+            {'path': '/h/c.toml', 'component': 'herdr', 'change': 'changed', 'conflicts': [], 'executable': exe, 'version': 'herdr 0.8.2', 'confirmation_required': False}]}
+        text = summary(result, io.StringIO())
+        self.assertIn('Themes: Claude Code, Codex, Ghostty', text)
+        self.assertNotIn('Detected', text)
+        self.assertNotIn('/b/herdr', text)
+        self.assertIn("Untouched: stock herdr and codex binaries, other terminals' settings, your shell profiles. Undo: herdr-electrified undo", text)
+        result['targets'][0]['confirmation_required'] = True
+        self.assertIn('Herdr executable to pin: /b/herdr (herdr 0.8.2)', summary(result, io.StringIO()))
+        result['targets'].append({'path': '/h/.config/ghostty/config.ghostty', 'component': 'ghostty-config', 'change': 'new', 'conflicts': [],
+                                  'notice': 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'})
+        self.assertNotIn('Reload Ghostty', summary(result, io.StringIO()))
 
     def test_unanswered_prompt_times_out_without_writing(self):
         class TTY(io.StringIO):
@@ -491,7 +523,7 @@ else: sys.exit(2)
         with contextlib.redirect_stderr(err):
             code, result = self.run_cli('apply', env=triple, stdin=TTY('y\n'))
             self.assertEqual(code, 0, result)
-            self.assertIn(', hint unconfirmed', err.getvalue())
+            self.assertIn('Herdr executable to pin:', err.getvalue())
             self.assertIn('pin this Herdr executable? [y/N]', err.getvalue())
             row = result['targets'][0]
             self.assertEqual((row['identity'], row['confirmation_required']), ('pinned', False))

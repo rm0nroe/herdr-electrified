@@ -34,7 +34,7 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.3
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.4
 herdr-electrified install
 ```
 
@@ -55,8 +55,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.3/herdr-electrified-0.4.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.3/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.4/herdr-electrified-0.4.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.0.4/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.4.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.4.0-macos-arm64.tar.gz
@@ -107,7 +107,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.3
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.0.4
 herdr-electrified install --settings-only
 ```
 
@@ -148,7 +148,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.3 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.0.4 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.
