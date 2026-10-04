@@ -54,6 +54,10 @@ class Electric(unittest.TestCase):
         electric_config = self.root / 'config/herdr-electrified/electric/config.toml'
         self.assertEqual(self.target.read_bytes(), before)
         self.assertIn('#FF7BC2', electric_config.read_text())
+        # Herdr Electric paints pane background, text and the 16 basic colors itself.
+        import tomllib
+        terminal = tomllib.loads(electric_config.read_text())['theme']['terminal']
+        self.assertEqual((terminal['background'], terminal['foreground'], len(terminal['palette'])), ('#11111b', '#cdd6f4', 16))
         self.assertIn('HERDR_CONFIG_PATH=' + str(electric_config.resolve()), (self.root / '.local/bin/herdr-electric').read_text())
         self.assertEqual(self.run_cli('check')[0], 0)
         self.assertEqual(self.target.read_bytes(), before)

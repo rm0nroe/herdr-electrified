@@ -73,7 +73,13 @@ unknown. Check the appearance visually to confirm the running pane repainted.
 The settings-only preset includes the supported palette, sidebar widths, two-line
 cards, scrollbars and agent labels. It contains no quota rows, onboarding settings,
 hidden-control options or custom renderer keys. Electric additionally enables
-the custom renderer settings carried by its patched Herdr binary. Existing per-agent row overrides
+the custom renderer settings carried by its patched Herdr binary, including
+`[theme.terminal]`: the pane background (`#11111b`), text (`#cdd6f4`) and 16 basic
+colors (Ghostty's Catppuccin Mocha) that Herdr Electric paints itself and reports
+to programs that ask (OSC 10, 11 and 4), with a dark color scheme. While a client
+is attached it also sets the host terminal's background and cursor color (OSC 11
+and 12) and resets both (OSC 111 and 112) on detach or exit. Herdr reads it
+at startup, so restart Herdr Electric after changing it. Existing per-agent row overrides
 are preserved and reported as partial coverage.
 
 ## Claude theme
@@ -168,5 +174,5 @@ Undo removes the `herdr-electric` launcher. If you already ran undo, remove the
 plugin with the bundled Herdr, which reads the same plugin list:
 
 ```sh
-~/.local/share/herdr-electrified/bundles/herdr-electrified-0.4.0-macos-arm64/herdr plugin uninstall herdr-electrified
+~/.local/share/herdr-electrified/bundles/herdr-electrified-0.5.0-macos-arm64/herdr plugin uninstall herdr-electrified
 ```

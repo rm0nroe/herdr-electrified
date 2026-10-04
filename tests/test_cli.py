@@ -374,6 +374,7 @@ else: sys.exit(2)
         code, result = self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))
         self.assertEqual(code, 1, result)
         self.assertIn('new or worsened', result['error'])
+        self.assertIn('run herdr-electrified install', result['error'])
         self.assertEqual(self.target.read_bytes(), before)
         self.assertFalse(self.ledger.parent.exists())
 
@@ -445,11 +446,13 @@ else: sys.exit(2)
                 return outcome(result, args)
         self.assertEqual(run(upgrade, 'ghostty'), 'Wrote 1 file. Undo: herdr-electrified undo\n'
                          'Next: reload Ghostty (cmd+shift+,), then run herdr-electric from a new Ghostty window (not inside a Herdr pane).')
-        note = "This terminal isn't styled by Electric; give it a dark background until v1.1."
+        # Herdr Electric paints its own pane colors, so no terminal background advice with the bundle.
         for terminal in ('iTerm.app', None):
             self.assertEqual(run(upgrade, terminal), 'Wrote 1 file. Undo: herdr-electrified undo\n'
                              'Next: run herdr-electric from a new terminal window (not inside a Herdr pane).\n'
-                             'Ghostty: open Ghostty windows pick up the new look after cmd+shift+,.\n' + note)
+                             'Ghostty: open Ghostty windows pick up the new look after cmd+shift+,.')
+        stock = run({'targets': [row('/h/.config/herdr/config.toml', 'herdr')]}, 'iTerm.app')
+        self.assertEqual(stock, "Wrote 1 file. Undo: herdr-electrified undo\nThis terminal isn't styled by Electric; give it a dark background.")
         self.assertNotIn('Ghostty', run({'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}, 'iTerm.app'))
         fonts = dict(upgrade, fonts_installed=True)
         self.assertIn('installed the font', run(fonts, 'ghostty'))

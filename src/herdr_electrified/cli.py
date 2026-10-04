@@ -436,12 +436,13 @@ def outcome(result, args):
         if steps:
             lines.append('Next: ' + ', then '.join(steps) + '.')
     else:
-        # Electric styles Ghostty only; elsewhere the terminal's own background shows through.
         if result.get('bundle'):
             lines.append('Next: ' + run.format('terminal') + '.')
         if ghostty:
             lines.append('Ghostty: ' + ('restart it once so it loads the new font.' if fonts else 'open Ghostty windows pick up the new look after cmd+shift+,.'))
-        lines.append("This terminal isn't styled by Electric; give it a dark background until v1.1.")
+        if not result.get('bundle'):
+            # Herdr Electric paints its own panes; stock Herdr shows this terminal's background.
+            lines.append("This terminal isn't styled by Electric; give it a dark background.")
     return '\n'.join(lines)
 
 

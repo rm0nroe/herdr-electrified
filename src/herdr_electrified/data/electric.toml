@@ -11,6 +11,14 @@ surface0 = "#1e1e2e"
 surface_dim = "#313244"
 overlay1 = "#6c7086"
 
+# Herdr Electric paints pane content itself, so panes look the same in any terminal:
+# Electric's Ghostty background and text, and Ghostty's built-in Catppuccin Mocha palette.
+[theme.terminal]
+background = "#11111b"
+foreground = "#cdd6f4"
+palette = ["#45475a", "#f38ba8", "#a6e3a1", "#f9e2af", "#89b4fa", "#f5c2e7", "#94e2d5", "#a6adc8",
+           "#585b70", "#f37799", "#89d88b", "#ebd391", "#74a8fc", "#f2aede", "#6bd7ca", "#bac2de"]
+
 [ui]
 sidebar_width = 31
 sidebar_max_width = 31

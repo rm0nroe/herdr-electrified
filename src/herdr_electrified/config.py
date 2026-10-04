@@ -459,7 +459,8 @@ def validate(binary, before, after, kind='herdr'):
             else:
                 raise ValueError(f'native validation failed: {name}: ' + '\n'.join(lines))
     if diagnostics[1] - diagnostics[0] or (before is None and diagnostics[1]):
-        raise ValueError('new or worsened diagnostics: ' + '; '.join(sorted(diagnostics[1] - diagnostics[0])))
+        raise ValueError('new or worsened diagnostics: ' + '; '.join(sorted(diagnostics[1] - diagnostics[0]))
+                         + '. If you just upgraded herdr-electrified, run herdr-electrified install')
     if identity(binary['path']) != binary:
         raise ValueError('executable changed during validation')
     return sorted(diagnostics[1])
