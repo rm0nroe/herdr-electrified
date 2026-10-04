@@ -6,6 +6,7 @@ from pathlib import Path
 import unittest
 import unittest.mock
 import test_cli
+from herdr_electrified import electric
 
 
 class Electric(unittest.TestCase):
@@ -47,6 +48,8 @@ class Electric(unittest.TestCase):
         self.assertIn('CODEX_HERDR_REFERENCE_UI=1', launcher.read_text())
         # Any -c override forces Codex off the shared background server.
         self.assertNotIn(' -c ', launcher.read_text())
+        # The pinned download must pass the bundle version check.
+        self.assertIn(electric.BUNDLE.split('-')[2], electric.VERSIONS)
         self.assertTrue(launcher.stat().st_mode & 0o100)
         electric_config = self.root / 'config/herdr-electrified/electric/config.toml'
         self.assertEqual(self.target.read_bytes(), before)

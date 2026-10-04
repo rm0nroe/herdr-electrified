@@ -23,7 +23,8 @@ GHOSTTY_APPS = ('/Applications', '~/Applications')
 # Pinned at release: install trusts only these exact archives.
 BUNDLE = 'herdr-electrified-0.4.0-macos-arm64'
 BUNDLE_URL = f'https://github.com/rm0nroe/herdr-electrified/releases/download/v{__version__}/{BUNDLE}.tar.gz'
-BUNDLE_SHA = '1ef0c3f12d9ff8a25d5b977d16c12ab53380ef08dd09f80c1d03e9d2367a61fb'
+VERSIONS = ('0.1.0', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.4.0')
+BUNDLE_SHA = 'a913fd03063cbf9c13fd50b3d84037b3556991e08f9301ca109691992640175c'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
 FONT_SHA = '04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf'
 FONTS = [f'JetBrainsMonoNerdFontMono-{style}.ttf' for style in ('Regular', 'Bold', 'Italic', 'BoldItalic')]
@@ -105,7 +106,7 @@ def verify(directory):
     manifest = json.loads((root / 'manifest.json').read_text())
     if not isinstance(manifest, dict):
         raise ValueError('invalid Electric manifest')
-    if manifest.get('version') not in ('0.1.0', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0') or manifest.get('target') != 'aarch64-apple-darwin':
+    if manifest.get('version') not in VERSIONS or manifest.get('target') != 'aarch64-apple-darwin':
         raise ValueError('unsupported Electric bundle version or target')
     files = manifest.get('files')
     if not isinstance(files, dict) or not REQUIRED <= files.keys():

@@ -8,6 +8,11 @@ these build tools. Set `ZIG` to the Zig executable when it is not on PATH.
 python3.12 scripts/build-electric.py /path/to/new-build-directory
 ```
 
+Release archives come from `.github/workflows/build-electric.yml`, which runs this
+script on a GitHub-hosted `macos-26` runner with Xcode 26.2 and attests the archive's
+build provenance. Check a download with
+`gh attestation verify <archive> --repo rm0nroe/herdr-electrified`.
+
 The script fetches pinned public source revisions, applies the checked-in patches,
 builds both native executables (Codex with 16 codegen units at opt-level 2 so
 the final thin-LTO link fits in memory), and verifies the official Codex helper archive

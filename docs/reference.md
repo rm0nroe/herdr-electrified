@@ -147,5 +147,5 @@ Undo removes the `herdr-electric` launcher. If you already ran undo, remove the
 plugin with the bundled Herdr, which reads the same plugin list:
 
 ```sh
-~/.local/share/herdr-electrified/bundles/herdr-electrified-0.3.0-macos-arm64/herdr plugin uninstall herdr-electrified
+~/.local/share/herdr-electrified/bundles/herdr-electrified-0.4.0-macos-arm64/herdr plugin uninstall herdr-electrified
 ```
