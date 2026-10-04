@@ -48,5 +48,5 @@ notices, native dependency notices, and MPL component sources. See
 
 Run the installer suite with `PYTHONPATH=src python -m unittest discover -s tests -v`.
 `tests/native_check.py` accepts the built Herdr binary for config validation.
-Native session, rendering, clean-machine, and public-install evidence are separate
-acceptance gates recorded in [parity](parity.md).
+Native session, rendering, clean-machine, and public-install checks are manual
+and not part of this suite.

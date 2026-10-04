@@ -9,6 +9,9 @@ requires one interactive confirmation, or `--yes` for scripted runs. An unpinned
 scripted target requires `--herdr-bin` when a write is needed. An already-styled,
 unpinned target is a no-op without executable selection. Conflicting managed keys require an
 interactive review of the new diff. `--json` returns structured output.
+The confirmation lists the files it will write, grouped by component; `--diff`
+shows full diffs instead, and conflicting targets always show theirs. With no
+answer in 5 minutes, or on Ctrl-C before writing, nothing is written.
 
 For settings-only installs, the target is `--herdr-config`, then
 `HERDR_CONFIG_PATH`, then the installed Herdr help output's default. Electric

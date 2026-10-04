@@ -66,6 +66,24 @@ class Install(unittest.TestCase):
         self.assertEqual(len(self.fetched), 1)
         self.assertEqual(self.ledger.read_bytes(), receipt)
 
+    def test_install_dry_run_caches_the_bundle_but_writes_no_config(self):
+        from herdr_electrified import electric
+        data = self.archive()
+        self.pin('BUNDLE_SHA', data)
+        self.serve({electric.BUNDLE_URL: data})
+        code, result = self.run_cli('install', '--dry-run')
+        self.assertEqual(code, 0, result)
+        self.assertIn('new', {row['change'] for row in result['targets']})
+        self.assertFalse((self.root / '.local/bin/herdr-electric').exists())
+        self.assertFalse(self.ledger.exists())
+
+    def test_download_past_its_deadline_leaves_nothing(self):
+        from herdr_electrified import electric
+        self.serve({'https://example.invalid/x': b'data'})
+        with self.assertRaisesRegex(ValueError, 'took over -1 min; nothing installed'):
+            electric.download('https://example.invalid/x', 'unused', self.root / 'dl', 'x', deadline=-1)
+        self.assertEqual(list((self.root / 'dl').iterdir()), [])
+
     def test_install_refuses_a_bundle_with_the_wrong_checksum(self):
         from herdr_electrified import electric
         self.serve({electric.BUNDLE_URL: self.archive()})

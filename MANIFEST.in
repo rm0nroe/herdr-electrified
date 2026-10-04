@@ -1,1 +1,1 @@
-include uv.lock tests/native_check.py docs/parity.md
+include uv.lock tests/native_check.py

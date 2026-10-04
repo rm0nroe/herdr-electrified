@@ -8,6 +8,8 @@ import shlex
 import shutil
 import socket
 import subprocess
+import sys
+import time
 import os
 import tarfile
 import tempfile
@@ -34,16 +36,26 @@ def store():
     return Path.home() / '.local/share/herdr-electrified'
 
 
-def download(url, sha, directory):
-    """Fetch into a temporary file beside its destination; nothing survives a checksum mismatch."""
+def download(url, sha, directory, label, deadline=600):
+    """Fetch into a temporary file beside its destination; nothing survives a checksum mismatch or the deadline."""
     directory.mkdir(parents=True, exist_ok=True)
     fd, name = tempfile.mkstemp(prefix='.download-', dir=directory)
     digest = hashlib.sha256()
+    start, progress = time.monotonic(), sys.stderr.isatty()
     try:
         with os.fdopen(fd, 'wb') as out, urlopen(url, timeout=60) as response:
+            total = (getattr(response, 'length', None) or 0) >> 20
+            received = 0
             while chunk := response.read(1 << 20):
+                if time.monotonic() - start > deadline:
+                    raise ValueError(f'downloading {label} took over {deadline // 60} min; nothing installed. Check the connection and retry')
                 digest.update(chunk)
                 out.write(chunk)
+                received += len(chunk)
+                if progress:
+                    print(f'\rDownloading {label}: {received >> 20}' + (f'/{total}' if total else '') + ' MB', end='', file=sys.stderr, flush=True)
+        if progress:
+            print(file=sys.stderr)
         if digest.hexdigest() != sha:
             raise ValueError(f'checksum mismatch for {url}; nothing installed')
         return Path(name)
@@ -57,7 +69,7 @@ def fetch_bundle():
     root = store() / 'bundles' / BUNDLE
     if root.exists():
         return root
-    archive = download(BUNDLE_URL, BUNDLE_SHA, root.parent)
+    archive = download(BUNDLE_URL, BUNDLE_SHA, root.parent, 'Electric bundle ' + BUNDLE.split('-')[2])
     staging = Path(tempfile.mkdtemp(prefix='.extract-', dir=root.parent))
     try:
         with tarfile.open(archive) as tar:
@@ -74,7 +86,7 @@ def fetch_fonts():
     root = store() / 'nerd-fonts-3.5.1'
     if all((root / 'fonts' / name).is_file() for name in FONTS):
         return root
-    archive = download(FONT_URL, FONT_SHA, root)
+    archive = download(FONT_URL, FONT_SHA, root, 'JetBrainsMono Nerd Font')
     staging = Path(tempfile.mkdtemp(prefix='.extract-', dir=root))
     try:
         with tarfile.open(archive) as tar:

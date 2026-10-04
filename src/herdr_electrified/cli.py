@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import select
 import shlex
 import shutil
 import subprocess
@@ -28,6 +29,19 @@ def python3_ok():
                                              capture_output=True, timeout=10).returncode == 0
     except (OSError, subprocess.TimeoutExpired):
         return False
+
+
+def ask(question, timeout=300):
+    """The lowercased answer, or None when nobody answers in time."""
+    print(question, end='', file=sys.stderr, flush=True)
+    try:
+        ready = select.select([sys.stdin], [], [], timeout)[0]
+    except (OSError, ValueError):
+        ready = True  # no file descriptor (test doubles): read directly
+    if not ready:
+        print(file=sys.stderr)
+        return None
+    return sys.stdin.readline().strip().lower()
 
 
 def execute(args):
@@ -66,6 +80,7 @@ def execute(args):
     result = {'targets': [], 'loaded': 'unknown', 'tier2': 'Electric bundle verified' if bundle else 'not selected', 'installed': 'CLI available'}
     if bundle:
         result['agents'] = sorted(agents)
+        result['bundle'] = manifest['version']
     fonts = data.get('electric', {}).get('fonts', []) + data.get('ghostty', {}).get('fonts', [])
     if fonts:
         result['fonts'] = electric.font_status(fonts)
@@ -195,6 +210,8 @@ def execute(args):
         if updated:
             updated['pin'] = binary
         plans.append((path, before, after, updated, binary, kind))
+    for row, (path, before, after, *_) in zip(result['targets'], plans):
+        row['change'] = 'unchanged' if before == after else 'new' if before is None else 'removed' if after is None else 'changed'
     if readonly:
         return result, 0
     conflicts = any(row['conflicts'] for row in result['targets'])
@@ -210,15 +227,19 @@ def execute(args):
     if (args.command == 'apply' and not args.yes) or needs_identity:
         if not sys.stdin.isatty():
             raise ValueError('confirmation requires a terminal; use --yes with explicit executable selection')
-        print(json.dumps(result, indent=2), file=sys.stderr)
-        print('Apply this diff and executable identity? [y/N] ', file=sys.stderr, end='')
-        if sys.stdin.readline().strip().lower() not in ('y', 'yes'):
+        print(render(result) if args.diff else summary(result, sys.stderr), file=sys.stderr)
+        answer = ask('Apply these changes and pin this Herdr executable? [y/N] ' if needs_identity else 'Apply these changes? [y/N] ')
+        if answer is None:
+            result['error'] = 'no answer in 5 min; nothing written'
+            return result, 1
+        if answer not in ('y', 'yes'):
             result['notice'] = 'declined; nothing written'
             return result, 0
     for row, (path, before, after, updated, binary, kind) in zip(result['targets'], plans):
         if row['confirmation_required']:
             row['diagnostics'] = c.validate(binary, before, after)
             row['validation'] = 'passed'
+    args.writing = True  # from here an interrupt can leave a journaled, recoverable write
     with c.locked(receipt):
         if c.load_receipt(receipt) != data:
             raise ValueError('receipt changed; retry with a fresh diff')
@@ -292,7 +313,8 @@ def main(argv=None):
     parser.add_argument('--version', action='version', version='herdr-electrified ' + __version__)
     parser.add_argument('command', choices=['install', 'apply', 'preview-apply', 'check', 'undo'])
     parser.add_argument('--settings-only', action='store_true', help='install: stock Herdr settings, no Electric bundle')
-    parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--dry-run', action='store_true', help='install or apply: show what would change, write nothing')
+    parser.add_argument('--diff', action='store_true', help='install or apply: show full diffs instead of the summary')
     parser.add_argument('--herdr-config')
     parser.add_argument('--herdr-bin')
     parser.add_argument('--electric', metavar='BUNDLE', help='opt in to a verified macOS arm64 Electric bundle')
@@ -307,13 +329,13 @@ def main(argv=None):
         parser.error('--electric is only valid for apply, preview-apply or check')
     if args.claude_statusline and args.command == 'undo':
         parser.error('--claude-statusline is only valid for install, apply, preview-apply or check')
-    if args.dry_run and args.command != 'apply':
-        parser.error('--dry-run is only valid for apply')
+    if args.dry_run and args.command not in ('install', 'apply'):
+        parser.error('--dry-run is only valid for install or apply')
     if args.settings_only and args.command != 'install':
         parser.error('--settings-only is only valid for install')
     if args.command == 'install' and args.electric:
         parser.error('install fetches its own bundle; use apply --electric for a local one')
-    args.ghostty, args.fonts = False, None
+    args.ghostty, args.fonts, args.writing = False, None, False
     try:
         if args.command == 'install':
             args.command = 'apply'
@@ -329,8 +351,69 @@ def main(argv=None):
         result, code = execute(args)
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         result, code = {'error': str(error), 'loaded': 'unknown'}, 1
-    print(json.dumps(result, indent=2) if args.json else render(result))
+    except KeyboardInterrupt:
+        print('\nInterrupted; run herdr-electrified check to see the state' if args.writing else '\nCancelled; nothing written', file=sys.stderr)
+        return 130
+    if args.json:
+        print(json.dumps(result, indent=2))
+    elif args.command == 'apply' and not args.diff:
+        print(outcome(result, args.dry_run))
+    else:
+        print(render(result))
     return code
+
+
+COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty',
+              'claude-theme': 'Claude Code', 'claude-settings': 'Claude Code', 'claude-statusline': 'Claude Code'}
+
+
+def summary(result, stream=sys.stdout, written=False):
+    """What apply will change (or changed), grouped by component; the full diff is behind --diff."""
+    color = stream.isatty() and not os.environ.get('NO_COLOR')
+    def paint(code, text):
+        return f'\033[{code}m{text}\033[0m' if color else text
+    home = str(Path.home().resolve()) + os.sep
+    lines = [result['error']] if 'error' in result else []
+    lines.extend(result[key] for key in ('pending', 'notice') if result.get(key))
+    lines.append(paint('1', 'herdr-electrified ' + __version__) + (f" · Electric bundle {result['bundle']} verified" if result.get('bundle') else ''))
+    if result.get('agents'):
+        lines.append('Detected: ' + ', '.join(result['agents']))
+    rows = [r for r in result.get('targets', []) if (r.get('saved') if written else r.get('change', 'unchanged') != 'unchanged')]
+    lines.append(('Wrote:' if written else 'Will write:') if rows else 'Nothing to change; already applied.')
+    for label in dict.fromkeys(COMPONENTS.values()):
+        group = [r for r in rows if COMPONENTS[r.get('component', 'herdr')] == label]
+        if group:
+            lines.append('  ' + label)
+        for r in group:
+            path = '~/' + r['path'][len(home):] if r['path'].startswith(home) else r['path']
+            lines.append('    ' + paint({'new': '32', 'removed': '31'}.get(r.get('change'), '33'), r.get('change', 'changed').ljust(8)) + path)
+    for r in result.get('targets', []):
+        if r.get('executable') and rows and not written:
+            lines.append(f"Herdr executable: {r['executable']['path']}" + (f" ({r['version']})" if r.get('version') else '')
+                         + (', ' + r['identity'] if r.get('confirmation_required') else ''))
+        if r.get('conflicts'):
+            lines.extend([paint('31', f"Conflicts in {r['path']}: " + ', '.join(r['conflicts'])), r['diff']])
+        if r.get('instruction'):
+            lines.append(r['instruction'])
+    # After writing, only reload instructions still apply; the settings.json formatting note was a preview caveat.
+    lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and not (written and r.get('component') == 'claude-settings')))
+    if rows and not written:
+        lines.append('Untouched: stock herdr and codex, your shell profiles. Undo any time: herdr-electrified undo')
+    return '\n'.join(lines)
+
+
+def outcome(result, dry_run):
+    if dry_run or 'error' in result:
+        return summary(result)
+    if result.get('notice') == 'declined; nothing written':
+        return 'Declined; nothing written.'
+    saved = sum(1 for r in result.get('targets', []) if r.get('saved'))
+    if not saved:
+        return summary(result)
+    lines = [summary(result, written=True), f"Done: {saved} file{'s' * (saved != 1)} written. Undo: herdr-electrified undo"]
+    if result.get('bundle'):
+        lines.append('Next: run herdr-electric from a new terminal window (not inside a Herdr pane).')
+    return '\n'.join(lines)
 
 
 def render(result):

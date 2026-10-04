@@ -393,6 +393,72 @@ else: sys.exit(2)
         self.assertEqual(code, 0, result)
         self.assertIn('partial coverage', result['targets'][0]['notice'])
 
+    def pty_cli(self, *args, answer=b'n\n'):
+        """Run the CLI on a real terminal; return what it showed before reading stdin, then the rest."""
+        import pty, select, subprocess, sys, time
+        primary, secondary = pty.openpty()
+        src = str(Path(__file__).resolve().parents[1] / 'src')
+        proc = subprocess.Popen([sys.executable, '-m', 'herdr_electrified.cli', *args], stdin=secondary, stdout=secondary, stderr=secondary,
+                                env=self.env | {'PYTHONPATH': src}, close_fds=True)
+        os.close(secondary)
+        def read_until(marker, seconds):
+            seen, deadline = b'', time.monotonic() + seconds
+            while (marker is None or marker not in seen) and time.monotonic() < deadline:
+                if select.select([primary], [], [], 0.1)[0]:
+                    try:
+                        chunk = os.read(primary, 4096)
+                    except OSError:
+                        break
+                    if not chunk:
+                        break
+                    seen += chunk
+            return seen
+        try:
+            shown = read_until(b'[y/N]', 10)
+            os.write(primary, answer)
+            rest = read_until(None, 10)
+            proc.wait(5)
+        finally:
+            proc.kill()
+            proc.wait()
+            os.close(primary)
+        return proc.returncode, shown.decode(), rest.decode()
+
+    def test_prompt_is_visible_on_a_terminal_before_reading_the_answer(self):
+        code, shown, rest = self.pty_cli('apply', '--herdr-bin', str(self.bin))
+        self.assertIn('[y/N]', shown)
+        self.assertIn('config.toml', shown)
+        self.assertIn('nothing written', rest.lower())
+        self.assertEqual(code, 0)
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_text_apply_prints_a_summary_once_then_done(self):
+        from herdr_electrified.cli import main
+        out = io.StringIO()
+        with patch.dict(os.environ, self.env, clear=True), patch('sys.stdin', NeverRead()), contextlib.redirect_stdout(out):
+            self.assertEqual(main(['apply', '--yes', '--herdr-bin', str(self.bin)]), 0)
+        text = out.getvalue()
+        self.assertIn('Wrote:\n  Herdr config\n    changed ~/config/herdr/config.toml', text)
+        self.assertIn('Done: 1 file written. Undo: herdr-electrified undo', text)
+        self.assertNotIn('+++', text)
+        self.assertNotIn('\033[', text)
+
+    def test_unanswered_prompt_times_out_without_writing(self):
+        class TTY(io.StringIO):
+            def isatty(self): return True
+        with patch('herdr_electrified.cli.select.select', return_value=([], [], [])), contextlib.redirect_stderr(io.StringIO()):
+            code, result = self.run_cli('apply', '--herdr-bin', str(self.bin), stdin=TTY('y\n'))
+        self.assertEqual(code, 1)
+        self.assertEqual(result['error'], 'no answer in 5 min; nothing written')
+        self.assertFalse(self.ledger.parent.exists())
+
+    def test_ctrl_c_exits_130_without_traceback(self):
+        from herdr_electrified.cli import main
+        err = io.StringIO()
+        with patch.dict(os.environ, self.env, clear=True), patch('herdr_electrified.cli.execute', side_effect=KeyboardInterrupt), contextlib.redirect_stderr(err):
+            self.assertEqual(main(['apply', '--herdr-bin', str(self.bin)]), 130)
+        self.assertEqual(err.getvalue(), '\nCancelled; nothing written\n')
+
     def test_interactive_decline_never_validates_hint_or_creates_state(self):
         class TTY(io.StringIO):
             def isatty(self): return True
@@ -412,8 +478,8 @@ else: sys.exit(2)
         with contextlib.redirect_stderr(err):
             code, result = self.run_cli('apply', env=triple, stdin=TTY('y\n'))
             self.assertEqual(code, 0, result)
-            preview = json.JSONDecoder().raw_decode(err.getvalue())[0]['targets'][0]
-            self.assertEqual((preview['identity'], preview['confirmation_required']), ('hint unconfirmed', True))
+            self.assertIn(', hint unconfirmed', err.getvalue())
+            self.assertIn('pin this Herdr executable? [y/N]', err.getvalue())
             row = result['targets'][0]
             self.assertEqual((row['identity'], row['confirmation_required']), ('pinned', False))
             self.assertEqual(self.run_cli('check')[1]['targets'][0]['identity'], 'pinned')
