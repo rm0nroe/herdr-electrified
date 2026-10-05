@@ -402,7 +402,7 @@ def summary(result, stream=sys.stdout, written=False):
         for r in group:
             path = '~/' + r['path'][len(home):] if r['path'].startswith(home) else r['path']
             # Bold, not yellow: yellow is unreadable on a light terminal background.
-            lines.append('    ' + paint({'new': '32', 'removed': '31'}.get(r.get('change'), '1'), r.get('change', 'changed').ljust(8)) + path)
+            lines.append('    ' + paint({'new': '32', 'removed': '31'}.get(r.get('change'), '1'), r.get('change', 'changed').ljust(10)) + path)
     for r in result.get('targets', []):
         if r.get('executable') and (r.get('confirmation_required') or 'old_identity' in r) and not written:
             lines.append(f"Herdr executable to pin: {r['executable']['path']}" + (f" ({r['version']})" if r.get('version') else ''))

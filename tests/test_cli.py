@@ -492,7 +492,7 @@ else: sys.exit(2)
         with patch.dict(os.environ, self.env, clear=True), patch('sys.stdin', NeverRead()), contextlib.redirect_stdout(out):
             self.assertEqual(main(['apply', '--yes', '--herdr-bin', str(self.bin)]), 0)
         text = out.getvalue()
-        self.assertIn('Wrote:\n  Herdr config\n    changed ~/config/herdr/config.toml', text)
+        self.assertIn('Wrote:\n  Herdr config\n    changed   ~/config/herdr/config.toml', text)
         self.assertIn('Wrote 1 file. Undo: herdr-electrified undo', text)
         self.assertNotIn('+++', text)
         self.assertNotIn('\033[', text)
@@ -526,7 +526,10 @@ else: sys.exit(2)
         self.assertEqual(settings, 'Wrote 1 file. Undo: herdr-electrified undo\nNext: reload Ghostty (cmd+shift+,).')
         # Without a prompt (--yes), the written files are listed once.
         listed = outcome(upgrade, SimpleNamespace(dry_run=False, prompted=False))
-        self.assertIn('Wrote:\n  Ghostty windows\n    changed /h/.config/herdr-electrified/electric/ghostty.conf', listed)
+        self.assertIn('Wrote:\n  Ghostty windows\n    changed   /h/.config/herdr-electrified/electric/ghostty.conf', listed)
+        # Saved but unchanged rows keep a space between the word and the path.
+        kept = dict(upgrade, targets=[row('/h/.config/herdr-electrified/electric/config.toml', 'herdr', change='unchanged')])
+        self.assertIn('    unchanged /h/.config/herdr-electrified/electric/config.toml', outcome(kept, SimpleNamespace(dry_run=False, prompted=False)))
 
     def test_summary_names_themes_and_only_asks_about_an_executable_to_pin(self):
         from herdr_electrified.cli import summary
