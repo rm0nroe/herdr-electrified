@@ -301,6 +301,69 @@ else: sys.exit(2)
         self.assertIn('sidebar_width = 19', self.target.read_text())
         self.assertIn('answer = 42', self.target.read_text())
 
+    def test_key_level_undo_removes_tables_apply_created(self):
+        import tomlkit
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text() + '\n[custom]\nanswer = 42\n')
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        text = self.target.read_text()
+        self.assertEqual(tomlkit.parse(text).unwrap(), {'ui': {'sidebar_width': 19}, 'custom': {'answer': 42}})
+        self.assertNotIn('[theme', text)
+        self.assertNotIn('[ui.sidebar', text)
+        self.assertIn('# keep me', text)
+
+    def test_key_level_undo_keeps_an_emptied_table_holding_a_user_comment(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.target.write_text(self.target.read_text() + '# my note\n')
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        text = self.target.read_text()
+        self.assertIn('[theme.custom]\n# my note', text)
+        self.assertNotIn('[ui.sidebar', text)
+
+    def test_key_level_undo_keeps_emptied_tables_with_header_comments(self):
+        for header in ('[theme]', '[theme.custom]'):
+            with self.subTest(header=header):
+                self.target.write_text('# keep me\n[ui]\nsidebar_width = 19 # original\n')
+                self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+                self.target.write_text(self.target.read_text().replace(header + '\n', header + ' # my note\n', 1) + '\n[custom]\nanswer = 42\n')
+                self.assertEqual(self.run_cli('undo')[0], 0)
+                text = self.target.read_text()
+                self.assertIn(header + ' # my note', text)
+                self.assertNotIn('[ui.sidebar', text)
+
+    def test_undo_keeps_a_created_config_holding_user_comments_or_tables(self):
+        edits = {'parent header comment': ('[theme]\n', '[theme] # my note\n'),
+                 'child header comment': ('[theme.custom]\n', '[theme.custom] # my note\n'),
+                 'standalone comment': (None, '# my note\n'),
+                 'user empty table': (None, '[my_table]\n')}
+        for name, (old, new) in edits.items():
+            with self.subTest(name):
+                self.target.unlink(missing_ok=True)
+                self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+                text = self.target.read_text()
+                self.target.write_text(text.replace(old, new, 1) if old else text + new)
+                self.assertEqual(self.run_cli('undo')[0], 0)
+                self.assertTrue(self.target.exists())
+                self.assertIn(new.strip(), self.target.read_text())
+                self.assertNotIn('[ui.sidebar.spaces]', self.target.read_text())
+
+    def test_missing_herdr_on_path_is_a_clear_error(self):
+        env = {'HERDR_CONFIG_PATH': '', 'PATH': '/usr/bin:/bin'}
+        for command in ('check', 'apply'):
+            code, result = self.run_cli(command, env=env)
+            self.assertEqual(code, 1, result)
+            self.assertEqual(result['error'], 'Herdr not found on PATH; install Herdr first, or pass --herdr-config')
+
+    def test_text_error_never_claims_already_applied(self):
+        from herdr_electrified.cli import main
+        out = io.StringIO()
+        with patch.dict(os.environ, self.env | {'HERDR_CONFIG_PATH': '', 'PATH': '/usr/bin:/bin'}, clear=True), \
+                patch('sys.stdin', NeverRead()), contextlib.redirect_stdout(out):
+            self.assertEqual(main(['apply', '--yes']), 1)
+        self.assertIn('Herdr not found on PATH', out.getvalue())
+        self.assertNotIn('Nothing to change', out.getvalue())
+
     def test_reapply_requires_new_conflict_confirmation_and_preserves_first_original(self):
         self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
         self.target.write_text(self.target.read_text().replace('sidebar_width = 31', 'sidebar_width = 44'))
@@ -528,7 +591,7 @@ else: sys.exit(2)
             code, result = self.run_cli('undo', stdin=TTY('y\n'))
             self.assertEqual(code, 0, result)
             row = result['targets'][0]
-            self.assertEqual((row['identity'], row['confirmation_required']), ('explicit, not pinned', False))
+            self.assertEqual((row['identity'], row['confirmation_required']), ('pin retired', False))
         self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
 
     def test_busy_check_does_not_take_lock_or_change_receipt(self):

@@ -1,6 +1,7 @@
 """Run only config validation against an explicitly supplied native Herdr.
 
-Usage: uv run python tests/native_check.py /absolute/path/to/herdr
+Usage: uv run python tests/native_check.py [--stock] /absolute/path/to/herdr
+Pass --stock for upstream Herdr, which does not know the Electric-only [theme.terminal].
 No server, session, install or GUI is started.
 """
 from pathlib import Path
@@ -11,6 +12,9 @@ import unittest
 from test_cli import CLI
 from test_electric import Electric
 
+STOCK = '--stock' in sys.argv
+if STOCK:
+    sys.argv.remove('--stock')
 BINARY = str(Path(sys.argv.pop(1)).resolve(strict=True))
 
 
@@ -47,6 +51,11 @@ class NativeElectric(Electric):
         for config in (self.target, electric):
             check = subprocess.run([BINARY, 'config', 'check'], env=self.env | {'HERDR_CONFIG_PATH': str(config)},
                                    stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=15)
+            lines = (check.stdout + check.stderr).strip().splitlines()
+            # Only the patched Herdr knows [theme.terminal]; stock Herdr never loads the Electric config.
+            if STOCK and config == electric:
+                self.assertEqual((check.returncode, lines), (1, ['config: issues found', 'unknown config key theme.terminal; ignoring key']))
+                continue
             self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
             self.assertEqual(check.stdout.strip(), 'config: ok')
         self.assertEqual(self.run_cli('undo')[0], 0)

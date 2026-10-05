@@ -66,7 +66,10 @@ def resolve_target(explicit):
     selected = explicit or os.environ.get('HERDR_CONFIG_PATH')
     if selected:
         return canonical(selected)
-    result = subprocess.run(['herdr', '--help'], stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=10, check=True)
+    try:
+        result = subprocess.run(['herdr', '--help'], stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=10, check=True)
+    except FileNotFoundError:
+        raise ValueError('Herdr not found on PATH; install Herdr first, or pass --herdr-config') from None
     for line in (result.stdout + result.stderr).splitlines():
         if line.strip().startswith('Config:'):
             return canonical(line.split('Config:', 1)[1].strip())
@@ -321,9 +324,21 @@ def undo_plan(path, entry):
         fragment = tomlkit.parse(values['original'])
         put(doc, keys, fragment.get('value'))
         del remaining['owned'][key]
+    # Tables apply created and undo emptied go too; one holding a user comment (body or header) stays.
+    original = tomlkit.parse(entry['original_file'] or '')
+    restored = [key.split('.') for key in entry['owned'] if key not in conflicts]
+    for prefix in sorted({tuple(keys[:i]) for keys in restored for i in range(1, len(keys))}, key=len, reverse=True):
+        table = get(doc, prefix)
+        if (isinstance(table, tomlkit.items.Table) and get(original, prefix) is None and not table.trivia.comment
+                and all(isinstance(item, (tomlkit.items.Whitespace, tomlkit.items.Null)) for _, item in table.value.body)):
+            put(doc, prefix, None)
     after = tomlkit.dumps(doc)
-    # A file apply created is ours to remove once only Herdr's own onboarding flag is left.
-    if entry['original_file'] is None and not remaining['owned'] and all(keys == ('onboarding',) for keys, _ in leaves(doc)):
+    # A file apply created is ours to remove once only Herdr's own onboarding flag is left;
+    # any user comment or table, even an empty one, keeps it.
+    rest = tomlkit.parse(after)
+    if 'onboarding' in rest and not isinstance(rest['onboarding'], dict) and not rest.item('onboarding').trivia.comment:
+        rest.remove('onboarding')
+    if entry['original_file'] is None and not remaining['owned'] and not tomlkit.dumps(rest).strip():
         after = None
     return before, after, remaining if remaining['owned'] else None, conflicts
 

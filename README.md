@@ -34,7 +34,7 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.0
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.1
 herdr-electrified install
 ```
 
@@ -55,8 +55,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.0/herdr-electrified-0.5.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.0/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.1/herdr-electrified-0.5.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.1/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.5.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.5.0-macos-arm64.tar.gz
@@ -118,7 +118,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.0
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.1
 herdr-electrified install --settings-only
 ```
 
@@ -159,7 +159,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.1.0 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.1.1 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.
@@ -197,7 +197,7 @@ uv run --frozen python -m unittest discover -s tests -v
 uv run --frozen python tests/native_check.py /absolute/path/to/herdr
 ```
 
-The tests use temporary configs. The native check only runs `config check`.
+The tests use temporary configs. The native check only runs `config check`. Add `--stock` before the path when checking upstream Herdr instead of the Electric build.
 
 ## License
 

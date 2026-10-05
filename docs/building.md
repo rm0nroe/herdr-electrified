@@ -58,6 +58,6 @@ notices, native dependency notices, and MPL component sources. See
 `licenses/components.json` and `licenses/native/*sources.json` for provenance.
 
 Run the installer suite with `PYTHONPATH=src python -m unittest discover -s tests -v`.
-`tests/native_check.py` accepts the built Herdr binary for config validation.
+`tests/native_check.py` accepts the built Herdr binary for config validation. Pass `--stock` first to check upstream Herdr, which does not know `[theme.terminal]`.
 Native session, rendering, clean-machine, and public-install checks are manual
 and not part of this suite.

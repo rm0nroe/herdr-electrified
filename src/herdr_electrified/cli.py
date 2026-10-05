@@ -288,7 +288,7 @@ def execute(args):
             row['configured'] = args.command == 'apply'
             row['confirmation_required'] = False
             if kind == 'herdr':
-                row['identity'] = 'pinned' if updated else 'explicit, not pinned'
+                row['identity'] = 'pinned' if updated else 'pin retired'
             if kind == 'herdr' and not data.get('electric') and before != after and association(path):
                 try:
                     reload = subprocess.run([binary['path'], 'server', 'reload-config'],
@@ -393,7 +393,8 @@ def summary(result, stream=sys.stdout, written=False):
     if result.get('agents'):
         lines.append('Themes: ' + ', '.join(THEMES[a] for a in result['agents']))
     rows = [r for r in result.get('targets', []) if (r.get('saved') if written else r.get('change', 'unchanged') != 'unchanged')]
-    lines.append(('Wrote:' if written else 'Will write:') if rows else 'Nothing to change; already applied.')
+    if rows or 'error' not in result:
+        lines.append(('Wrote:' if written else 'Will write:') if rows else 'Nothing to change; already applied.')
     for label in dict.fromkeys(COMPONENTS.values()):
         group = [r for r in rows if component(r) == label]
         if group:
