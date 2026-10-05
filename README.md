@@ -34,14 +34,14 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.1
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.2.0
 herdr-electrified install
 ```
 
 Then restart Ghostty and run `herdr-electric` from a new window (not from
 inside a Herdr pane; Herdr refuses to nest).
 
-`install` downloads the Electric bundle 0.5.0 (patched Herdr 0.8.2, patched
+`install` downloads the Electric bundle 0.6.0 (patched Herdr 0.8.2, patched
 Codex 0.160.0, JetBrainsMono Nerd Font Mono 3.5.1) into
 `~/.local/share/herdr-electrified/bundles/`, refuses it unless its SHA-256
 matches the checksum pinned in the CLI, lists the files it will write, and
@@ -55,13 +55,13 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.1/herdr-electrified-0.5.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.1.1/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.2.0/herdr-electrified-0.6.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.2.0/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
-gh attestation verify herdr-electrified-0.5.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
-tar -xzf herdr-electrified-0.5.0-macos-arm64.tar.gz
-herdr-electrified preview-apply --electric ./herdr-electrified-0.5.0-macos-arm64
-herdr-electrified apply --electric ./herdr-electrified-0.5.0-macos-arm64
+gh attestation verify herdr-electrified-0.6.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
+tar -xzf herdr-electrified-0.6.0-macos-arm64.tar.gz
+herdr-electrified preview-apply --electric ./herdr-electrified-0.6.0-macos-arm64
+herdr-electrified apply --electric ./herdr-electrified-0.6.0-macos-arm64
 ```
 
 The archive is built by this repository's public GitHub Actions workflow
@@ -71,7 +71,7 @@ quarantined and `apply` refuses it. After the checksum passes, clear the mark
 and apply again:
 
 ```sh
-xattr -dr com.apple.quarantine ./herdr-electrified-0.5.0-macos-arm64
+xattr -dr com.apple.quarantine ./herdr-electrified-0.6.0-macos-arm64
 ```
 
 ## What Electric changes
@@ -100,7 +100,7 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.5.0-macos-arm64
   OpenCode theme in `~/.config/opencode/themes`, selected (with a mauve Build
   accent) only inside Electric panes. Your own OpenCode settings are not edited.
 - **Ghostty** (when installed): an appearance include (Catppuccin Mocha, the
-  Nerd Font, small padding) in the Ghostty config, plus the font in
+  Nerd Font at 14.5pt, small padding) in the Ghostty config, plus the font in
   `~/Library/Fonts`. Keybindings and behavior are not touched. Reload Ghostty
   (cmd+shift+,) and restart it once after the font is first installed.
 
@@ -118,7 +118,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.1.1
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.2.0
 herdr-electrified install --settings-only
 ```
 
@@ -159,7 +159,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.1.1 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.2.0 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.

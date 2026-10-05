@@ -265,7 +265,7 @@ index 58f95be..fe0f68e 100644
          let (palette, theme_name) = super::resolve_effective_theme(
              &self.state.theme_runtime,
 diff --git a/src/client/mod.rs b/src/client/mod.rs
-index c33157f..8235608 100644
+index c33157f..df6e6c3 100644
 --- a/src/client/mod.rs
 +++ b/src/client/mod.rs
 @@ -342,8 +342,8 @@ impl From<protocol::FramingError> for ClientError {
@@ -320,7 +320,7 @@ index c33157f..8235608 100644
      restored: bool,
      #[cfg(windows)]
      restore_windows_input_mode: Option<u32>,
-@@ -456,17 +464,44 @@ fn write_host_color_scheme_report_mode(
+@@ -456,17 +464,49 @@ fn write_host_color_scheme_report_mode(
  fn write_terminal_restore_postlude(
      writer: &mut impl io::Write,
      reset_host_color_scheme_reports: bool,
@@ -346,9 +346,14 @@ index c33157f..8235608 100644
 +/// Empty when the theme sets neither color.
 +fn host_terminal_color_sequence(theme: &crate::terminal_theme::TerminalTheme) -> String {
 +    use crate::terminal_theme::{osc_set_default_color_sequence, DefaultColorKind};
++    // One blue step off the pane color (invisible): Ghostty only extends an edge row
++    // into the padding when none of its cells match the host default background.
 +    let mut sequence = theme
 +        .background
-+        .map(|bg| osc_set_default_color_sequence(DefaultColorKind::Background, bg))
++        .map(|bg| {
++            let host_bg = crate::terminal_theme::RgbColor { b: bg.b ^ 1, ..bg };
++            osc_set_default_color_sequence(DefaultColorKind::Background, host_bg)
++        })
 +        .unwrap_or_default();
 +    if let Some(fg) = theme.foreground {
 +        sequence.push_str(&format!(
@@ -365,7 +370,7 @@ index c33157f..8235608 100644
  fn should_draw_host_cursor(mode: crate::config::HostCursorModeConfig) -> bool {
      match mode {
          crate::config::HostCursorModeConfig::Auto => {
-@@ -583,6 +618,7 @@ fn set_mouse_capture(enabled: bool, sgr_pixels: bool) -> io::Result<()> {
+@@ -583,6 +623,7 @@ fn set_mouse_capture(enabled: bool, sgr_pixels: bool) -> io::Result<()> {
  fn restore_terminal_state(
      reset_modify_other_keys: bool,
      reset_host_color_scheme_reports: bool,
@@ -373,7 +378,7 @@ index c33157f..8235608 100644
      #[cfg(windows)] restore_windows_input_mode: Option<u32>,
  ) -> io::Result<()> {
      let _ = clear_received_kitty_graphics(&mut io::stdout());
-@@ -609,8 +645,11 @@ fn restore_terminal_state(
+@@ -609,8 +650,11 @@ fn restore_terminal_state(
      }
  
      let restore_result = ratatui::try_restore();
@@ -387,7 +392,7 @@ index c33157f..8235608 100644
  
      #[cfg(windows)]
      if windows_vti_input_backend_enabled() && windows_win32_input_mode_enabled() {
-@@ -668,6 +707,7 @@ impl TerminalGuard {
+@@ -668,6 +712,7 @@ impl TerminalGuard {
          restore_terminal_state(
              self.reset_modify_other_keys,
              self.reset_host_color_scheme_reports,
@@ -395,7 +400,7 @@ index c33157f..8235608 100644
              #[cfg(windows)]
              self.restore_windows_input_mode,
          )
-@@ -680,6 +720,7 @@ impl Drop for TerminalGuard {
+@@ -680,6 +725,7 @@ impl Drop for TerminalGuard {
              let _ = restore_terminal_state(
                  self.reset_modify_other_keys,
                  self.reset_host_color_scheme_reports,
@@ -403,7 +408,7 @@ index c33157f..8235608 100644
                  #[cfg(windows)]
                  self.restore_windows_input_mode,
              );
-@@ -1283,10 +1324,16 @@ fn run_client_with_mode(
+@@ -1283,10 +1329,16 @@ fn run_client_with_mode(
      // Now set up the terminal. This must happen AFTER the handshake succeeds,
      // so we don't leave the terminal in raw mode if the server rejects us.
      let direct_attach = attach_escape.is_some();
@@ -422,7 +427,7 @@ index c33157f..8235608 100644
      }
      .map_err(|err| {
          eprintln!("herdr: failed to set up terminal: {err}");
-@@ -1296,6 +1343,7 @@ fn run_client_with_mode(
+@@ -1296,6 +1348,7 @@ fn run_client_with_mode(
      // Install a panic hook to restore the terminal on panic (same as monolithic).
      let panic_resets_modify_other_keys = terminal_guard.reset_modify_other_keys;
      let panic_resets_host_color_scheme_reports = terminal_guard.reset_host_color_scheme_reports;
@@ -430,7 +435,7 @@ index c33157f..8235608 100644
      #[cfg(windows)]
      let panic_restore_windows_input_mode = terminal_guard.restore_windows_input_mode;
      let original_hook = std::panic::take_hook();
-@@ -1303,6 +1351,7 @@ fn run_client_with_mode(
+@@ -1303,6 +1356,7 @@ fn run_client_with_mode(
          let _ = restore_terminal_state(
              panic_resets_modify_other_keys,
              panic_resets_host_color_scheme_reports,
@@ -438,7 +443,7 @@ index c33157f..8235608 100644
              #[cfg(windows)]
              panic_restore_windows_input_mode,
          );
-@@ -3088,14 +3137,59 @@ mod tests {
+@@ -3088,14 +3142,59 @@ mod tests {
      #[test]
      fn terminal_restore_postlude_restores_visible_default_cursor() {
          let mut output = Vec::new();
@@ -465,7 +470,7 @@ index c33157f..8235608 100644
 +        };
 +        assert_eq!(
 +            host_terminal_color_sequence(&theme),
-+            "\x1b]11;rgb:11/11/1b\x1b\\\x1b]12;rgb:cd/d6/f4\x1b\\"
++            "\x1b]11;rgb:11/11/1a\x1b\\\x1b]12;rgb:cd/d6/f4\x1b\\"
 +        );
 +        assert_eq!(host_terminal_color_sequence(&TerminalTheme::default()), "");
 +    }
@@ -848,28 +853,39 @@ index 2460731..a1a2eea 100644
      fn parses_st_terminated_rgb_response() {
          let parsed = parse_default_color_response("\x1b]10;rgb:cccc/dddd/eeee\x1b\\");
 diff --git a/src/ui.rs b/src/ui.rs
-index 8adc31e..8798a15 100644
+index 8adc31e..577f01b 100644
 --- a/src/ui.rs
 +++ b/src/ui.rs
-@@ -103,7 +103,7 @@ use crate::app::state::ViewLayout;
- use crate::app::{AppState, Mode};
- use crate::terminal::TerminalRuntimeRegistry;
+@@ -459,6 +459,19 @@ pub fn render_with_runtime_registry(
+         Mode::Navigator => render_navigator_overlay(app, terminal_runtimes, frame),
+         Mode::Terminal => {}
+     }
++
++    // Leave the top-right filler cell on the host default background so Ghostty's
++    // `window-padding-color = extend` never stretches the tab bar into the top
++    // padding, while the fully painted bottom row still extends to the window edge.
++    if let Some(bg) = app.terminal_colors.and_then(|colors| colors.background) {
++        let area = frame.area();
++        if area.width > 0 && area.height > 0 {
++            let cell = &mut frame.buffer_mut()[(area.right() - 1, area.y)];
++            if cell.bg == ratatui::style::Color::Rgb(bg.r, bg.g, bg.b) {
++                cell.set_bg(ratatui::style::Color::Reset);
++            }
++        }
++    }
+ }
  
--const COLLAPSED_WIDTH: u16 = 4; // num + space + dot + separator
-+const COLLAPSED_WIDTH: u16 = 5; // inset + num + num/space + dot + separator
- 
- /// Compute view geometry and reconcile pane sizes.
- /// Called before render to separate mutation from drawing.
-@@ -1068,6 +1068,8 @@ mod tests {
+ fn render_navigation_chrome(
+@@ -1068,6 +1081,8 @@ mod tests {
          terminal.draw(|frame| render(&app, frame)).unwrap();
          let buffer = terminal.backend().buffer();
  
-+        assert_eq!(app.view.sidebar_rect.width, 5);
-+        assert_eq!(app.view.terminal_area.x, 5);
++        assert_eq!(app.view.sidebar_rect.width, 4);
++        assert_eq!(app.view.terminal_area.x, 4);
          let (ws_area, _, _) = collapsed_sidebar_sections(app.view.sidebar_rect);
          let active_row = ws_area.y + 1;
          let active_style = buffer[(ws_area.x, active_row)].style();
-@@ -1104,9 +1106,9 @@ mod tests {
+@@ -1104,9 +1119,9 @@ mod tests {
          let line1 = buffer_row_text(buffer, card, card.y);
          let line2 = buffer_row_text(buffer, card, card.y + 1);
  
@@ -954,7 +970,7 @@ index f20b55b..249e771 100644
  
      #[tokio::test]
 diff --git a/src/ui/sidebar.rs b/src/ui/sidebar.rs
-index a6dfbcd..b313d9b 100644
+index a6dfbcd..fc8d86b 100644
 --- a/src/ui/sidebar.rs
 +++ b/src/ui/sidebar.rs
 @@ -1,7 +1,7 @@
@@ -982,24 +998,6 @@ index a6dfbcd..b313d9b 100644
      if area.width == 0 || area.height < 2 {
          return Rect::default();
      }
-@@ -820,7 +821,7 @@ pub(super) fn render_sidebar_collapsed(app: &AppState, frame: &mut Frame, area:
- 
-         frame.render_widget(
-             Paragraph::new(Line::from(vec![
--                Span::styled(format!("{:<2}", visible_idx + 1), num_style),
-+                Span::styled(format!(" {:<2}", visible_idx + 1), num_style),
-                 Span::styled(icon, icon_style),
-             ])),
-             Rect::new(ws_area.x, y, ws_area.width, 1),
-@@ -871,7 +872,7 @@ pub(super) fn render_sidebar_collapsed(app: &AppState, frame: &mut Frame, area:
- 
-             frame.render_widget(
-                 Paragraph::new(Line::from(vec![
--                    Span::styled(format!("{position:<2}"), position_style),
-+                    Span::styled(format!(" {position:<2}"), position_style),
-                     Span::styled(icon, icon_style),
-                 ])),
-                 Rect::new(detail_content_area.x, y, detail_content_area.width, 1),
 @@ -1235,7 +1236,10 @@ fn render_workspace_list(
                  " spaces",
                  Style::default().fg(p.overlay0).add_modifier(Modifier::BOLD),
@@ -1232,32 +1230,12 @@ index a6dfbcd..b313d9b 100644
      }
  
      #[test]
-@@ -2289,7 +2402,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             app.terminals.get_mut(&terminal_id).unwrap().detected_agent = Some(Agent::Claude);
-         }
- 
--        let area = Rect::new(0, 0, 4, 12);
-+        let area = Rect::new(0, 0, 5, 12);
-         let (_, _, detail_area) = collapsed_sidebar_sections(area);
-         let mut terminal = Terminal::new(TestBackend::new(area.width, area.height))
-             .expect("test terminal should initialize");
-@@ -2299,8 +2412,8 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             .expect("collapsed sidebar should render");
- 
-         let buffer = terminal.backend().buffer();
--        assert_eq!(buffer[(detail_area.x, detail_area.y)].symbol(), "1");
--        assert_eq!(buffer[(detail_area.x, detail_area.y + 1)].symbol(), "2");
-+        assert_eq!(buffer[(detail_area.x + 1, detail_area.y)].symbol(), "1");
-+        assert_eq!(buffer[(detail_area.x + 1, detail_area.y + 1)].symbol(), "2");
-     }
- 
-     /// Two agent panes in one workspace plus a second workspace, so the
-@@ -2348,6 +2461,60 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
+@@ -2348,6 +2461,59 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
              .collect()
      }
  
 +    #[test]
-+    fn collapsed_sidebar_insets_single_and_two_digit_rows() {
++    fn collapsed_sidebar_aligns_single_and_two_digit_rows() {
 +        for count in [2, 10] {
 +            let (mut app, _, _) = collapsed_agent_app();
 +            if count == 10 {
@@ -1281,18 +1259,17 @@ index a6dfbcd..b313d9b 100644
 +            for section in [spaces, agents] {
 +                for row in [0, count - 1] {
 +                    let y = section.y + row;
-+                    assert_eq!(buffer[(0, y)].symbol(), " ");
-+                    assert_eq!(buffer[(1, y)].symbol(), if row == 1 { "2" } else { "1" });
-+                    assert_eq!(buffer[(2, y)].symbol(), if row == 9 { "0" } else { " " });
-+                    assert_eq!(buffer[(3, y)].symbol(), "·");
-+                    assert_eq!(buffer[(4, y)].symbol(), "│");
++                    assert_eq!(buffer[(0, y)].symbol(), if row == 1 { "2" } else { "1" });
++                    assert_eq!(buffer[(1, y)].symbol(), if row == 9 { "0" } else { " " });
++                    assert_eq!(buffer[(2, y)].symbol(), "·");
++                    assert_eq!(buffer[(3, y)].symbol(), "│");
 +                }
 +            }
-+            for x in 0..4 {
++            for x in 0..3 {
 +                assert_eq!(buffer[(x, divider.unwrap())].symbol(), "─");
 +            }
-+            assert_eq!(collapsed_sidebar_toggle_rect(area), Rect::new(2, 24, 1, 1));
-+            assert_eq!(buffer[(2, 24)].symbol(), "»");
++            assert_eq!(collapsed_sidebar_toggle_rect(area), Rect::new(1, 24, 1, 1));
++            assert_eq!(buffer[(1, 24)].symbol(), "»");
 +
 +            // Optional review artifact from the actual renderer, without a live session.
 +            if let Some(dir) = std::env::var_os("HERDR_SIDEBAR_CAPTURE_DIR") {
@@ -1313,7 +1290,7 @@ index a6dfbcd..b313d9b 100644
      #[test]
      fn collapsed_sidebar_highlights_only_the_focused_agent_pane() {
          let (mut app, first_pane, second_pane) = collapsed_agent_app();
-@@ -2356,7 +2523,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
+@@ -2356,7 +2522,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
          assert!(app.is_active_pane(0, 0, second_pane));
          assert!(!app.is_active_pane(0, 0, first_pane));
  
@@ -1322,7 +1299,7 @@ index a6dfbcd..b313d9b 100644
          let (_, _, detail_area) = collapsed_sidebar_sections(area);
          let rows = collapsed_agent_row_styles(&app, area, detail_area, 3);
  
-@@ -2390,7 +2557,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
+@@ -2390,7 +2556,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
          let (mut app, _, _) = collapsed_agent_app();
          app.active = None;
  
@@ -1331,99 +1308,7 @@ index a6dfbcd..b313d9b 100644
          let (_, _, detail_area) = collapsed_sidebar_sections(area);
          let rows = collapsed_agent_row_styles(&app, area, detail_area, 3);
  
-@@ -2418,7 +2585,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             app.terminals.get_mut(&terminal_id).unwrap().detected_agent = Some(Agent::Claude);
-         }
- 
--        let area = Rect::new(0, 0, 4, 25);
-+        let area = Rect::new(0, 0, 5, 25);
-         let (workspace_area, _, _) = collapsed_sidebar_sections(area);
-         let mut terminal = Terminal::new(TestBackend::new(area.width, area.height))
-             .expect("test terminal should initialize");
-@@ -2429,18 +2596,21 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
- 
-         let tenth_row = workspace_area.y + 9;
-         let buffer = terminal.backend().buffer();
--        assert_eq!(buffer[(workspace_area.x, workspace_area.y)].symbol(), "1");
-         assert_eq!(
-             buffer[(workspace_area.x + 1, workspace_area.y)].symbol(),
--            " "
-+            "1"
-         );
-         assert_eq!(
-             buffer[(workspace_area.x + 2, workspace_area.y)].symbol(),
-+            " "
-+        );
-+        assert_eq!(
-+            buffer[(workspace_area.x + 3, workspace_area.y)].symbol(),
-             "·"
-         );
--        assert_eq!(buffer[(workspace_area.x, tenth_row)].symbol(), "1");
--        assert_eq!(buffer[(workspace_area.x + 1, tenth_row)].symbol(), "0");
--        assert_eq!(buffer[(workspace_area.x + 2, tenth_row)].symbol(), "·");
-+        assert_eq!(buffer[(workspace_area.x + 1, tenth_row)].symbol(), "1");
-+        assert_eq!(buffer[(workspace_area.x + 2, tenth_row)].symbol(), "0");
-+        assert_eq!(buffer[(workspace_area.x + 3, tenth_row)].symbol(), "·");
-     }
- 
-     #[test]
-@@ -2459,7 +2629,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             app.terminals.get_mut(&terminal_id).unwrap().detected_agent = Some(Agent::Claude);
-         }
- 
--        let area = Rect::new(0, 0, 4, 25);
-+        let area = Rect::new(0, 0, 5, 25);
-         let (_, _, detail_area) = collapsed_sidebar_sections(area);
-         let mut terminal = Terminal::new(TestBackend::new(area.width, area.height))
-             .expect("test terminal should initialize");
-@@ -2470,9 +2640,9 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
- 
-         let tenth_row = detail_area.y + 9;
-         let buffer = terminal.backend().buffer();
--        assert_eq!(buffer[(detail_area.x, tenth_row)].symbol(), "1");
--        assert_eq!(buffer[(detail_area.x + 1, tenth_row)].symbol(), "0");
--        assert_eq!(buffer[(detail_area.x + 2, tenth_row)].symbol(), "·");
-+        assert_eq!(buffer[(detail_area.x + 1, tenth_row)].symbol(), "1");
-+        assert_eq!(buffer[(detail_area.x + 2, tenth_row)].symbol(), "0");
-+        assert_eq!(buffer[(detail_area.x + 3, tenth_row)].symbol(), "·");
-     }
- 
-     #[test]
-@@ -2509,7 +2679,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-         assert_eq!(app.workspaces[1].public_pane_number(urgent_pane), Some(2));
-         assert_eq!(agent_panel_entries(&app)[0].pane_id, urgent_pane);
- 
--        let area = Rect::new(0, 0, 4, 16);
-+        let area = Rect::new(0, 0, 5, 16);
-         let (_, _, detail_area) = collapsed_sidebar_sections(area);
-         let mut terminal = Terminal::new(TestBackend::new(area.width, area.height))
-             .expect("test terminal should initialize");
-@@ -2519,17 +2689,17 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             .expect("collapsed sidebar should render");
- 
-         let buffer = terminal.backend().buffer();
--        assert_eq!(buffer[(detail_area.x, detail_area.y)].symbol(), "1");
--        assert_eq!(buffer[(detail_area.x, detail_area.y + 1)].symbol(), "2");
--        assert_eq!(buffer[(detail_area.x, detail_area.y + 2)].symbol(), "3");
--        assert_eq!(buffer[(detail_area.x + 2, detail_area.y)].symbol(), "×");
-+        assert_eq!(buffer[(detail_area.x + 1, detail_area.y)].symbol(), "1");
-+        assert_eq!(buffer[(detail_area.x + 1, detail_area.y + 1)].symbol(), "2");
-+        assert_eq!(buffer[(detail_area.x + 1, detail_area.y + 2)].symbol(), "3");
-+        assert_eq!(buffer[(detail_area.x + 3, detail_area.y)].symbol(), "×");
-         assert_eq!(
--            buffer[(detail_area.x + 2, detail_area.y)].style().fg,
-+            buffer[(detail_area.x + 3, detail_area.y)].style().fg,
-             Some(app.palette.red)
-         );
--        assert_eq!(buffer[(detail_area.x + 2, detail_area.y + 1)].symbol(), "✓");
-+        assert_eq!(buffer[(detail_area.x + 3, detail_area.y + 1)].symbol(), "✓");
-         assert_eq!(
--            buffer[(detail_area.x + 2, detail_area.y + 1)].style().fg,
-+            buffer[(detail_area.x + 3, detail_area.y + 1)].style().fg,
-             Some(app.palette.teal)
-         );
-     }
-@@ -2752,8 +2922,8 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
+@@ -2752,8 +2918,8 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
          let parent_name_x = find_symbol_x(buffer, cards[0].rect.y, cards[0].rect.width, "m");
          let plain_name_x = find_symbol_x(buffer, cards[3].rect.y, cards[3].rect.width, "n");
          assert_eq!(parent_name_x, plain_name_x);
@@ -1434,7 +1319,7 @@ index a6dfbcd..b313d9b 100644
          assert_eq!(
              buffer[(cards[0].rect.x + cards[0].rect.width - 1, cards[0].rect.y)].symbol(),
              "▾"
-@@ -2790,7 +2960,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
+@@ -2790,7 +2956,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
  
          let child = app.view.workspace_card_areas[1];
          assert_eq!(
