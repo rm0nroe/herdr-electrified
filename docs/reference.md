@@ -141,15 +141,17 @@ commands intact. Herdr Electric uses the named
 `herdr-electrified` session and clears inherited socket overrides, so opening
 it does not attach to or hand off a stock Herdr server. It also clears Claude
 Code's `CLAUDE_CODE_CHILD_SESSION` marker, so Claude Code in an Electric pane
-keeps saving transcripts even when Electric was started from a Claude session. Its child PATH puts Electric
-Codex first, so `codex` in an Electric pane runs Electric Codex. In zsh panes
+keeps saving transcripts even when Electric was started from a Claude session. Its child PATH puts Electric's
+`codex` and `claude` commands first, so `codex` in an Electric pane runs Electric Codex
+and `claude` runs with the Electric theme. In zsh panes
 this holds even when your profile prepends its own directories (for example
 `~/.local/bin` or nvm with an npm-installed `codex`): the launcher points
 `ZDOTDIR` at `~/.local/share/herdr-electrified/zsh`, whose `.zshenv` restores your
-`ZDOTDIR`, runs your usual startup files, and puts Electric Codex back first
-before the first prompt. Bash and fish panes do not get this; there, run
-`command -v codex` and use `codex-electric` directly if it does not point at
-`~/.local/share/herdr-electrified/commands/codex`. Shell profiles are never edited.
+`ZDOTDIR`, runs your usual startup files, and puts those commands back first
+before the first prompt. Bash and fish panes do not get this. There, if
+`command -v codex` does not point at `~/.local/share/herdr-electrified/commands/codex`,
+use `codex-electric` directly; for Claude, run
+`~/.local/share/herdr-electrified/commands/claude`. Shell profiles are never edited.
 After upgrading herdr-electrified, stop a running Electric server
 (`herdr-electric server stop`) so new panes pick up the launcher's environment.
 

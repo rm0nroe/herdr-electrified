@@ -44,13 +44,13 @@ failed to link Zig 0.15.2's build runner with unresolved Darwin C symbols.
 ## Releasing a new bundle
 
 1. Bump `BUNDLE_VERSION` in `scripts/build-electric.py` and commit the patches.
-2. Run the `build-electric` workflow on GitHub (`workflow_dispatch`, about 2.5 hours)
+2. Run the `build-electric` workflow on GitHub (`workflow_dispatch`, about 2 to 2.5 hours)
    and download its `electric-bundle` artifact.
 3. In `src/herdr_electrified/electric.py`, set `BUNDLE` to the new name, append the
    version to `VERSIONS`, and set `BUNDLE_SHA` to the archive's SHA-256 from `SHA256SUMS`.
 4. Bump the package version, then attach the archive and `SHA256SUMS` to that
    package's GitHub release: `BUNDLE_URL` points at `v{package version}`.
-5. Update the bundle name in the README.
+5. Update the bundle name in the README and in `docs/reference.md`.
 
 The manifest records upstream revisions, patch digests, helper-package and font-archive digests,
 and each bundle file's checksum. The release includes the original upstream
