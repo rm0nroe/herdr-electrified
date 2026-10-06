@@ -2,6 +2,7 @@ import hashlib
 import os
 import json
 import shutil
+import subprocess
 from pathlib import Path
 import unittest
 import unittest.mock
@@ -529,9 +530,10 @@ class Ghostty(unittest.TestCase):
     def ghostty_host(self):
         apps = self.root / 'Applications'
         (apps / 'Ghostty.app').mkdir(parents=True)
-        patcher = unittest.mock.patch('herdr_electrified.electric.GHOSTTY_APPS', (str(apps),))
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        for name, value in (('GHOSTTY_APPS', (str(apps),)), ('OPEN', str(self.root / 'stub-open'))):
+            patcher = unittest.mock.patch('herdr_electrified.electric.' + name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
         return {'PATH': '/usr/bin:/bin'}
 
     def font_bundle(self):
@@ -546,6 +548,28 @@ class Ghostty(unittest.TestCase):
         (root / 'manifest.json').write_text(json.dumps(manifest))
         return root
 
+    def legacy_include(self, path):
+        """Own a global Ghostty include the way Electric did before v1.3.0, for upgrade tests."""
+        from herdr_electrified import config as c
+        with unittest.mock.patch.dict(os.environ, self.env, clear=True):
+            receipt = c.receipt_path()
+            data = c.load_receipt(receipt)
+            path = c.canonical(path)
+            look = c.canonical(self.root / 'config/herdr-electrified/electric/ghostty.conf')
+            before, after, updated, _ = c.ghostty_plan(path, None, look)
+            c.transact(receipt, data, path, before, after, updated, None, 'ghostty-config')
+
+    def launch(self, *args, env=None):
+        """Run the installed herdr-electric with a stub `open` that records its argv and environment."""
+        opened, seen = self.root / 'opened.txt', self.root / 'opened-env.txt'
+        stub = self.root / 'stub-open'
+        stub.write_text(f'#!/bin/sh\nfor a in "$@"; do printf "%s\\n" "$a"; done > {opened}\nenv > {seen}\n')
+        stub.chmod(0o700)
+        opened.unlink(missing_ok=True)
+        run = subprocess.run([str(self.root / '.local/bin/herdr-electric'), *args], capture_output=True, text=True, timeout=10,
+                             env={'PATH': '/usr/bin:/bin', 'HOME': str(self.root)} | (env or {}))
+        return run, opened.read_text().splitlines() if opened.exists() else None
+
     def test_fresh_host_gets_ghostty_look_and_undo_leaves_nothing(self):
         root = self.font_bundle()
         env = self.ghostty_host()
@@ -556,42 +580,96 @@ class Ghostty(unittest.TestCase):
         look = self.root / 'config/herdr-electrified/electric/ghostty.conf'
         self.assertIn('background = #11111b', look.read_text())
         self.assertIn('font-family = "JetBrainsMono Nerd Font Mono"', look.read_text())
-        ghostty = self.root / 'config/ghostty/config.ghostty'
-        self.assertIn('config-file = "?' + str(look.resolve()) + '"', ghostty.read_text())
+        # The look reaches Electric windows only: no Ghostty config is written.
+        self.assertFalse((self.root / 'config/ghostty').exists())
+        self.assertFalse((self.root / 'Library/Application Support').exists())
         self.assertEqual((self.root / 'Library/Fonts/JetBrainsMonoNerdFontMono-Bold.ttf').read_bytes(), b'bold')
         self.assertEqual(self.run_cli('check', env=env)[0], 0)
         code, result = self.run_cli('undo', env=env)
         self.assertEqual(code, 0, result)
-        self.assertFalse((self.root / 'config/ghostty').exists())
         self.assertFalse((self.root / 'Library/Fonts/JetBrainsMonoNerdFontMono-Bold.ttf').exists())
         state = {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}
         self.assertEqual(self.files() - state, before)
 
-    def test_include_goes_in_last_loaded_file_and_undo_keeps_user_edits(self):
+    def test_bare_launcher_opens_its_own_ghostty_window(self):
+        root = self.bundle()
+        env = self.ghostty_host()
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        launcher = (self.root / '.local/bin/herdr-electric').resolve()
+        look = (self.root / 'config/herdr-electrified/electric/ghostty.conf').resolve()
+        run, opened = self.launch()
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertEqual(opened, ['-na', str(self.root / 'Applications/Ghostty.app'), '--env', 'HERDR_ELECTRIFIED_WINDOW=1', '--args',
+                                  f'--config-file={look}', '--quit-after-last-window-closed=true', '--window-save-state=never',
+                                  f'--command={launcher}'])
+        # open hands the caller's environment to Ghostty; the window starts clean, as from the Dock,
+        # so a Herdr pane's HERDR_ENV (nesting refusal) or a terminal's own variables never leak in.
+        run, opened = self.launch(env={'HERDR_ENV': '1', 'HERDR_PANE_ID': 'w1:p1', 'ZDOTDIR': '/x', 'TERM_PROGRAM': 'ghostty', 'LANG': 'en_US.UTF-8'})
+        seen = dict(line.split('=', 1) for line in (self.root / 'opened-env.txt').read_text().splitlines())
+        self.assertEqual({k: v for k, v in seen.items() if k in ('HOME', 'PATH', 'LANG')},
+                         {'HOME': str(self.root), 'PATH': '/usr/bin:/bin:/usr/sbin:/sbin', 'LANG': 'en_US.UTF-8'})
+        self.assertFalse({'HERDR_ENV', 'HERDR_PANE_ID', 'ZDOTDIR', 'TERM_PROGRAM'} & seen.keys())
+
+    def test_launcher_runs_in_place_inside_its_window_or_with_arguments(self):
+        root = self.bundle()
+        env = self.ghostty_host()
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        run, opened = self.launch('server', 'stop')
+        self.assertEqual((run.returncode, opened), (2, None))  # the bundle's herdr ran
+        run, opened = self.launch(env={'HERDR_ELECTRIFIED_WINDOW': '1'})
+        self.assertEqual((run.returncode, opened), (2, None))
+        # Pane shells must not inherit the marker, or herdr-electric there would skip the window.
+        self.assertIn('unset HERDR_ELECTRIFIED_WINDOW', (self.root / '.local/bin/herdr-electric').read_text())
+
+    def test_launcher_runs_in_place_when_ghostty_app_is_gone(self):
+        root = self.bundle()
+        env = self.ghostty_host()
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        (self.root / 'Applications/Ghostty.app').rmdir()
+        run, opened = self.launch()
+        self.assertEqual((run.returncode, opened), (2, None))
+
+    def test_upgrade_removes_the_old_global_include(self):
         root = self.bundle()
         env = self.ghostty_host()
         xdg = self.root / 'config/ghostty/config'
         xdg.parent.mkdir(parents=True)
         xdg.write_text('font-size = 11\n')
-        support = self.root / 'Library/Application Support/com.mitchellh.ghostty/config.ghostty'
+        support = self.root / 'Library/Application Support/com.mitchellh.ghostty/config'
         support.parent.mkdir(parents=True)
-        support.write_text('')
-        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
-        self.assertEqual(xdg.read_text(), 'font-size = 11\n')
+        support.write_text('# template\n')
+        self.legacy_include(support)
         self.assertIn('config-file = "?', support.read_text())
-        support.write_text(support.read_text() + 'cursor-color = #ffffff\n')
-        code, result = self.run_cli('undo', env=env)
+        code, result = self.run_cli('apply', '--electric', str(root), '--yes', env=env)
         self.assertEqual(code, 0, result)
-        self.assertEqual(support.read_text(), 'cursor-color = #ffffff\n')
+        self.assertEqual(support.read_text(), '# template\n')
+        self.assertEqual(xdg.read_text(), 'font-size = 11\n')
+        self.assertNotIn(str(support.resolve()), json.loads(self.ledger.read_text())['targets'])
 
-    def test_removed_include_is_an_undo_conflict(self):
+    def test_upgrade_keeps_user_edits_to_the_old_include_file(self):
         root = self.bundle()
         env = self.ghostty_host()
-        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
         ghostty = self.root / 'config/ghostty/config.ghostty'
+        ghostty.parent.mkdir(parents=True)
+        ghostty.write_text('font-size = 11\n')
+        self.legacy_include(ghostty)
+        ghostty.write_text(ghostty.read_text() + 'cursor-color = #ffffff\n')
+        code, result = self.run_cli('apply', '--electric', str(root), '--yes', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(ghostty.read_text(), 'font-size = 11\ncursor-color = #ffffff\n')
+
+    def test_upgrade_after_user_removed_the_include_just_drops_it(self):
+        root = self.bundle()
+        env = self.ghostty_host()
+        ghostty = self.root / 'config/ghostty/config.ghostty'
+        ghostty.parent.mkdir(parents=True)
+        self.legacy_include(ghostty)
         ghostty.write_text('font-size = 14\n')
-        code, result = self.run_cli('undo', env=env)
-        self.assertEqual(code, 1, result)
+        code, result = self.run_cli('apply', '--electric', str(root), '--yes', env=env)
+        self.assertEqual(code, 0, result)
+        self.assertEqual(ghostty.read_text(), 'font-size = 14\n')
+        self.assertNotIn(str(ghostty.resolve()), json.loads(self.ledger.read_text())['targets'])
+        self.assertEqual(self.run_cli('undo', env=env)[0], 0)
         self.assertEqual(ghostty.read_text(), 'font-size = 14\n')
 
     def test_users_own_font_is_never_replaced_or_removed(self):

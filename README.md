@@ -16,7 +16,9 @@ streaming. A settings-only option styles stock Herdr without the bundle.
 | Herdr plugin | Preview, check and undo actions from Herdr's menu |
 
 With Ghostty installed, both install options also add the Ghostty appearance
-and font. When Claude Code or OpenCode is present, Electric also installs its theme.
+and font: Electric only in its own Ghostty window, settings-only in every
+Ghostty window. When Claude Code or OpenCode is present, Electric also installs
+its theme.
 
 ## Requirements
 
@@ -34,12 +36,14 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.2.1
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.3.0
 herdr-electrified install
 ```
 
-Then restart Ghostty and run `herdr-electric` from a new window (not from
-inside a Herdr pane; Herdr refuses to nest).
+Then run `herdr-electric`. With Ghostty installed it opens its own Ghostty
+window with the Electric look; your other Ghostty windows keep your own config.
+Without Ghostty, run it from a new terminal window (not from inside a Herdr
+pane; Herdr refuses to nest).
 
 `install` downloads the Electric bundle 0.6.0 (patched Herdr 0.8.2, patched
 Codex 0.160.0, JetBrainsMono Nerd Font Mono 3.5.1) into
@@ -55,8 +59,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.2.1/herdr-electrified-0.6.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.2.1/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.3.0/herdr-electrified-0.6.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.3.0/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.6.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.6.0-macos-arm64.tar.gz
@@ -99,10 +103,14 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.6.0-macos-arm64
 - **OpenCode** (when `opencode` is on PATH or `~/.config/opencode` exists): the
   OpenCode theme in `~/.config/opencode/themes`, selected (with a mauve Build
   accent) only inside Electric panes. Your own OpenCode settings are not edited.
-- **Ghostty** (when installed): an appearance include (Catppuccin Mocha, the
-  Nerd Font at 14.5pt, small padding) in the Ghostty config, plus the font in
-  `~/Library/Fonts`. Keybindings and behavior are not touched. Reload Ghostty
-  (cmd+shift+,) and restart it once after the font is first installed.
+- **Ghostty** (when installed): an appearance file (Catppuccin Mocha, the Nerd
+  Font at 14.5pt, small padding) loaded only by the window `herdr-electric`
+  opens, plus the font in `~/Library/Fonts`. That window is a separate Ghostty
+  instance layered on your own config (keybindings kept), with its own Dock
+  icon until you close it. Your Ghostty config is not edited; upgrading from
+  v1.2.x removes the include older versions added, so reload Ghostty
+  (cmd+shift+,) once afterwards. `herdr-electric` with arguments (for example
+  `herdr-electric server stop`) runs in the current terminal.
 
 In zsh panes, `codex` and `claude` run the Electric versions even when your
 profile puts another `codex` or `claude` first on PATH. Bash and fish panes don't
@@ -118,12 +126,13 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.2.1
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.3.0
 herdr-electrified install --settings-only
 ```
 
 This applies the Herdr preset to your Herdr config and, with Ghostty, the same
-Ghostty appearance and font. Restart Ghostty once afterwards. To preview first:
+Ghostty appearance and font in every Ghostty window (one include line in your
+Ghostty config; undo removes it). Restart Ghostty once afterwards. To preview first:
 
 ```sh
 herdr-electrified apply --dry-run --herdr-bin "$(command -v herdr)"
@@ -159,7 +168,7 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.2.1 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.3.0 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.

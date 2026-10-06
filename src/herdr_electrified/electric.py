@@ -22,6 +22,7 @@ from . import config as c
 REQUIRED = {'herdr', 'codex/bin/codex', 'codex/bin/codex-code-mode-host',
             'codex/codex-path/rg', 'codex/codex-resources/zsh/bin/zsh', 'themes/codex-electric.tmTheme'}
 GHOSTTY_APPS = ('/Applications', '~/Applications')
+OPEN = '/usr/bin/open'
 # Pinned at release: install trusts only these exact archives.
 BUNDLE = 'herdr-electrified-0.6.0-macos-arm64'
 BUNDLE_URL = f'https://github.com/rm0nroe/herdr-electrified/releases/download/v{__version__}/{BUNDLE}.tar.gz'
@@ -102,8 +103,12 @@ def fetch_fonts():
     return root
 
 
+def ghostty_app():
+    return next((app for d in GHOSTTY_APPS if (app := Path(d).expanduser() / 'Ghostty.app').is_dir()), None)
+
+
 def ghostty_installed(path=None):
-    return bool(shutil.which('ghostty', path=path) or any((Path(d).expanduser() / 'Ghostty.app').is_dir() for d in GHOSTTY_APPS))
+    return bool(shutil.which('ghostty', path=path) or ghostty_app())
 
 
 def verify(directory):
@@ -329,7 +334,21 @@ def targets(root, config, codex_home, agents=('codex',)):
     if 'opencode' in agents:
         path += ('export OPENCODE_TUI_CONFIG=' + shlex.quote(str(opencode / 'tui.json')) + '\n'
                  'export OPENCODE_CONFIG=' + shlex.quote(str(opencode / 'opencode.json')) + '\n')
-    herdr = '#!/bin/sh\nunset HERDR_SOCKET_PATH HERDR_CLIENT_SOCKET_PATH HERDR_SESSION CLAUDE_CODE_CHILD_SESSION\n' + path + 'export HERDR_CONFIG_PATH=' + shlex.quote(str(config)) + '\nexec ' + shlex.quote(str(root / 'herdr')) + ' --session herdr-electrified "$@"\n'
+    # Bare herdr-electric opens its own Ghostty window with the Electric look, so other Ghostty
+    # windows keep the user's config. Inside that window (marker set) or with arguments it runs in place.
+    # Ghostty runs --command through a shell, so the launcher path is quoted twice.
+    app = ghostty_app() if 'ghostty' in agents else None
+    window = ('if [ $# -eq 0 ] && [ -z "${HERDR_ELECTRIFIED_WINDOW-}" ] && [ -d ' + shlex.quote(str(app)) + ' ]; then\n'
+              # open hands its whole environment to Ghostty; start it clean, as from the Dock, so a Herdr
+              # pane's HERDR_ENV (nesting refusal) or this terminal's own variables never reach the window.
+              '  exec /usr/bin/env -i HOME="$HOME" USER="${USER-}" LOGNAME="${LOGNAME-}" SHELL="${SHELL-}" TMPDIR="${TMPDIR-}" '
+              'LANG="${LANG-}" SSH_AUTH_SOCK="${SSH_AUTH_SOCK-}" PATH=/usr/bin:/bin:/usr/sbin:/sbin \\\n    '
+              + shlex.quote(OPEN) + ' -na ' + shlex.quote(str(app)) + ' --env HERDR_ELECTRIFIED_WINDOW=1 --args '
+              + shlex.quote('--config-file=' + str(c.canonical(Path(config).parent / 'ghostty.conf')))
+              + ' --quit-after-last-window-closed=true --window-save-state=never '
+              + shlex.quote('--command=' + shlex.quote(str(c.canonical(bin_dir / 'herdr-electric')))) + '\n'
+              'fi\nunset HERDR_ELECTRIFIED_WINDOW\n') if app else ''
+    herdr = '#!/bin/sh\n' + window + 'unset HERDR_SOCKET_PATH HERDR_CLIENT_SOCKET_PATH HERDR_SESSION CLAUDE_CODE_CHILD_SESSION\n' + path + 'export HERDR_CONFIG_PATH=' + shlex.quote(str(config)) + '\nexec ' + shlex.quote(str(root / 'herdr')) + ' --session herdr-electrified "$@"\n'
     files = {c.canonical(bin_dir / 'herdr-electric'): herdr}
     if 'codex' in agents:
         files |= {c.canonical(codex_home / 'themes/herdr-electric.tmTheme'): (root / 'themes/codex-electric.tmTheme').read_text(),

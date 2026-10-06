@@ -119,9 +119,13 @@ def execute(args):
             paths.append((c.canonical(root / 'settings.json'), 'claude-settings'))
         release = {path for path, kind in legacy if kind == 'claude-theme'} - {path for path, kind in paths}
         paths.extend(legacy)
-        if 'ghostty' in agents or layer:
-            owned = [c.canonical(p) for p, e in data['targets'].items() if e.get('kind') == 'ghostty-config']
+        owned = [c.canonical(p) for p, e in data['targets'].items() if e.get('kind') == 'ghostty-config']
+        if layer:
             paths.append((owned[0] if owned else electric.ghostty_config(), 'ghostty-config'))
+        elif bundle and owned and 'ghostty' not in data:
+            # Before v1.3.0 Electric styled every Ghostty window; herdr-electric now opens its own.
+            paths.append((owned[0], 'ghostty-config'))
+            release.add(owned[0])
         paths.extend((p, 'electric-file') for p in electric_targets)
         paths = list(dict.fromkeys(paths))
     script = next((path for path, kind in paths if kind == 'claude-statusline'), None)
@@ -143,7 +147,7 @@ def execute(args):
             plans.append((path, before, after, updated, None, kind))
             continue
         if kind == 'ghostty-config':
-            before, after, updated, conflicts = c.ghostty_plan(path, entry, look, args.command == 'undo')
+            before, after, updated, conflicts = c.ghostty_plan(path, entry, look, args.command == 'undo', path in release)
             result['targets'].append({'path': str(path), 'component': kind, 'diff': c.diff(path, before, after),
                                       'conflicts': conflicts, 'configured': before == after, 'loaded': 'unknown',
                                       'reload': 'skipped', 'validation': 'include only', 'confirmation_required': False,
@@ -432,6 +436,12 @@ def outcome(result, args):
     ghostty = fonts or any(r.get('saved') and component(r) == 'Ghostty windows' for r in result['targets'])
     restart = 'restart Ghostty once so it loads the new font' if fonts else 'reload Ghostty (cmd+shift+,)'
     run = 'run herdr-electric from a new {} window (not inside a Herdr pane)'
+    if result.get('bundle'):
+        # herdr-electric opens its own Ghostty window, which loads the look and any new font itself;
+        # only a released pre-v1.3.0 include needs the open windows reloaded.
+        window = 'ghostty' in result.get('agents', [])
+        ghostty = any(r.get('saved') and r.get('component') == 'ghostty-config' for r in result['targets'])
+        restart, run = 'reload Ghostty (cmd+shift+,) so other windows drop the Electric look', 'run herdr-electric (it opens its own Ghostty window)' if window else run
     if os.environ.get('TERM_PROGRAM') == 'ghostty':
         steps = ([restart] if ghostty else []) + ([run.format('Ghostty')] if result.get('bundle') else [])
         if steps:
@@ -440,7 +450,8 @@ def outcome(result, args):
         if result.get('bundle'):
             lines.append('Next: ' + run.format('terminal') + '.')
         if ghostty:
-            lines.append('Ghostty: ' + ('restart it once so it loads the new font.' if fonts else 'open Ghostty windows pick up the new look after cmd+shift+,.'))
+            lines.append('Ghostty: ' + ('reload it (cmd+shift+,) so other windows drop the Electric look.' if result.get('bundle') else
+                                        'restart it once so it loads the new font.' if fonts else 'open Ghostty windows pick up the new look after cmd+shift+,.'))
         if not result.get('bundle'):
             # Herdr Electric paints its own panes; stock Herdr shows this terminal's background.
             lines.append("This terminal isn't styled by Electric; give it a dark background.")

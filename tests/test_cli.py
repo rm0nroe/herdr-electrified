@@ -503,24 +503,35 @@ else: sys.exit(2)
         args = SimpleNamespace(dry_run=False, prompted=True)
         def row(path, component='electric-file', **extra):
             return {'path': path, 'component': component, 'change': 'changed', 'saved': True, **extra}
-        upgrade = {'bundle': '0.4.0', 'targets': [row('/h/.config/herdr-electrified/electric/ghostty.conf')]}
+        upgrade = {'bundle': '0.4.0', 'agents': ['ghostty'], 'targets': [row('/h/.config/herdr-electrified/electric/ghostty.conf')]}
         def run(result, terminal):
             with patch.dict(os.environ, {'TERM_PROGRAM': terminal} if terminal else {}, clear=True):
                 return outcome(result, args)
-        self.assertEqual(run(upgrade, 'ghostty'), 'Wrote 1 file. Undo: herdr-electrified undo\n'
-                         'Next: reload Ghostty (cmd+shift+,), then run herdr-electric from a new Ghostty window (not inside a Herdr pane).')
+        # herdr-electric opens its own Ghostty window, which loads the look and a new font itself.
         # Herdr Electric paints its own pane colors, so no terminal background advice with the bundle.
-        for terminal in ('iTerm.app', None):
+        for terminal in ('ghostty', 'iTerm.app', None):
             self.assertEqual(run(upgrade, terminal), 'Wrote 1 file. Undo: herdr-electrified undo\n'
-                             'Next: run herdr-electric from a new terminal window (not inside a Herdr pane).\n'
-                             'Ghostty: open Ghostty windows pick up the new look after cmd+shift+,.')
+                             'Next: run herdr-electric (it opens its own Ghostty window).')
+        fonts = dict(upgrade, fonts_installed=True)
+        self.assertEqual(run(fonts, 'ghostty'), 'Wrote 1 file and installed the font. Undo: herdr-electrified undo\n'
+                         'Next: run herdr-electric (it opens its own Ghostty window).')
+        # Upgrading from v1.2.x removes the global include; open Ghostty windows drop the look on reload.
+        released = dict(upgrade, targets=upgrade['targets'] + [row('/h/Library/Application Support/com.mitchellh.ghostty/config', 'ghostty-config')])
+        self.assertEqual(run(released, 'ghostty'), 'Wrote 2 files. Undo: herdr-electrified undo\n'
+                         'Next: reload Ghostty (cmd+shift+,) so other windows drop the Electric look, then run herdr-electric (it opens its own Ghostty window).')
+        self.assertEqual(run(released, 'iTerm.app'), 'Wrote 2 files. Undo: herdr-electrified undo\n'
+                         'Next: run herdr-electric (it opens its own Ghostty window).\n'
+                         'Ghostty: reload it (cmd+shift+,) so other windows drop the Electric look.')
+        # Without Ghostty, Electric runs in the terminal it is started from.
+        plain = {'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}
+        self.assertEqual(run(plain, 'iTerm.app'), 'Wrote 1 file. Undo: herdr-electrified undo\n'
+                         'Next: run herdr-electric from a new terminal window (not inside a Herdr pane).')
         stock = run({'targets': [row('/h/.config/herdr/config.toml', 'herdr')]}, 'iTerm.app')
         self.assertEqual(stock, "Wrote 1 file. Undo: herdr-electrified undo\nThis terminal isn't styled by Electric; give it a dark background.")
-        self.assertNotIn('Ghostty', run({'bundle': '0.4.0', 'targets': [row('/h/.local/bin/herdr-electric')]}, 'iTerm.app'))
-        fonts = dict(upgrade, fonts_installed=True)
-        self.assertIn('installed the font', run(fonts, 'ghostty'))
-        self.assertIn('Next: restart Ghostty once so it loads the new font, then run herdr-electric', run(fonts, 'ghostty'))
-        self.assertIn('Ghostty: restart it once so it loads the new font.', run(fonts, 'iTerm.app'))
+        # Settings-only still styles every Ghostty window through the include.
+        look = {'targets': [row('/h/.config/herdr-electrified/ghostty.conf')], 'fonts_installed': True}
+        self.assertIn('Next: restart Ghostty once so it loads the new font.', run(look, 'ghostty'))
+        self.assertIn('Ghostty: restart it once so it loads the new font.', run(look, 'iTerm.app'))
         notice = 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'
         settings = run({'targets': [row('/h/.config/ghostty/config.ghostty', 'ghostty-config', notice=notice)]}, 'ghostty')
         self.assertEqual(settings, 'Wrote 1 file. Undo: herdr-electrified undo\nNext: reload Ghostty (cmd+shift+,).')

@@ -425,15 +425,16 @@ def settings_plan(before, entry, undo, values, requested):
     return before, after, updated, conflicts
 
 
-def ghostty_plan(path, entry, include, undo=False):
-    """Append one optional include line; undo restores the file exactly, or removes only that line after user edits."""
+def ghostty_plan(path, entry, include, undo=False, release=False):
+    """Append one optional include line; undo restores the file exactly, or removes only that line after user edits.
+    Release is undo during apply: an include the user already removed just stops being owned."""
     before = read(path)
-    if undo:
+    if undo or release:
         if entry.get('exact_restore', True) and digest(before) == entry['installed_hash']:
             return before, entry['original_file'], None, []
         installed = entry['owned']['$include']['installed']
         if before is None or installed not in before:
-            return before, before, copy.deepcopy(entry), ['$include']
+            return (before, before, None, []) if release else (before, before, copy.deepcopy(entry), ['$include'])
         return before, before.replace(installed, '', 1), None, []
     block = entry['owned']['$include']['installed'] if entry else (
         '# Herdr Electrified Electric appearance; herdr-electrified undo removes these two lines.\n'
