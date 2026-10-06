@@ -1,7 +1,7 @@
 # Building Electric
 
 The initial target is macOS arm64. Builders need Python 3.12+, git, full Xcode,
-Rust 1.96.1 (Herdr), Rust 1.95.0 (Codex), and Zig 0.15.2. End users do not need
+Rust 1.96.1 (Herdr), Rust 1.95.0 (Codex), and Zig 0.16.0. End users do not need
 these build tools. Set `ZIG` to the Zig executable when it is not on PATH.
 
 ```sh
@@ -35,11 +35,11 @@ failed to link Zig 0.15.2's build runner with unresolved Darwin C symbols.
 
 | Component | Pinned source |
 | --- | --- |
-| Herdr 0.8.2 | `herdrdev/herdr@9eb521456ac0d19d3ab3d9d7cea3cca10baa8a4c` |
+| Herdr 0.9.3 | `herdrdev/herdr@7b116c05bfda646af39d2524c54e70c751f57ee8` |
 | Codex 0.160.0 | `openai/codex@a956835d020762cb2b570053af06f643a11c0ecc` |
 | Codex helpers | official `rust-v0.160.0` macOS arm64 package |
 | Font | Nerd Fonts `v3.5.1` `JetBrainsMono.tar.xz` (Mono Regular, Bold, Italic, BoldItalic) |
-| Zig | 0.15.2 |
+| Zig | 0.16.0 |
 
 ## Releasing a new bundle
 

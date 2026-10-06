@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the pinned macOS arm64 renderers. Requires Python 3.12+, git, Rust, Zig 0.15.2 and full Xcode."""
+"""Build the pinned macOS arm64 renderers. Requires Python 3.12+, git, Rust, Zig 0.16.0 and full Xcode."""
 import argparse
 import gzip
 import hashlib
@@ -15,14 +15,14 @@ import tarfile
 import urllib.request
 
 REPO = Path(__file__).resolve().parents[1]
-SOURCES = {'herdr': ('https://github.com/herdrdev/herdr.git', '9eb521456ac0d19d3ab3d9d7cea3cca10baa8a4c'),
+SOURCES = {'herdr': ('https://github.com/herdrdev/herdr.git', '7b116c05bfda646af39d2524c54e70c751f57ee8'),
            'codex': ('https://github.com/openai/codex.git', 'a956835d020762cb2b570053af06f643a11c0ecc')}
 PACKAGE_URL = 'https://github.com/openai/codex/releases/download/rust-v0.160.0/codex-package-aarch64-apple-darwin.tar.gz'
 PACKAGE_SHA = '007df41b607dbbc8d204b9746ce7fed2d4ce6c813f44c32ceee54175ca796525'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
 FONT_SHA = '04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf'
 FONTS = [f'JetBrainsMonoNerdFontMono-{style}.ttf' for style in ('Regular', 'Bold', 'Italic', 'BoldItalic')]
-BUNDLE_VERSION = '0.6.0'
+BUNDLE_VERSION = '0.7.0'
 
 
 def build_env():

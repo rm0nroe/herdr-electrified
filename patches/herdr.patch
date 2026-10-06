@@ -1,142 +1,17 @@
-diff --git a/src/app/input/sidebar.rs b/src/app/input/sidebar.rs
-index 0923eef..a9e8084 100644
---- a/src/app/input/sidebar.rs
-+++ b/src/app/input/sidebar.rs
-@@ -175,6 +175,9 @@ impl AppState {
-     }
- 
-     pub(crate) fn sidebar_new_button_rect(&self) -> Rect {
-+        if self.sidebar_spaces.hide_controls {
-+            return Rect::default();
-+        }
-         let footer = self.sidebar_footer_rect();
-         let width = 5u16.min(footer.width.max(1));
-         Rect::new(footer.x, footer.y, width, footer.height)
-@@ -184,6 +187,9 @@ impl AppState {
-         if self.view.layout == ViewLayout::Mobile {
-             return self.view.mobile_menu_hit_area;
-         }
-+        if self.sidebar_spaces.hide_controls {
-+            return Rect::default();
-+        }
- 
-         let footer = self.sidebar_footer_rect();
-         let width = if self.global_menu_attention_badge_visible() {
-@@ -252,6 +258,9 @@ impl AppState {
-     }
- 
-     pub(super) fn on_sidebar_toggle(&self, col: u16, row: u16) -> bool {
-+        if !self.sidebar_collapsed && self.sidebar_spaces.hide_controls {
-+            return false;
-+        }
-         let rect = if self.sidebar_collapsed {
-             crate::ui::collapsed_sidebar_toggle_rect(self.view.sidebar_rect)
-         } else {
-@@ -474,7 +483,11 @@ impl AppState {
-             self.view.sidebar_rect,
-             self.sidebar_section_split,
-         );
--        let rect = crate::ui::agent_panel_toggle_rect(detail_area, self.agent_panel_sort);
-+        let rect = crate::ui::agent_panel_toggle_rect(
-+            detail_area,
-+            self.agent_panel_sort,
-+            self.sidebar_agents.padding_x,
-+        );
-         rect.width > 0
-             && col >= rect.x
-             && col < rect.x + rect.width
-@@ -856,7 +869,11 @@ mod tests {
-             app.state.view.sidebar_rect,
-             app.state.sidebar_section_split,
-         );
--        let toggle = crate::ui::agent_panel_toggle_rect(detail_area, app.state.agent_panel_sort);
-+        let toggle = crate::ui::agent_panel_toggle_rect(
-+            detail_area,
-+            app.state.agent_panel_sort,
-+            app.state.sidebar_agents.padding_x,
-+        );
-         app.handle_mouse(mouse(
-             MouseEventKind::Down(MouseButton::Left),
-             toggle.x,
-@@ -1073,8 +1090,8 @@ mod tests {
-         app.state.selected = 0;
-         app.state.mode = Mode::Terminal;
-         app.state.sidebar_collapsed = true;
--        app.state.view.sidebar_rect = Rect::new(0, 0, 4, 20);
--        app.state.view.terminal_area = Rect::new(4, 0, 80, 20);
-+        app.state.view.sidebar_rect = Rect::new(0, 0, 5, 20);
-+        app.state.view.terminal_area = Rect::new(5, 0, 80, 20);
- 
-         let (_, _, detail_area) =
-             crate::ui::collapsed_sidebar_sections(app.state.view.sidebar_rect);
-@@ -1107,8 +1124,8 @@ mod tests {
-         app.state.mode = Mode::Terminal;
-         app.state.sidebar_collapsed = true;
-         app.state.agent_panel_sort = AgentPanelSort::Priority;
--        app.state.view.sidebar_rect = Rect::new(0, 0, 4, 20);
--        app.state.view.terminal_area = Rect::new(4, 0, 80, 20);
-+        app.state.view.sidebar_rect = Rect::new(0, 0, 5, 20);
-+        app.state.view.terminal_area = Rect::new(5, 0, 80, 20);
- 
-         let set_state = |app: &mut crate::app::App, ws_idx: usize, pane_id, state| {
-             let terminal_id = app.state.workspaces[ws_idx].tabs[0].panes[&pane_id]
-@@ -1141,8 +1158,8 @@ mod tests {
-     fn clicking_collapsed_sidebar_toggle_expands_sidebar() {
-         let mut app = app_for_mouse_test();
-         app.state.sidebar_collapsed = true;
--        app.state.view.sidebar_rect = Rect::new(0, 0, 4, 20);
--        app.state.view.terminal_area = Rect::new(4, 0, 80, 20);
-+        app.state.view.sidebar_rect = Rect::new(0, 0, 5, 20);
-+        app.state.view.terminal_area = Rect::new(5, 0, 80, 20);
- 
-         let toggle = crate::ui::collapsed_sidebar_toggle_rect(app.state.view.sidebar_rect);
-         app.handle_mouse(mouse(
-@@ -1167,6 +1184,31 @@ mod tests {
-         assert!(app.state.sidebar_collapsed);
-     }
- 
-+    #[test]
-+    fn hidden_controls_have_no_expanded_toggle_hit_target() {
-+        let mut app = app_for_mouse_test();
-+        app.state.sidebar_collapsed = false;
-+        app.state.workspaces = vec![Workspace::test_new("one")];
-+        app.state.active = Some(0);
-+        app.state.ensure_test_terminals();
-+        crate::ui::compute_view(&mut app.state, Rect::new(0, 0, 120, 40));
-+        let card = app.state.view.workspace_card_areas[0].rect;
-+        let drop_target = app.state.workspace_drop_target_at_row(card.y);
-+        app.state.sidebar_spaces.hide_controls = true;
-+        app.state.sidebar_spaces.padding_x = 1;
-+        app.state.sidebar_agents.padding_x = 1;
-+        crate::ui::compute_view(&mut app.state, Rect::new(0, 0, 120, 40));
-+        assert_eq!(app.state.view.workspace_card_areas[0].rect, card);
-+        assert_eq!(app.state.workspace_at_row(card.y), Some(0));
-+        assert_eq!(app.state.workspace_drop_target_at_row(card.y), drop_target);
-+        let rect = crate::ui::expanded_sidebar_toggle_rect(app.state.view.sidebar_rect);
-+        assert!(!app.state.on_sidebar_toggle(rect.x, rect.y));
-+        app.state.sidebar_collapsed = true;
-+        crate::ui::compute_view(&mut app.state, Rect::new(0, 0, 120, 40));
-+        let rect = crate::ui::collapsed_sidebar_toggle_rect(app.state.view.sidebar_rect);
-+        assert!(app.state.on_sidebar_toggle(rect.x, rect.y));
-+    }
-+
-     #[test]
-     fn clicking_expanded_sidebar_toggle_collapses_sidebar() {
-         let mut app = app_for_mouse_test();
 diff --git a/src/app/mod.rs b/src/app/mod.rs
-index 85ad4fa..ae7726b 100644
+index 8fad961c..ee1be437 100644
 --- a/src/app/mod.rs
 +++ b/src/app/mod.rs
-@@ -698,6 +698,8 @@ impl App {
+@@ -521,6 +521,8 @@ impl App {
+             next_plugin_command_log_id: 1,
              plugin_commands_in_flight: 0,
-             global_menu: state::MenuListState::new(0),
              host_terminal_theme: crate::terminal_theme::TerminalTheme::default(),
 +            // ponytail: read at startup only; a config reload keeps the colors Herdr started with.
 +            terminal_colors: config.theme.terminal_colors(),
              host_cell_size: crate::kitty_graphics::HostCellSize::default(),
-             host_mouse_pixels: None,
              session_dirty: false,
-@@ -805,6 +807,11 @@ impl App {
+             terminal_runtime_shutdowns: Vec::new(),
+@@ -627,6 +629,11 @@ impl App {
          };
          app.configure_tab_bar_status(&config.ui.tab_bar_right, &config.ui.tab_bar_right_separator);
          app.configure_window_title(&config.ui.window_title);
@@ -148,7 +23,7 @@ index 85ad4fa..ae7726b 100644
          app
      }
  
-@@ -2742,6 +2749,43 @@ mod tests {
+@@ -1338,6 +1345,50 @@ mod tests {
          assert!(app.event_rx.try_recv().is_err());
      }
  
@@ -160,7 +35,13 @@ index 85ad4fa..ae7726b 100644
 +        )
 +        .unwrap();
 +        let (_api_tx, api_rx) = tokio::sync::mpsc::unbounded_channel();
-+        let mut app = App::new(&config, true, None, api_rx, crate::api::EventHub::default());
++        let mut app = App::new(
++            &config,
++            crate::app::AppPolicy::TEST,
++            None,
++            api_rx,
++            crate::api::EventHub::default(),
++        );
 +        let dark = Some(RgbColor {
 +            r: 0x11,
 +            g: 0x11,
@@ -172,16 +53,17 @@ index 85ad4fa..ae7726b 100644
 +            app.state.host_terminal_appearance,
 +            Some(HostAppearance::Dark)
 +        );
-+        app.update_host_terminal_theme(
-+            DefaultColorKind::Background,
-+            RgbColor {
-+                r: 255,
-+                g: 255,
-+                b: 255,
-+            },
++        app.set_host_terminal_theme(
++            crate::terminal_theme::TerminalTheme::default().with_color(
++                DefaultColorKind::Background,
++                RgbColor {
++                    r: 255,
++                    g: 255,
++                    b: 255,
++                },
++            ),
 +        );
 +        assert_eq!(app.state.host_terminal_theme.background, dark);
-+        app.set_host_terminal_appearance(HostAppearance::Light, true);
 +        app.set_host_terminal_appearance_state(Some(HostAppearance::Light), true);
 +        assert_eq!(
 +            app.state.host_terminal_appearance,
@@ -193,41 +75,31 @@ index 85ad4fa..ae7726b 100644
      fn startup_uses_configured_agent_panel_sort() {
          let mut config = Config::default();
 diff --git a/src/app/state.rs b/src/app/state.rs
-index d9dcfc9..eb97b59 100644
+index 65c06a6c..572bc9c2 100644
 --- a/src/app/state.rs
 +++ b/src/app/state.rs
-@@ -1551,6 +1551,8 @@ pub struct AppState {
-     pub global_menu: MenuListState,
+@@ -881,6 +881,8 @@ pub struct AppState {
+     pub(crate) plugin_commands_in_flight: usize,
      /// Resolved host terminal default colors for theming embedded panes.
      pub host_terminal_theme: TerminalTheme,
 +    /// `[theme.terminal]`: colors Herdr paints over the host's (startup config only).
 +    pub terminal_colors: Option<TerminalTheme>,
      /// Last known foreground host terminal cell size in pixels.
      pub(crate) host_cell_size: crate::kitty_graphics::HostCellSize,
-     /// Exact pixel provenance only while one confirmed SGR report is dispatched.
-@@ -1932,6 +1934,7 @@ impl AppState {
+     /// Set when a persisted session snapshot would change.
+@@ -1101,6 +1103,7 @@ impl AppState {
+             next_plugin_command_log_id: 1,
              plugin_commands_in_flight: 0,
-             global_menu: MenuListState::new(0),
              host_terminal_theme: TerminalTheme::default(),
 +            terminal_colors: None,
              host_cell_size: crate::kitty_graphics::HostCellSize::default(),
-             host_mouse_pixels: None,
              session_dirty: false,
+             terminal_runtime_shutdowns: Vec::new(),
 diff --git a/src/app/theme_sync.rs b/src/app/theme_sync.rs
-index 58f95be..fe0f68e 100644
+index ed0f632d..aea1b14a 100644
 --- a/src/app/theme_sync.rs
 +++ b/src/app/theme_sync.rs
-@@ -51,6 +51,9 @@ impl App {
-         appearance: crate::terminal_theme::HostAppearance,
-         explicit: bool,
-     ) -> bool {
-+        let (appearance, explicit) = self
-+            .forced_appearance()
-+            .map_or((appearance, explicit), |forced| (forced, true));
-         if self.state.host_terminal_appearance == Some(appearance)
-             && self.state.host_terminal_appearance_explicit == explicit
-         {
-@@ -70,6 +73,9 @@ impl App {
+@@ -6,6 +6,9 @@ impl App {
          appearance: Option<crate::terminal_theme::HostAppearance>,
          explicit: bool,
      ) -> bool {
@@ -237,7 +109,7 @@ index 58f95be..fe0f68e 100644
          if self.state.host_terminal_appearance == appearance
              && self.state.host_terminal_appearance_explicit == explicit
          {
-@@ -85,6 +91,11 @@ impl App {
+@@ -21,6 +24,11 @@ impl App {
          &mut self,
          theme: crate::terminal_theme::TerminalTheme,
      ) -> bool {
@@ -249,7 +121,7 @@ index 58f95be..fe0f68e 100644
          if theme == self.state.host_terminal_theme {
              return false;
          }
-@@ -93,6 +104,14 @@ impl App {
+@@ -29,6 +37,14 @@ impl App {
          true
      }
  
@@ -265,63 +137,478 @@ index 58f95be..fe0f68e 100644
          let (palette, theme_name) = super::resolve_effective_theme(
              &self.state.theme_runtime,
 diff --git a/src/client/mod.rs b/src/client/mod.rs
-index c33157f..df6e6c3 100644
+index d55e4c48..11113743 100644
 --- a/src/client/mod.rs
 +++ b/src/client/mod.rs
-@@ -342,8 +342,8 @@ impl From<protocol::FramingError> for ClientError {
+@@ -76,7 +76,8 @@ use terminal_geometry::{
+ use terminal_geometry::{reported_cell_size_from_events, store_reported_cell_size};
+ use terminal_setup::{
+     effective_mouse_capture, effective_sgr_pixel_mouse, set_mouse_capture,
+-    setup_direct_attach_terminal, setup_terminal, should_draw_host_cursor, TerminalGuard,
++    host_terminal_color_sequence, setup_direct_attach_terminal, setup_terminal,
++    should_draw_host_cursor, TerminalGuard,
+ };
+ 
+ fn refresh_host_mouse_capture(enabled: bool, sgr_pixels: bool) {
+@@ -185,6 +186,12 @@ fn run_client_with_mode(
+             .with_local_endpoint(&socket_path)
+     });
+     let mouse_capture = loaded_config.config.ui.mouse_capture;
++    let host_colors = loaded_config
++        .config
++        .theme
++        .terminal_colors()
++        .map(|theme| host_terminal_color_sequence(&theme))
++        .unwrap_or_default();
+     let mouse_scroll_lines = loaded_config.config.ui.mouse_scroll_lines();
+     let redraw_on_focus_gained = loaded_config.config.ui.redraw_on_focus_gained;
+     let host_cursor = loaded_config.config.ui.host_cursor;
+@@ -298,9 +305,9 @@ fn run_client_with_mode(
+     // The federated shell can show connection notices without any server snapshot.
+     let direct_attach = attach_escape.is_some();
+     let mut terminal_guard = if direct_attach {
+-        setup_direct_attach_terminal(mouse_capture)
++        setup_direct_attach_terminal(mouse_capture, &host_colors)
+     } else {
+-        setup_terminal(mouse_capture)
++        setup_terminal(mouse_capture, &host_colors)
+     }
+     .map_err(|err| {
+         eprintln!("herdr: failed to set up terminal: {err}");
+diff --git a/src/client/shell.rs b/src/client/shell.rs
+index 2d180443..5857cd3e 100644
+--- a/src/client/shell.rs
++++ b/src/client/shell.rs
+@@ -236,6 +236,22 @@ fn status_color(
+     }
+ }
+ 
++/// State text dims once an agent is idle; the icon keeps its status color.
++fn status_text_color(
++    status: crate::api::schema::AgentStatus,
++    palette: &Palette,
++) -> ratatui::style::Color {
++    match status {
++        crate::api::schema::AgentStatus::Idle => palette.overlay0,
++        _ => status_color(status, palette),
++    }
++}
++
++/// `padding_x` cells trimmed from both sides for text; hit regions keep the full rect.
++fn sidebar_text_rect(area: Rect, padding_x: u16) -> Rect {
++    area.inner(ratatui::layout::Margin::new(padding_x.min(area.width / 2), 0))
++}
++
+ fn panel_contrast_fg(palette: &Palette) -> ratatui::style::Color {
+     match palette.panel_bg {
+         ratatui::style::Color::Reset => palette.surface_dim,
+diff --git a/src/client/shell/agent_sidebar.rs b/src/client/shell/agent_sidebar.rs
+index e43ab8cc..b16fd58e 100644
+--- a/src/client/shell/agent_sidebar.rs
++++ b/src/client/shell/agent_sidebar.rs
+@@ -108,11 +108,12 @@ pub(super) fn render_agent_panel_header(
+     if area.height < 2 {
+         return false;
+     }
++    let text = sidebar_text_rect(area, config.agents.padding_x);
+     put_text(
+         buffer,
+-        area.x,
++        text.x,
+         area.y + 1,
+-        area.width,
++        text.width,
+         " agents",
+         Style::default()
+             .fg(config.palette.overlay0)
+@@ -122,9 +123,9 @@ pub(super) fn render_agent_panel_header(
+         crate::config::AgentPanelSortConfig::Spaces => "grouped",
+         crate::config::AgentPanelSortConfig::Priority => "priority",
+     });
+-    let sort_width = display_width(sort_label).min(area.width as usize) as u16;
++    let sort_width = display_width(sort_label).min(text.width as usize) as u16;
+     let sort_rect = Rect::new(
+-        area.right().saturating_sub(sort_width),
++        text.right().saturating_sub(sort_width),
+         area.y + 1,
+         sort_width,
+         1,
+@@ -339,7 +340,7 @@ pub(super) fn render_agent_row(
+             .fg(palette.subtext0)
+             .add_modifier(Modifier::BOLD)
+     };
+-    let status_style = Style::default().fg(status_color(row.status, palette));
++    let status_style = Style::default().fg(status_text_color(row.status, palette));
+     let secondary = Style::default().fg(palette.overlay0);
+     let icon = (
+         status_icon(row.status, config.status_indicators),
+@@ -353,6 +354,8 @@ pub(super) fn render_agent_row(
+     } else {
+         row.rows.clone()
+     };
++    let text = sidebar_text_rect(rect, config.agents.padding_x);
++    buffer.set_style(rect, row_style);
+     for (index, tokens) in rows.iter().take(rect.height as usize).enumerate() {
+         let indent = if index == 0 { 1 } else { 3 };
+         let mut spans = vec![ratatui::text::Span::raw(" ".repeat(indent))];
+@@ -364,10 +367,10 @@ pub(super) fn render_agent_row(
+             secondary,
+             secondary,
+             palette,
+-            rect.width.saturating_sub(indent as u16) as usize,
++            text.width.saturating_sub(indent as u16) as usize,
+         ));
+         Paragraph::new(Line::from(spans)).style(row_style).render(
+-            Rect::new(rect.x, rect.y + index as u16, rect.width, 1),
++            Rect::new(text.x, rect.y + index as u16, text.width, 1),
+             buffer,
+         );
+     }
+diff --git a/src/client/shell/composition.rs b/src/client/shell/composition.rs
+index b7ab4a96..347e886f 100644
+--- a/src/client/shell/composition.rs
++++ b/src/client/shell/composition.rs
+@@ -720,6 +720,19 @@ impl ClientShellState {
+             self.hits.pane_splits.clear();
+             self.hits.popup = None;
+         }
++        // Leave the top-right cell on the host default background so Ghostty's
++        // `window-padding-color = extend` never stretches the tab bar into the top
++        // padding, while the fully painted bottom row still extends to the window edge.
++        if let Some(bg) = self.config.terminal_background {
++            if let Some(cell) = usize::from(frame.width)
++                .checked_sub(1)
++                .and_then(|x| frame.cells.get_mut(x))
++            {
++                if cell.bg == crate::protocol::color_to_u32(bg) {
++                    cell.bg = crate::protocol::color_to_u32(ratatui::style::Color::Reset);
++                }
++            }
++        }
+         let graphics = self.compose_graphics(layout, &occlusion);
+         Some(crate::client::frame_output::ComposedFrame { frame, graphics })
+     }
+diff --git a/src/client/shell/config.rs b/src/client/shell/config.rs
+index bfa1fb2f..065e7821 100644
+--- a/src/client/shell/config.rs
++++ b/src/client/shell/config.rs
+@@ -158,6 +158,11 @@ impl ClientShellConfig {
+             preferences_path: None,
+             preferences: preferences::ClientChromePreferences::default(),
+             startup_config_diagnostic: None,
++            terminal_background: config
++                .theme
++                .terminal_colors()
++                .and_then(|colors| colors.background)
++                .map(|bg| ratatui::style::Color::Rgb(bg.r, bg.g, bg.b)),
+             startup_onboarding: false,
+         }
+     }
+diff --git a/src/client/shell/endpoint_sidebar.rs b/src/client/shell/endpoint_sidebar.rs
+index 96982487..48020fce 100644
+--- a/src/client/shell/endpoint_sidebar.rs
++++ b/src/client/shell/endpoint_sidebar.rs
+@@ -471,6 +471,7 @@ pub(super) fn render_expanded(
+                 super::sidebar::render_workspace_rows(
+                     buffer,
+                     nested,
++                    config.spaces.padding_x,
+                     status,
+                     config.status_indicators,
+                     entry,
+diff --git a/src/client/shell/sidebar.rs b/src/client/shell/sidebar.rs
+index f94f6bdc..2ad72217 100644
+--- a/src/client/shell/sidebar.rs
++++ b/src/client/shell/sidebar.rs
+@@ -215,11 +215,12 @@ pub(crate) fn render_sidebar(
+         crate::ui::expanded_sidebar_sections(area, state.sidebar_section_split);
+     hits.sidebar_section_divider =
+         crate::ui::sidebar_section_divider_rect(area, state.sidebar_section_split);
++    let header = sidebar_text_rect(workspace_area, config.spaces.padding_x);
+     put_text(
+         buffer,
+-        workspace_area.x,
++        header.x,
+         workspace_area.y,
+-        workspace_area.width,
++        header.width,
+         " spaces",
+         Style::default()
+             .fg(palette.overlay0)
+@@ -324,6 +325,7 @@ pub(crate) fn render_sidebar(
+         render_workspace_rows(
+             buffer,
+             rect,
++            config.spaces.padding_x,
+             status,
+             config.status_indicators,
+             entry,
+@@ -376,7 +378,7 @@ pub(crate) fn render_sidebar(
+     }
+ 
+     let footer_y = workspace_area.bottom().saturating_sub(1);
+-    if config.mouse_capture {
++    if config.mouse_capture && !config.spaces.hide_controls {
+         hits.new_workspace = Rect::new(
+             workspace_area.x,
+             footer_y,
+@@ -439,6 +441,9 @@ pub(crate) fn render_sidebar(
+         hits,
+     );
+ 
++    if config.spaces.hide_controls {
++        return;
++    }
+     hits.sidebar_toggle = Rect::new(
+         area.right().saturating_sub(2),
+         area.bottom().saturating_sub(1),
+@@ -655,6 +660,7 @@ pub(in crate::client::shell) fn workspace_rows(
+ pub(in crate::client::shell) fn render_workspace_rows(
+     buffer: &mut Buffer,
+     area: Rect,
++    padding_x: u16,
+     status: crate::api::schema::AgentStatus,
+     indicators: crate::config::StatusIndicatorStyle,
+     entry: &WorkspaceEntry,
+@@ -665,12 +671,14 @@ pub(in crate::client::shell) fn render_workspace_rows(
+     dragged: bool,
+     palette: &Palette,
+ ) {
++    let text = sidebar_text_rect(area, padding_x);
++    let right = text.right().min(area.right().saturating_sub(2));
+     for (row_index, row) in rows.iter().enumerate() {
+         let y = area.y + row_index as u16;
+         if y >= area.bottom() {
+             break;
+         }
+-        let mut x = area.x;
++        let mut x = text.x;
+         if entry.indented {
+             let prefix = if row_index == 0 {
+                 if entry.last_child {
+@@ -687,7 +695,7 @@ pub(in crate::client::shell) fn render_workspace_rows(
+                 buffer,
+                 x,
+                 y,
+-                area.right(),
++                right,
+                 prefix,
+                 Style::default().fg(palette.overlay0),
+             );
+@@ -719,17 +727,15 @@ pub(in crate::client::shell) fn render_workspace_rows(
+                 status_icon(status, indicators),
+                 Style::default().fg(status_color(status, palette)),
+             ),
+-            Style::default().fg(status_color(status, palette)),
++            Style::default().fg(status_text_color(status, palette)),
+             workspace_style,
+             secondary_style,
+             Style::default().fg(palette.overlay1),
+             palette,
+-            area.right().saturating_sub(2).saturating_sub(x) as usize,
+-        );
+-        Paragraph::new(Line::from(spans)).render(
+-            Rect::new(x, y, area.right().saturating_sub(2).saturating_sub(x), 1),
+-            buffer,
++            right.saturating_sub(x) as usize,
+         );
++        Paragraph::new(Line::from(spans))
++            .render(Rect::new(x, y, right.saturating_sub(x), 1), buffer);
+     }
+ 
+     let background = if selected {
+diff --git a/src/client/shell/state.rs b/src/client/shell/state.rs
+index c170c9b0..f15a3b0e 100644
+--- a/src/client/shell/state.rs
++++ b/src/client/shell/state.rs
+@@ -50,6 +50,8 @@ pub(crate) struct ClientShellConfig {
+     pub(super) preferences_path: Option<std::path::PathBuf>,
+     pub(super) preferences: preferences::ClientChromePreferences,
+     pub(super) startup_config_diagnostic: Option<String>,
++    /// `[theme.terminal]` background (startup config only).
++    pub(super) terminal_background: Option<ratatui::style::Color>,
+     pub(super) startup_onboarding: bool,
+ }
+ 
+diff --git a/src/client/shell/tabs.rs b/src/client/shell/tabs.rs
+index 3fdcf7dc..3f80808d 100644
+--- a/src/client/shell/tabs.rs
++++ b/src/client/shell/tabs.rs
+@@ -123,6 +123,17 @@ pub(crate) fn render_tab_bar(
+             right_padding = padding.saturating_sub(left) as usize,
+         );
+         put_text(buffer, rect.x, rect.y, rect.width, &text, style);
++        // The existing one-cell gap remains outside the tab's mouse target.
++        if rect.right() < area.right() {
++            put_text(
++                buffer,
++                rect.right(),
++                rect.y,
++                1,
++                "│",
++                Style::default().fg(palette.surface_dim).bg(palette.panel_bg),
++            );
++        }
+         hits.tabs.push((rect, tab.tab_id.clone()));
+         first_visible.get_or_insert(index);
+         last_visible = Some(index);
+diff --git a/src/client/shell/tests/agents_worktrees_notifications.rs b/src/client/shell/tests/agents_worktrees_notifications.rs
+index 5b8b1224..302df4a5 100644
+--- a/src/client/shell/tests/agents_worktrees_notifications.rs
++++ b/src/client/shell/tests/agents_worktrees_notifications.rs
+@@ -148,7 +148,7 @@ fn grouped_worktrees_render_parent_branch_and_indented_child() {
+     let collapsed = state.compose(106, 20).expect("collapsed worktree group");
+     let parent = state.hits.workspaces[0].rect;
+     let status_cell = usize::from(parent.y) * usize::from(collapsed.width)
+-        + usize::from(parent.x.saturating_add(1));
++        + usize::from(parent.x.saturating_add(2));
+     assert_eq!(
+         collapsed.cells[status_cell].fg,
+         crate::protocol::color_to_u32(state.config.palette.red)
+@@ -504,7 +504,8 @@ fn agent_sidebar_honors_priority_symbols_tokens_and_stable_hits() {
+         .join("\n");
+     assert!(text.contains("× needs input"), "frame: {text}");
+     assert!(text.contains("pi two"), "frame: {text}");
+-    assert!(text.contains("waiting for"), "frame: {text}");
++    // Sidebar padding leaves room for "waiting fo…" at this width.
++    assert!(text.contains("waiting fo"), "frame: {text}");
+     assert_eq!(
+         state
+             .hits
+diff --git a/src/client/shell/tests/chrome_context.rs b/src/client/shell/tests/chrome_context.rs
+index ed21bc8a..99e87cd4 100644
+--- a/src/client/shell/tests/chrome_context.rs
++++ b/src/client/shell/tests/chrome_context.rs
+@@ -523,3 +523,63 @@ fn close_confirmation_error_becomes_client_owned_overlay_and_stable_group_close(
+             if params.workspace_id == "ws_1" && params.close_group
+     ));
+ }
++
++#[test]
++fn sidebar_padding_insets_text_but_keeps_full_width_hit_targets() {
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    let frame = state.compose(106, 30).expect("expanded sidebar").frame;
++    let rows = frame_rows(&frame);
++
++    assert!(rows[0].starts_with("  spaces"), "{:?}", rows[0]);
++    let card = state.hits.workspaces[0].rect;
++    assert_eq!(card.x, 0);
++    assert!(rows[card.y as usize].starts_with("  "), "{:?}", rows[card.y as usize]);
++    assert!(rows.iter().any(|row| row.starts_with("  agents")));
++}
++
++#[test]
++fn hidden_sidebar_controls_remove_footer_and_toggle_hit_targets() {
++    let mut config = Config::default();
++    config.ui.sidebar.spaces.hide_controls = true;
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&config));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    let frame = state.compose(106, 30).expect("expanded sidebar").frame;
++    let rows = frame_rows(&frame);
++
++    assert_eq!(state.hits.new_workspace, Rect::default());
++    assert_eq!(state.hits.global_launcher, Rect::default());
++    assert_eq!(state.hits.sidebar_toggle, Rect::default());
++    assert!(rows.iter().all(|row| !row.contains(" new") && !row.contains('«')));
++}
++
++#[test]
++fn tab_bar_draws_a_divider_after_each_tab() {
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    let frame = state.compose(106, 30).expect("expanded sidebar").frame;
++    let tab = state.hits.tabs[0].0;
++    let cell = &frame.cells[(tab.y * frame.width + tab.right()) as usize];
++    assert_eq!(cell.symbol, "│");
++}
++
++#[test]
++fn terminal_background_leaves_the_top_right_cell_on_the_host_default() {
++    let config: Config = toml::from_str(
++        "[theme.custom]\npanel_bg = \"#11111b\"\n[theme.terminal]\nbackground = \"#11111b\"\n",
++    )
++    .unwrap();
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&config));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    let frame = state.compose(106, 30).expect("expanded sidebar").frame;
++    let painted = crate::protocol::color_to_u32(ratatui::style::Color::Rgb(0x11, 0x11, 0x1b));
++    assert_eq!(
++        frame.cells[105].bg,
++        crate::protocol::color_to_u32(ratatui::style::Color::Reset)
++    );
++    assert_eq!(frame.cells[104].bg, painted);
++}
+diff --git a/src/client/terminal_setup.rs b/src/client/terminal_setup.rs
+index 249e29ad..97c886b3 100644
+--- a/src/client/terminal_setup.rs
++++ b/src/client/terminal_setup.rs
+@@ -28,8 +28,8 @@ use super::frame_output::clear_received_kitty_graphics;
  /// Sets up the terminal for client mode (raw mode, optional mouse, keyboard enhancements).
  ///
  /// Returns a guard that restores the terminal when dropped.
--fn setup_terminal(mouse_capture: bool) -> io::Result<TerminalGuard> {
+-pub(super) fn setup_terminal(mouse_capture: bool) -> io::Result<TerminalGuard> {
 -    setup_terminal_with_capabilities(true, mouse_capture)
-+fn setup_terminal(mouse_capture: bool, host_colors: &str) -> io::Result<TerminalGuard> {
++pub(super) fn setup_terminal(mouse_capture: bool, host_colors: &str) -> io::Result<TerminalGuard> {
 +    setup_terminal_with_capabilities(true, mouse_capture, host_colors)
  }
  
  /// Sets up a direct attach terminal.
-@@ -351,13 +351,14 @@ fn setup_terminal(mouse_capture: bool) -> io::Result<TerminalGuard> {
- /// Direct attach forwards stdin to the attached PTY. It enables mouse capture
- /// so wheel events can drive the attached viewport or be forwarded to child
+@@ -37,13 +37,17 @@ pub(super) fn setup_terminal(mouse_capture: bool) -> io::Result<TerminalGuard> {
+ /// Direct attach forwards stdin to the attached PTY. When configured, mouse
+ /// capture lets wheel events drive the attached viewport or reach child
  /// programs that requested mouse input.
--fn setup_direct_attach_terminal() -> io::Result<TerminalGuard> {
--    setup_terminal_with_capabilities(false, true)
-+fn setup_direct_attach_terminal(host_colors: &str) -> io::Result<TerminalGuard> {
-+    setup_terminal_with_capabilities(false, true, host_colors)
+-pub(super) fn setup_direct_attach_terminal(mouse_capture: bool) -> io::Result<TerminalGuard> {
+-    setup_terminal_with_capabilities(false, mouse_capture)
++pub(super) fn setup_direct_attach_terminal(
++    mouse_capture: bool,
++    host_colors: &str,
++) -> io::Result<TerminalGuard> {
++    setup_terminal_with_capabilities(false, mouse_capture, host_colors)
  }
  
- fn setup_terminal_with_capabilities(
+ pub(super) fn setup_terminal_with_capabilities(
      enable_client_protocols: bool,
      mouse_capture: bool,
 +    host_colors: &str,
  ) -> io::Result<TerminalGuard> {
      ratatui::init();
-     crate::terminal_modes::clear_host_mouse_reporting(&mut io::stdout())?;
-@@ -418,9 +419,15 @@ fn setup_terminal_with_capabilities(
+     let mut terminal_guard = TerminalGuard {
+@@ -52,6 +56,7 @@ pub(super) fn setup_terminal_with_capabilities(
+         reset_keyboard_enhancements: false,
+         reset_modify_other_keys: false,
+         reset_host_color_scheme_reports: false,
++        reset_host_colors: false,
+         restore_claimed: Arc::new(AtomicBool::new(false)),
+         restored: false,
+         #[cfg(windows)]
+@@ -121,6 +126,12 @@ pub(super) fn setup_terminal_with_capabilities(
  
      execute!(io::stdout(), DisableLineWrap)?;
  
 +    if !host_colors.is_empty() {
++        terminal_guard.reset_host_colors = true;
 +        io::stdout().write_all(host_colors.as_bytes())?;
 +        io::stdout().flush()?;
 +    }
 +
-     Ok(TerminalGuard {
-         reset_modify_other_keys: modify_other_keys_mode.is_some(),
-         reset_host_color_scheme_reports: host_color_scheme_reports,
-+        reset_host_colors: !host_colors.is_empty(),
-         restored: false,
-         #[cfg(windows)]
-         restore_windows_input_mode: windows_virtual_terminal_input.restore_mode,
-@@ -435,6 +442,7 @@ fn should_enable_host_color_scheme_reports(enable_client_protocols: bool) -> boo
- struct TerminalGuard {
+     terminal_guard.host_escape_disambiguation_active = host_escape_disambiguation_active;
+     terminal_guard.buffered_host_input = buffered_host_input;
+     Ok(terminal_guard)
+@@ -137,6 +148,7 @@ pub(super) struct TerminalGuard {
+     reset_keyboard_enhancements: bool,
      reset_modify_other_keys: bool,
      reset_host_color_scheme_reports: bool,
 +    reset_host_colors: bool,
+     restore_claimed: Arc<AtomicBool>,
      restored: bool,
      #[cfg(windows)]
-     restore_windows_input_mode: Option<u32>,
-@@ -456,17 +464,49 @@ fn write_host_color_scheme_report_mode(
- fn write_terminal_restore_postlude(
+@@ -342,17 +354,51 @@ pub(super) fn write_host_color_scheme_report_mode(
+ pub(super) fn write_terminal_restore_postlude(
      writer: &mut impl io::Write,
      reset_host_color_scheme_reports: bool,
 +    reset_host_colors: bool,
@@ -344,7 +631,9 @@ index c33157f..df6e6c3 100644
 +/// OSC 11 and OSC 12 that paint the host window background and cursor with the
 +/// `[theme.terminal]` colors, so the window padding and cursor match the panes.
 +/// Empty when the theme sets neither color.
-+fn host_terminal_color_sequence(theme: &crate::terminal_theme::TerminalTheme) -> String {
++pub(super) fn host_terminal_color_sequence(
++    theme: &crate::terminal_theme::TerminalTheme,
++) -> String {
 +    use crate::terminal_theme::{osc_set_default_color_sequence, DefaultColorKind};
 +    // One blue step off the pane color (invisible): Ghostty only extends an edge row
 +    // into the padding when none of its cells match the host default background.
@@ -367,18 +656,34 @@ index c33157f..df6e6c3 100644
 +/// OSC 111 and OSC 112 return the host background and cursor to the terminal's own.
 +const HOST_TERMINAL_COLOR_RESET_SEQUENCE: &str = "\x1b]111\x1b\\\x1b]112\x1b\\";
 +
- fn should_draw_host_cursor(mode: crate::config::HostCursorModeConfig) -> bool {
+ pub(super) fn should_draw_host_cursor(mode: crate::config::HostCursorModeConfig) -> bool {
      match mode {
          crate::config::HostCursorModeConfig::Auto => {
-@@ -583,6 +623,7 @@ fn set_mouse_capture(enabled: bool, sgr_pixels: bool) -> io::Result<()> {
- fn restore_terminal_state(
+@@ -611,6 +657,7 @@ fn restore_terminal_state_once(
+     reset_keyboard_enhancements: bool,
+     reset_modify_other_keys: bool,
+     reset_host_color_scheme_reports: bool,
++    reset_host_colors: bool,
+     #[cfg(windows)] restore_windows_input_mode: &WindowsInputModeRestore,
+ ) -> io::Result<()> {
+     if restore_claimed.swap(true, Ordering::AcqRel) {
+@@ -622,6 +669,7 @@ fn restore_terminal_state_once(
+         reset_keyboard_enhancements,
+         reset_modify_other_keys,
+         reset_host_color_scheme_reports,
++        reset_host_colors,
+         #[cfg(windows)]
+         restore_windows_input_mode,
+     )
+@@ -631,6 +679,7 @@ fn restore_terminal_state(
+     reset_keyboard_enhancements: bool,
      reset_modify_other_keys: bool,
      reset_host_color_scheme_reports: bool,
 +    reset_host_colors: bool,
      #[cfg(windows)] restore_windows_input_mode: Option<u32>,
  ) -> io::Result<()> {
      let _ = clear_received_kitty_graphics(&mut io::stdout());
-@@ -609,8 +650,11 @@ fn restore_terminal_state(
+@@ -662,8 +711,11 @@ fn restore_terminal_state(
      }
  
      let restore_result = ratatui::try_restore();
@@ -392,124 +697,113 @@ index c33157f..df6e6c3 100644
  
      #[cfg(windows)]
      if windows_vti_input_backend_enabled() && windows_win32_input_mode_enabled() {
-@@ -668,6 +712,7 @@ impl TerminalGuard {
-         restore_terminal_state(
+@@ -743,6 +795,7 @@ impl TerminalGuard {
+         let reset_keyboard_enhancements = self.reset_keyboard_enhancements;
+         let reset_modify_other_keys = self.reset_modify_other_keys;
+         let reset_host_color_scheme_reports = self.reset_host_color_scheme_reports;
++        let reset_host_colors = self.reset_host_colors;
+         #[cfg(windows)]
+         let restore_windows_input_mode = self.restore_windows_input_mode.clone();
+         move || {
+@@ -751,6 +804,7 @@ impl TerminalGuard {
+                 reset_keyboard_enhancements,
+                 reset_modify_other_keys,
+                 reset_host_color_scheme_reports,
++                reset_host_colors,
+                 #[cfg(windows)]
+                 &restore_windows_input_mode,
+             );
+@@ -764,6 +818,7 @@ impl TerminalGuard {
+             self.reset_keyboard_enhancements,
              self.reset_modify_other_keys,
              self.reset_host_color_scheme_reports,
 +            self.reset_host_colors,
              #[cfg(windows)]
-             self.restore_windows_input_mode,
+             &self.restore_windows_input_mode,
          )
-@@ -680,6 +725,7 @@ impl Drop for TerminalGuard {
-             let _ = restore_terminal_state(
+@@ -778,6 +833,7 @@ impl Drop for TerminalGuard {
+                 self.reset_keyboard_enhancements,
                  self.reset_modify_other_keys,
                  self.reset_host_color_scheme_reports,
 +                self.reset_host_colors,
                  #[cfg(windows)]
-                 self.restore_windows_input_mode,
+                 &self.restore_windows_input_mode,
              );
-@@ -1283,10 +1329,16 @@ fn run_client_with_mode(
-     // Now set up the terminal. This must happen AFTER the handshake succeeds,
-     // so we don't leave the terminal in raw mode if the server rejects us.
-     let direct_attach = attach_escape.is_some();
-+    let host_colors = loaded_config
-+        .config
-+        .theme
-+        .terminal_colors()
-+        .map(|theme| host_terminal_color_sequence(&theme))
-+        .unwrap_or_default();
-     let terminal_guard = if direct_attach {
--        setup_direct_attach_terminal()
-+        setup_direct_attach_terminal(&host_colors)
-     } else {
--        setup_terminal(mouse_capture)
-+        setup_terminal(mouse_capture, &host_colors)
-     }
-     .map_err(|err| {
-         eprintln!("herdr: failed to set up terminal: {err}");
-@@ -1296,6 +1348,7 @@ fn run_client_with_mode(
-     // Install a panic hook to restore the terminal on panic (same as monolithic).
-     let panic_resets_modify_other_keys = terminal_guard.reset_modify_other_keys;
-     let panic_resets_host_color_scheme_reports = terminal_guard.reset_host_color_scheme_reports;
-+    let panic_resets_host_colors = terminal_guard.reset_host_colors;
-     #[cfg(windows)]
-     let panic_restore_windows_input_mode = terminal_guard.restore_windows_input_mode;
-     let original_hook = std::panic::take_hook();
-@@ -1303,6 +1356,7 @@ fn run_client_with_mode(
-         let _ = restore_terminal_state(
-             panic_resets_modify_other_keys,
-             panic_resets_host_color_scheme_reports,
-+            panic_resets_host_colors,
-             #[cfg(windows)]
-             panic_restore_windows_input_mode,
-         );
-@@ -3088,14 +3142,59 @@ mod tests {
-     #[test]
-     fn terminal_restore_postlude_restores_visible_default_cursor() {
-         let mut output = Vec::new();
--        write_terminal_restore_postlude(&mut output, false).unwrap();
-+        write_terminal_restore_postlude(&mut output, false, false).unwrap();
-         assert_eq!(output, b"\x1b[?25h\x1b[0 q");
-     }
+diff --git a/src/client/tests/mod.rs b/src/client/tests/mod.rs
+index 035d00d3..bc851f4f 100644
+--- a/src/client/tests/mod.rs
++++ b/src/client/tests/mod.rs
+@@ -490,10 +490,55 @@ fn color_scheme_reports_are_enabled_only_for_full_clients() {
+ #[test]
+ fn terminal_restore_postlude_restores_visible_default_cursor() {
+     let mut output = Vec::new();
+-    write_terminal_restore_postlude(&mut output, false).unwrap();
++    write_terminal_restore_postlude(&mut output, false, false).unwrap();
+     assert_eq!(output, b"\x1b[?25h\x1b[0 q");
+ }
  
-+    #[test]
-+    fn host_terminal_colors_set_background_and_cursor_from_terminal_theme() {
-+        use crate::terminal_theme::{RgbColor, TerminalTheme};
-+        let theme = TerminalTheme {
-+            background: Some(RgbColor {
-+                r: 0x11,
-+                g: 0x11,
-+                b: 0x1b,
-+            }),
-+            foreground: Some(RgbColor {
-+                r: 0xcd,
-+                g: 0xd6,
-+                b: 0xf4,
-+            }),
-+            ..Default::default()
-+        };
-+        assert_eq!(
-+            host_terminal_color_sequence(&theme),
-+            "\x1b]11;rgb:11/11/1a\x1b\\\x1b]12;rgb:cd/d6/f4\x1b\\"
-+        );
-+        assert_eq!(host_terminal_color_sequence(&TerminalTheme::default()), "");
-+    }
++#[test]
++fn host_terminal_colors_set_background_and_cursor_from_terminal_theme() {
++    use crate::terminal_theme::{RgbColor, TerminalTheme};
++    let theme = TerminalTheme {
++        background: Some(RgbColor {
++            r: 0x11,
++            g: 0x11,
++            b: 0x1b,
++        }),
++        foreground: Some(RgbColor {
++            r: 0xcd,
++            g: 0xd6,
++            b: 0xf4,
++        }),
++        ..Default::default()
++    };
++    assert_eq!(
++        host_terminal_color_sequence(&theme),
++        "\x1b]11;rgb:11/11/1a\x1b\\\x1b]12;rgb:cd/d6/f4\x1b\\"
++    );
++    assert_eq!(host_terminal_color_sequence(&TerminalTheme::default()), "");
++}
 +
-+    #[test]
-+    fn terminal_restore_postlude_resets_host_colors_when_set() {
-+        let mut output = Vec::new();
-+        write_terminal_restore_postlude(&mut output, false, true).unwrap();
-+        assert_eq!(output, b"\x1b]111\x1b\\\x1b]112\x1b\\\x1b[?25h\x1b[0 q");
-+    }
++#[test]
++fn terminal_restore_postlude_resets_host_colors_when_set() {
++    let mut output = Vec::new();
++    write_terminal_restore_postlude(&mut output, false, true).unwrap();
++    assert_eq!(output, b"\x1b]111\x1b\\\x1b]112\x1b\\\x1b[?25h\x1b[0 q");
++}
 +
-+    #[test]
-+    fn terminal_restore_postlude_stops_color_scheme_reports_before_resetting_host_colors() {
-+        // Resetting the background flips the host appearance; with reports still on,
-+        // the host answers after the client stopped reading and the report reaches the shell.
-+        let mut output = Vec::new();
-+        write_terminal_restore_postlude(&mut output, true, true).unwrap();
++#[test]
++fn terminal_restore_postlude_stops_color_scheme_reports_before_resetting_host_colors() {
++    // Resetting the background flips the host appearance; with reports still on,
++    // the host answers after the client stopped reading and the report reaches the shell.
++    let mut output = Vec::new();
++    write_terminal_restore_postlude(&mut output, true, true).unwrap();
 +
-+        let mut expected = Vec::new();
-+        expected.extend_from_slice(
-+            crate::terminal_theme::HOST_COLOR_SCHEME_REPORT_DISABLE_SEQUENCE.as_bytes(),
-+        );
-+        expected.extend_from_slice(b"\x1b]111\x1b\\\x1b]112\x1b\\\x1b[?25h\x1b[0 q");
-+        assert_eq!(output, expected);
-+    }
++    let mut expected = Vec::new();
++    expected.extend_from_slice(
++        crate::terminal_theme::HOST_COLOR_SCHEME_REPORT_DISABLE_SEQUENCE.as_bytes(),
++    );
++    expected.extend_from_slice(b"\x1b]111\x1b\\\x1b]112\x1b\\\x1b[?25h\x1b[0 q");
++    assert_eq!(output, expected);
++}
 +
-     #[test]
-     fn terminal_restore_postlude_disables_color_scheme_reports_when_enabled() {
-         let mut output = Vec::new();
--        write_terminal_restore_postlude(&mut output, true).unwrap();
-+        write_terminal_restore_postlude(&mut output, true, false).unwrap();
+ #[test]
+ fn direct_attach_mouse_capture_combines_local_preference_with_child_demand() {
+     assert!(effective_mouse_capture(false, true));
+@@ -506,7 +551,7 @@ fn direct_attach_mouse_capture_combines_local_preference_with_child_demand() {
+ #[test]
+ fn terminal_restore_postlude_disables_color_scheme_reports_when_enabled() {
+     let mut output = Vec::new();
+-    write_terminal_restore_postlude(&mut output, true).unwrap();
++    write_terminal_restore_postlude(&mut output, true, false).unwrap();
  
-         let mut expected = Vec::new();
-         expected.extend_from_slice(
+     let mut expected = Vec::new();
+     expected.extend_from_slice(
 diff --git a/src/config/sidebar.rs b/src/config/sidebar.rs
-index c548c83..815ed3f 100644
+index 9a4cb5e0..00e82597 100644
 --- a/src/config/sidebar.rs
 +++ b/src/config/sidebar.rs
-@@ -377,6 +377,8 @@ pub struct AgentsSidebarConfig {
+@@ -427,6 +427,8 @@ pub struct AgentsSidebarConfig {
      #[serde(default, deserialize_with = "deserialize_rows_by_agent")]
      pub rows_by_agent: BTreeMap<String, AgentSidebarRows>,
      pub row_gap: u16,
@@ -518,7 +812,7 @@ index c548c83..815ed3f 100644
  }
  
  impl AgentsSidebarConfig {
-@@ -400,6 +402,7 @@ impl Default for AgentsSidebarConfig {
+@@ -451,6 +453,7 @@ impl Default for AgentsSidebarConfig {
              ],
              rows_by_agent: BTreeMap::new(),
              row_gap: DEFAULT_SIDEBAR_ROW_GAP,
@@ -526,7 +820,7 @@ index c548c83..815ed3f 100644
          }
      }
  }
-@@ -407,19 +410,25 @@ impl Default for AgentsSidebarConfig {
+@@ -458,19 +461,25 @@ impl Default for AgentsSidebarConfig {
  #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
  #[serde(default)]
  pub struct SpacesSidebarConfig {
@@ -553,7 +847,7 @@ index c548c83..815ed3f 100644
      }
  }
 diff --git a/src/config/theme.rs b/src/config/theme.rs
-index 8f28390..1ef333e 100644
+index cb9e3498..22fd412d 100644
 --- a/src/config/theme.rs
 +++ b/src/config/theme.rs
 @@ -69,9 +69,39 @@ pub struct ThemeConfig {
@@ -596,7 +890,7 @@ index 8f28390..1ef333e 100644
      pub(crate) fn diagnostics(&self) -> Vec<String> {
          let valid = THEME_NAMES.join(", ");
          [
-@@ -194,6 +224,26 @@ mod tests {
+@@ -223,6 +253,26 @@ mod tests {
      use super::*;
      use crate::config::Config;
  
@@ -624,10 +918,10 @@ index 8f28390..1ef333e 100644
      fn theme_name_parses() {
          let toml = r#"
 diff --git a/src/pane/terminal.rs b/src/pane/terminal.rs
-index 0b06302..894ba67 100644
+index 24379d22..50a5fcc5 100644
 --- a/src/pane/terminal.rs
 +++ b/src/pane/terminal.rs
-@@ -2135,9 +2135,12 @@ impl GhosttyPaneTerminal {
+@@ -2391,9 +2391,12 @@ impl GhosttyPaneTerminal {
              .and_then(|c| ghostty_default_fg(c.foreground, host_theme, initial_default_foreground));
          let resolved_fg = colors.map(|c| ghostty_color(c.foreground));
          let resolved_bg = colors.map(|c| ghostty_color(c.background));
@@ -643,7 +937,7 @@ index 0b06302..894ba67 100644
          let hide_kitty_placeholders = crate::kitty_graphics::is_enabled();
  
          let mut row_iterator = match crate::ghostty::RowIterator::new() {
-@@ -2398,9 +2401,12 @@ fn ghostty_collect_dirty_patch(
+@@ -2660,9 +2663,12 @@ fn ghostty_collect_dirty_patch(
          .and_then(|c| ghostty_default_fg(c.foreground, host_theme, initial_default_foreground));
      let resolved_fg = colors.map(|c| ghostty_color(c.foreground));
      let resolved_bg = colors.map(|c| ghostty_color(c.background));
@@ -659,7 +953,7 @@ index 0b06302..894ba67 100644
      let hide_kitty_placeholders = crate::kitty_graphics::is_enabled();
  
      let Ok(mut row_iterator) = crate::ghostty::RowIterator::new() else {
-@@ -3208,6 +3214,9 @@ fn ghostty_default_fg(
+@@ -3502,6 +3508,9 @@ fn ghostty_default_fg(
      host_theme: crate::terminal_theme::TerminalTheme,
      initial_default_foreground: Option<crate::ghostty::RgbColor>,
  ) -> Option<Color> {
@@ -669,7 +963,7 @@ index 0b06302..894ba67 100644
      if let Some(host_foreground) = host_theme.foreground {
          if host_foreground == terminal_theme_color(color) {
              None
-@@ -3226,6 +3235,9 @@ fn ghostty_default_bg(
+@@ -3520,6 +3529,9 @@ fn ghostty_default_bg(
      host_theme: crate::terminal_theme::TerminalTheme,
      initial_default_background: Option<crate::ghostty::RgbColor>,
  ) -> Option<Color> {
@@ -679,7 +973,7 @@ index 0b06302..894ba67 100644
      if let Some(host_background) = host_theme.background {
          if host_background == terminal_theme_color(color) {
              None
-@@ -3250,18 +3262,20 @@ fn terminal_theme_color(color: crate::ghostty::RgbColor) -> crate::terminal_them
+@@ -3544,18 +3556,20 @@ fn terminal_theme_color(color: crate::ghostty::RgbColor) -> crate::terminal_them
  // Palette entries the program redefined with OSC 4. Forwarding a palette index to the
  // host makes it resolve against the host's own palette, discarding the redefinition.
  // Only overridden entries become RGB; the rest stay indexed and keep following the
@@ -702,7 +996,7 @@ index 0b06302..894ba67 100644
                  overrides[index] = Some(*active);
                  any = true;
              }
-@@ -3370,7 +3384,7 @@ mod tests {
+@@ -3688,7 +3702,7 @@ mod tests {
      #[test]
      fn palette_overrides_are_none_without_an_osc4_write() {
          let default = [rgb(1, 2, 3); 256];
@@ -711,7 +1005,7 @@ index 0b06302..894ba67 100644
      }
  
      #[test]
-@@ -3378,7 +3392,7 @@ mod tests {
+@@ -3696,7 +3710,7 @@ mod tests {
          let default = [rgb(1, 2, 3); 256];
          let mut active = default;
          active[18] = rgb(169, 177, 214);
@@ -720,7 +1014,7 @@ index 0b06302..894ba67 100644
  
          assert_eq!(
              ghostty_cell_color(crate::ghostty::CellColor::Palette(18), Some(&overrides)),
-@@ -3401,7 +3415,7 @@ mod tests {
+@@ -3719,7 +3733,7 @@ mod tests {
          let default = [rgb(1, 2, 3); 256];
          let mut active = default;
          active[18] = rgb(169, 177, 214);
@@ -729,7 +1023,7 @@ index 0b06302..894ba67 100644
          assert_eq!(
              ghostty_cell_color(
                  crate::ghostty::CellColor::Rgb(rgb(122, 162, 247)),
-@@ -6602,6 +6616,57 @@ mod tests {
+@@ -7311,6 +7325,57 @@ mod tests {
          assert_eq!(buffer[(2, 0)].style().bg, Some(Color::Reset));
      }
  
@@ -788,7 +1082,7 @@ index 0b06302..894ba67 100644
      fn render_keeps_explicit_default_foreground_when_it_differs_from_host() {
          let (tx, _rx) = mpsc::channel(4);
 diff --git a/src/terminal_theme.rs b/src/terminal_theme.rs
-index 2460731..a1a2eea 100644
+index 2460731e..a1a2eea9 100644
 --- a/src/terminal_theme.rs
 +++ b/src/terminal_theme.rs
 @@ -36,6 +36,9 @@ pub struct TerminalTheme {
@@ -852,56 +1146,11 @@ index 2460731..a1a2eea 100644
      #[test]
      fn parses_st_terminated_rgb_response() {
          let parsed = parse_default_color_response("\x1b]10;rgb:cccc/dddd/eeee\x1b\\");
-diff --git a/src/ui.rs b/src/ui.rs
-index 8adc31e..577f01b 100644
---- a/src/ui.rs
-+++ b/src/ui.rs
-@@ -459,6 +459,19 @@ pub fn render_with_runtime_registry(
-         Mode::Navigator => render_navigator_overlay(app, terminal_runtimes, frame),
-         Mode::Terminal => {}
-     }
-+
-+    // Leave the top-right filler cell on the host default background so Ghostty's
-+    // `window-padding-color = extend` never stretches the tab bar into the top
-+    // padding, while the fully painted bottom row still extends to the window edge.
-+    if let Some(bg) = app.terminal_colors.and_then(|colors| colors.background) {
-+        let area = frame.area();
-+        if area.width > 0 && area.height > 0 {
-+            let cell = &mut frame.buffer_mut()[(area.right() - 1, area.y)];
-+            if cell.bg == ratatui::style::Color::Rgb(bg.r, bg.g, bg.b) {
-+                cell.set_bg(ratatui::style::Color::Reset);
-+            }
-+        }
-+    }
- }
- 
- fn render_navigation_chrome(
-@@ -1068,6 +1081,8 @@ mod tests {
-         terminal.draw(|frame| render(&app, frame)).unwrap();
-         let buffer = terminal.backend().buffer();
- 
-+        assert_eq!(app.view.sidebar_rect.width, 4);
-+        assert_eq!(app.view.terminal_area.x, 4);
-         let (ws_area, _, _) = collapsed_sidebar_sections(app.view.sidebar_rect);
-         let active_row = ws_area.y + 1;
-         let active_style = buffer[(ws_area.x, active_row)].style();
-@@ -1104,9 +1119,9 @@ mod tests {
-         let line1 = buffer_row_text(buffer, card, card.y);
-         let line2 = buffer_row_text(buffer, card, card.y + 1);
- 
--        assert!(line1.starts_with(" · one"));
-+        assert!(line1.starts_with("  · one"));
-         assert!(!line1.contains("1 one"));
--        assert_eq!(line2, "   main");
-+        assert_eq!(line2, "    main");
- 
-         std::fs::remove_dir_all(repo).ok();
-     }
 diff --git a/src/ui/panes.rs b/src/ui/panes.rs
-index f20b55b..249e771 100644
+index adf1f3d3..924af6dc 100644
 --- a/src/ui/panes.rs
 +++ b/src/ui/panes.rs
-@@ -345,6 +345,13 @@ pub(super) fn render_panes(
+@@ -392,6 +392,13 @@ pub(super) fn render_panes(
      pane_infos: &[PaneInfo],
      split_borders: &[crate::layout::SplitBorder],
  ) {
@@ -912,10 +1161,10 @@ index f20b55b..249e771 100644
 +            Style::default().bg(Color::Rgb(bg.r, bg.g, bg.b)),
 +        );
 +    }
-     let Some(ws_idx) = app.active else {
+     let Some(target) = target else {
          return;
      };
-@@ -520,7 +527,7 @@ fn render_pane_borders(
+@@ -502,7 +509,7 @@ fn render_pane_borders(
          let color = if focused {
              app.palette.accent
          } else {
@@ -924,10 +1173,14 @@ index f20b55b..249e771 100644
          };
          cell.set_style(Style::default().fg(color));
      }
-@@ -1049,6 +1056,35 @@ mod tests {
-         assert!(display_width(title.as_str()) <= 10);
-     }
+@@ -1206,7 +1213,38 @@ mod tests {
  
+         let buffer = terminal.backend().buffer();
+         assert_eq!(buffer[(1, 1)].style().fg, Some(app.palette.accent));
+-        assert_eq!(buffer[(2, 1)].style().fg, Some(app.palette.overlay0));
++        assert_eq!(buffer[(2, 1)].style().fg, Some(app.palette.surface_dim));
++    }
++
 +    #[test]
 +    fn render_panes_fills_the_terminal_area_with_the_painted_background() {
 +        let mut app = AppState::test_new();
@@ -943,7 +1196,9 @@ index f20b55b..249e771 100644
 +        let mut terminal =
 +            ratatui::Terminal::new(ratatui::backend::TestBackend::new(6, 4)).unwrap();
 +        terminal
-+            .draw(|frame| render_panes(&app, &TerminalRuntimeRegistry::new(), frame, &[], &[]))
++            .draw(|frame| {
++                render_panes(&app, &TerminalRuntimeRegistry::new(), frame, None, &[], &[])
++            })
 +            .unwrap();
 +        let buffer = terminal.backend().buffer();
 +        assert_eq!(
@@ -955,560 +1210,6 @@ index f20b55b..249e771 100644
 +            Some(Color::Rgb(0x11, 0x11, 0x1b))
 +        );
 +        assert_eq!(buffer[(0, 0)].style().bg, Some(Color::Reset));
-+    }
-+
-     #[test]
-     fn pane_border_renderer_places_adjacent_cjk_by_display_width() {
-         let mut app = AppState::test_new();
-@@ -1309,7 +1345,7 @@ mod tests {
- 
-         let buffer = terminal.backend().buffer();
-         assert_eq!(buffer[(1, 1)].style().fg, Some(app.palette.accent));
--        assert_eq!(buffer[(2, 1)].style().fg, Some(app.palette.overlay0));
-+        assert_eq!(buffer[(2, 1)].style().fg, Some(app.palette.surface_dim));
      }
  
      #[tokio::test]
-diff --git a/src/ui/sidebar.rs b/src/ui/sidebar.rs
-index a6dfbcd..fc8d86b 100644
---- a/src/ui/sidebar.rs
-+++ b/src/ui/sidebar.rs
-@@ -1,7 +1,7 @@
- mod tokens;
- 
- use ratatui::{
--    layout::{Alignment, Rect},
-+    layout::{Alignment, Margin, Rect},
-     style::{Color, Modifier, Style},
-     text::{Line, Span},
-     widgets::Paragraph,
-@@ -85,11 +85,12 @@ fn agent_panel_sort_label(sort: AgentPanelSort) -> &'static str {
-     }
- }
- 
--pub(crate) fn agent_panel_toggle_rect(area: Rect, sort: AgentPanelSort) -> Rect {
--    agent_panel_header_label_rect(area, agent_panel_sort_label(sort))
-+pub(crate) fn agent_panel_toggle_rect(area: Rect, sort: AgentPanelSort, padding_x: u16) -> Rect {
-+    agent_panel_header_label_rect(area, agent_panel_sort_label(sort), padding_x)
- }
- 
--fn agent_panel_header_label_rect(area: Rect, label: &str) -> Rect {
-+fn agent_panel_header_label_rect(area: Rect, label: &str, padding_x: u16) -> Rect {
-+    let area = area.inner(Margin::new(padding_x.min(area.width / 2), 0));
-     if area.width == 0 || area.height < 2 {
-         return Rect::default();
-     }
-@@ -1235,7 +1236,10 @@ fn render_workspace_list(
-                 " spaces",
-                 Style::default().fg(p.overlay0).add_modifier(Modifier::BOLD),
-             )])),
--            Rect::new(area.x, area.y, area.width, 1),
-+            Rect::new(area.x, area.y, area.width, 1).inner(Margin::new(
-+                app.sidebar_spaces.padding_x.min(area.width / 2),
-+                0,
-+            )),
-         );
-     }
- 
-@@ -1326,6 +1330,10 @@ fn render_workspace_list(
-             },
-         );
- 
-+        let text_rect = card.rect.inner(Margin::new(
-+            app.sidebar_spaces.padding_x.min(card.rect.width / 2),
-+            0,
-+        ));
-         for (row_index, resolved) in rows.iter().enumerate() {
-             if row_index as u16 >= row_height || row_y + row_index as u16 >= list_bottom {
-                 break;
-@@ -1367,13 +1375,13 @@ fn render_workspace_list(
-                 branch_style,
-                 branch_style,
-                 p,
--                card.rect
-+                text_rect
-                     .width
-                     .saturating_sub(prefix_width + trailing_width) as usize,
-             ));
-             frame.render_widget(
-                 Paragraph::new(Line::from(spans)),
--                Rect::new(card.rect.x, row_y + row_index as u16, card.rect.width, 1),
-+                Rect::new(text_rect.x, row_y + row_index as u16, text_rect.width, 1),
-             );
-         }
- 
-@@ -1403,7 +1411,7 @@ fn render_workspace_list(
-         render_scrollbar(frame, metrics, track, p.surface_dim, p.overlay0, "▕");
-     }
- 
--    if app.mouse_capture && list_bottom > area.y {
-+    if app.mouse_capture && !app.sidebar_spaces.hide_controls && list_bottom > area.y {
-         let new_rect = app.sidebar_new_button_rect();
-         frame.render_widget(
-             Paragraph::new(Span::styled(" new", Style::default().fg(p.overlay0))),
-@@ -1452,11 +1460,15 @@ fn render_agent_detail(
-             " agents",
-             Style::default().fg(p.overlay0).add_modifier(Modifier::BOLD),
-         )])),
--        Rect::new(area.x, area.y + 1, area.width, 1),
-+        Rect::new(area.x, area.y + 1, area.width, 1).inner(Margin::new(
-+            app.sidebar_agents.padding_x.min(area.width / 2),
-+            0,
-+        )),
-     );
-     let control_label = active_agent_view_label(app)
-         .unwrap_or_else(|| agent_panel_sort_label(app.agent_panel_sort));
--    let toggle_rect = agent_panel_header_label_rect(area, control_label);
-+    let toggle_rect =
-+        agent_panel_header_label_rect(area, control_label, app.sidebar_agents.padding_x);
-     if toggle_rect != Rect::default() {
-         let color = if app.agent_view_override.is_some() {
-             p.accent
-@@ -1519,6 +1531,13 @@ fn render_agent_detail(
-         let agent_style = Style::default().fg(p.overlay0).add_modifier(Modifier::DIM);
-         let state_icon = state_icon(detail.state, detail.seen, app.status_indicators, p);
- 
-+        let text_rect = body.inner(Margin::new(
-+            app.sidebar_agents.padding_x.min(body.width / 2),
-+            0,
-+        ));
-+        frame
-+            .buffer_mut()
-+            .set_style(Rect::new(body.x, row_y, body.width, height), row_style);
-         for (row_index, resolved) in rows.iter().take(height as usize).enumerate() {
-             let mut spans = vec![Span::raw(if row_index == 0 { " " } else { "   " })];
-             spans.extend(resolved_token_spans(
-@@ -1529,12 +1548,13 @@ fn render_agent_detail(
-                 agent_style,
-                 agent_style,
-                 p,
--                body.width
-+                text_rect
-+                    .width
-                     .saturating_sub(if row_index == 0 { 1 } else { 3 }) as usize,
-             ));
-             frame.render_widget(
-                 Paragraph::new(Line::from(spans)).style(row_style),
--                Rect::new(body.x, row_y + row_index as u16, body.width, 1),
-+                Rect::new(text_rect.x, row_y + row_index as u16, text_rect.width, 1),
-             );
-         }
-         row_y = row_y
-@@ -1577,6 +1597,9 @@ fn render_sidebar_toggle(
-     collapsed: bool,
-     p: &Palette,
- ) {
-+    if !collapsed && app.sidebar_spaces.hide_controls {
-+        return;
-+    }
-     let toggle_area = if collapsed {
-         collapsed_sidebar_toggle_rect(area)
-     } else {
-@@ -1619,6 +1642,95 @@ mod tests {
-             })
-     }
- 
-+    #[test]
-+    fn sidebar_padding_preserves_seven_entry_geometry_and_small_viewports() {
-+        let mut app = AppState::test_new();
-+        app.workspaces = (0..7)
-+            .map(|i| Workspace::test_new(&format!("agent{i}")))
-+            .collect();
-+        app.ensure_test_terminals();
-+        for terminal in app.terminals.values_mut() {
-+            terminal.detected_agent = Some(Agent::Claude);
-+        }
-+        app.sidebar_agents.rows = vec![vec![crate::config::AgentSidebarToken::Workspace]];
-+        app.sidebar_agents.row_gap = 1;
-+        app.sidebar_spaces.hide_controls = true;
-+        let runtimes = TerminalRuntimeRegistry::new();
-+        for width in [1, 2, 3, 7, 31] {
-+            for height in [1, 5, 12, 34, 50] {
-+                let area = Rect::new(0, 0, width, height);
-+                app.view.sidebar_rect = area;
-+                let (spaces, agents) = expanded_sidebar_sections(area, 0.5);
-+                app.sidebar_spaces.padding_x = 0;
-+                app.sidebar_agents.padding_x = 0;
-+                let cards = compute_workspace_card_areas(&app, spaces);
-+                let metrics = agent_panel_scroll_metrics(&app, agents);
-+                for padding in [0, 1, u16::MAX] {
-+                    app.sidebar_spaces.padding_x = padding;
-+                    app.sidebar_agents.padding_x = padding;
-+                    app.view.workspace_card_areas = compute_workspace_card_areas(&app, spaces);
-+                    assert_eq!(
-+                        app.view
-+                            .workspace_card_areas
-+                            .iter()
-+                            .map(|c| c.rect)
-+                            .collect::<Vec<_>>(),
-+                        cards.iter().map(|c| c.rect).collect::<Vec<_>>()
-+                    );
-+                    assert_eq!(
-+                        agent_panel_scroll_metrics(&app, agents).max_offset_from_bottom,
-+                        metrics.max_offset_from_bottom
-+                    );
-+                    let mut terminal = Terminal::new(TestBackend::new(width, height)).unwrap();
-+                    terminal
-+                        .draw(|frame| render_sidebar(&app, &runtimes, frame, area))
-+                        .unwrap();
-+                    if width == 31 && height == 50 && padding == 1 {
-+                        let buffer = terminal.backend().buffer();
-+                        assert_eq!(buffer[(2, 0)].symbol(), "s");
-+                        assert_eq!(buffer[(2, agents.y + 1)].symbol(), "a");
-+                        let body = agent_panel_body_rect(agents, false);
-+                        for i in 0..7 {
-+                            assert!(row_text(buffer, body.y + i * 2, 30)
-+                                .starts_with(&format!("  agent{i}")));
-+                        }
-+                        let toggle = agent_panel_toggle_rect(agents, app.agent_panel_sort, padding);
-+                        assert_eq!(buffer[(toggle.x, toggle.y)].symbol(), "g");
-+                        assert_eq!(toggle.right(), agents.right() - 1);
-+                    }
-+                }
-+            }
-+        }
-+    }
-+
-+    #[test]
-+    fn hidden_controls_removes_rendered_controls_and_hit_targets() {
-+        let mut app = AppState::test_new();
-+        app.mouse_capture = true;
-+        app.view.sidebar_rect = Rect::new(0, 0, 31, 34);
-+        let footer = app.sidebar_footer_rect();
-+        assert!(footer.height > 0);
-+        app.sidebar_spaces.hide_controls = true;
-+        assert_eq!(app.sidebar_footer_rect(), footer);
-+        assert_eq!(app.sidebar_new_button_rect().height, 0);
-+        assert_eq!(app.global_launcher_rect().height, 0);
-+        let mut terminal = Terminal::new(TestBackend::new(31, 34)).unwrap();
-+        terminal
-+            .draw(|frame| {
-+                render_sidebar(
-+                    &app,
-+                    &TerminalRuntimeRegistry::new(),
-+                    frame,
-+                    app.view.sidebar_rect,
-+                )
-+            })
-+            .unwrap();
-+        assert_eq!(row_text(terminal.backend().buffer(), footer.y, 30), "");
-+        assert_eq!(row_text(terminal.backend().buffer(), 33, 30), "");
-+        app.sidebar_spaces.hide_controls = false;
-+        assert_eq!(app.sidebar_footer_rect(), footer);
-+    }
-+
-     #[test]
-     fn expanded_and_collapsed_sidebars_use_custom_background() {
-         let mut app = crate::app::state::AppState::test_new();
-@@ -1638,7 +1750,8 @@ mod tests {
-             .iter()
-             .all(|cell| cell.bg == app.palette.sidebar_bg));
- 
--        let mut collapsed = Terminal::new(TestBackend::new(26, 20)).unwrap();
-+        let area = Rect::new(0, 0, 5, 20);
-+        let mut collapsed = Terminal::new(TestBackend::new(5, 20)).unwrap();
-         collapsed
-             .draw(|frame| render_sidebar_collapsed(&app, frame, area))
-             .unwrap();
-@@ -1677,7 +1790,7 @@ mod tests {
-         let first = row_text(buffer, body.y, 25);
-         let second = row_text(buffer, body.y + 1, 25);
-         assert!(first.contains("one"));
--        assert_eq!(second, "   pi");
-+        assert_eq!(second, "    pi");
-         assert!(!first.contains("working"));
-         assert!(!second.contains("working"));
- 
-@@ -1990,8 +2103,8 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
- 
-         assert_eq!(metrics.viewport_rows, 2);
-         assert_eq!(metrics.max_offset_from_bottom, 0);
--        assert_eq!(row_text(buffer, body.y, body.width), " pi");
--        assert_eq!(row_text(buffer, body.y + 1, body.width), " claude");
-+        assert_eq!(row_text(buffer, body.y, body.width), "  pi");
-+        assert_eq!(row_text(buffer, body.y + 1, body.width), "  claude");
-     }
- 
-     #[test]
-@@ -2348,6 +2461,59 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-             .collect()
-     }
- 
-+    #[test]
-+    fn collapsed_sidebar_aligns_single_and_two_digit_rows() {
-+        for count in [2, 10] {
-+            let (mut app, _, _) = collapsed_agent_app();
-+            if count == 10 {
-+                app.workspaces = (1..=count)
-+                    .map(|i| Workspace::test_new(&format!("workspace-{i}")))
-+                    .collect();
-+                app.ensure_test_terminals();
-+                for terminal in app.terminals.values_mut() {
-+                    terminal.detected_agent = Some(Agent::Claude);
-+                }
-+            }
-+            assert_eq!(app.sidebar_spaces.padding_x, 1);
-+            assert_eq!(app.sidebar_agents.padding_x, 1);
-+            let area = Rect::new(0, 0, super::super::COLLAPSED_WIDTH, 25);
-+            let mut terminal = Terminal::new(TestBackend::new(area.width, area.height)).unwrap();
-+            terminal
-+                .draw(|frame| render_sidebar_collapsed(&app, frame, area))
-+                .unwrap();
-+            let buffer = terminal.backend().buffer();
-+            let (spaces, divider, agents) = collapsed_sidebar_sections(area);
-+            for section in [spaces, agents] {
-+                for row in [0, count - 1] {
-+                    let y = section.y + row;
-+                    assert_eq!(buffer[(0, y)].symbol(), if row == 1 { "2" } else { "1" });
-+                    assert_eq!(buffer[(1, y)].symbol(), if row == 9 { "0" } else { " " });
-+                    assert_eq!(buffer[(2, y)].symbol(), "·");
-+                    assert_eq!(buffer[(3, y)].symbol(), "│");
-+                }
-+            }
-+            for x in 0..3 {
-+                assert_eq!(buffer[(x, divider.unwrap())].symbol(), "─");
-+            }
-+            assert_eq!(collapsed_sidebar_toggle_rect(area), Rect::new(1, 24, 1, 1));
-+            assert_eq!(buffer[(1, 24)].symbol(), "»");
-+
-+            // Optional review artifact from the actual renderer, without a live session.
-+            if let Some(dir) = std::env::var_os("HERDR_SIDEBAR_CAPTURE_DIR") {
-+                use ratatui::backend::{Backend, CrosstermBackend};
-+                let path = std::path::Path::new(&dir).join(format!("collapsed-{count}.ansi"));
-+                let mut backend = CrosstermBackend::new(std::fs::File::create(path).unwrap());
-+                backend
-+                    .draw(
-+                        (0..area.height)
-+                            .flat_map(|y| (0..area.width).map(move |x| (x, y, &buffer[(x, y)]))),
-+                    )
-+                    .unwrap();
-+                Backend::flush(&mut backend).unwrap();
-+            }
-+        }
-+    }
-+
-     #[test]
-     fn collapsed_sidebar_highlights_only_the_focused_agent_pane() {
-         let (mut app, first_pane, second_pane) = collapsed_agent_app();
-@@ -2356,7 +2522,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-         assert!(app.is_active_pane(0, 0, second_pane));
-         assert!(!app.is_active_pane(0, 0, first_pane));
- 
--        let area = Rect::new(0, 0, 4, 14);
-+        let area = Rect::new(0, 0, 5, 14);
-         let (_, _, detail_area) = collapsed_sidebar_sections(area);
-         let rows = collapsed_agent_row_styles(&app, area, detail_area, 3);
- 
-@@ -2390,7 +2556,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-         let (mut app, _, _) = collapsed_agent_app();
-         app.active = None;
- 
--        let area = Rect::new(0, 0, 4, 14);
-+        let area = Rect::new(0, 0, 5, 14);
-         let (_, _, detail_area) = collapsed_sidebar_sections(area);
-         let rows = collapsed_agent_row_styles(&app, area, detail_area, 3);
- 
-@@ -2752,8 +2918,8 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
-         let parent_name_x = find_symbol_x(buffer, cards[0].rect.y, cards[0].rect.width, "m");
-         let plain_name_x = find_symbol_x(buffer, cards[3].rect.y, cards[3].rect.width, "n");
-         assert_eq!(parent_name_x, plain_name_x);
--        assert_eq!(buffer[(cards[1].rect.x + 3, cards[1].rect.y)].symbol(), "├");
--        assert_eq!(buffer[(cards[2].rect.x + 3, cards[2].rect.y)].symbol(), "└");
-+        assert_eq!(buffer[(cards[1].rect.x + 4, cards[1].rect.y)].symbol(), "├");
-+        assert_eq!(buffer[(cards[2].rect.x + 4, cards[2].rect.y)].symbol(), "└");
-         assert_eq!(
-             buffer[(cards[0].rect.x + cards[0].rect.width - 1, cards[0].rect.y)].symbol(),
-             "▾"
-@@ -2790,7 +2956,7 @@ rows = [[{ token = "git_status", fg = "#123456" }]]
- 
-         let child = app.view.workspace_card_areas[1];
-         assert_eq!(
--            terminal.backend().buffer()[(child.rect.x + 3, child.rect.y)].symbol(),
-+            terminal.backend().buffer()[(child.rect.x + 4, child.rect.y)].symbol(),
-             "├"
-         );
-     }
-diff --git a/src/ui/status.rs b/src/ui/status.rs
-index 6264648..a7f1d6b 100644
---- a/src/ui/status.rs
-+++ b/src/ui/status.rs
-@@ -220,7 +220,11 @@ pub(super) fn state_icon(
- ) -> (&'static str, Style) {
-     (
-         state_icon_symbol(state, seen, indicator_style),
--        Style::default().fg(state_label_color(state, seen, p)),
-+        Style::default().fg(if state == AgentState::Idle && seen {
-+            p.green
-+        } else {
-+            state_label_color(state, seen, p)
-+        }),
-     )
- }
- 
-@@ -239,7 +243,7 @@ pub(super) fn state_label_color(state: AgentState, seen: bool, p: &Palette) -> C
-         (AgentState::Blocked, _) => p.red,
-         (AgentState::Working, _) => p.yellow,
-         (AgentState::Idle, false) => p.teal,
--        (AgentState::Idle, true) => p.green,
-+        (AgentState::Idle, true) => p.overlay0,
-         (AgentState::Unknown, _) => p.overlay0,
-     }
- }
-@@ -286,6 +290,14 @@ mod tests {
-                 assert_eq!(actual_symbol, expected_symbol);
-                 assert_eq!(display_width_u16(actual_symbol), 1);
-                 assert_eq!(style.fg, Some(color));
-+                assert_eq!(
-+                    state_label_color(state, seen, &palette),
-+                    if state == AgentState::Idle && seen {
-+                        palette.overlay0
-+                    } else {
-+                        color
-+                    }
-+                );
-             }
-         }
-     }
-diff --git a/src/ui/tab_surface.rs b/src/ui/tab_surface.rs
-index 99ca972..a72e53c 100644
---- a/src/ui/tab_surface.rs
-+++ b/src/ui/tab_surface.rs
-@@ -304,7 +304,7 @@ mod tests {
-         assert_eq!(frame.hyperlinks, vec![uri.to_owned()]);
-         assert_eq!(
-             frame_digest(&frame),
--            "a7c21fa42305a41231c7ae254f264f6ef923f46301d8fc4cd35ab6dfdd651b6b"
-+            "576c9f62f4c4019d617ee85c48489b9c5779edbaf8a4bbaf0e9baf047480e0d7"
-         );
-     }
- 
-diff --git a/src/ui/tabs.rs b/src/ui/tabs.rs
-index 603422f..3002fff 100644
---- a/src/ui/tabs.rs
-+++ b/src/ui/tabs.rs
-@@ -416,6 +416,12 @@ pub(super) fn render_tab_bar(app: &AppState, frame: &mut Frame, area: Rect) {
-             right = padding - left
-         );
-         frame.render_widget(Paragraph::new(text).style(style), rect);
-+        // The existing one-cell gap remains outside the tab's mouse target.
-+        if rect.right() < area.right() {
-+            frame.buffer_mut()[(rect.right(), rect.y)]
-+                .set_symbol("│")
-+                .set_style(Style::default().fg(p.surface_dim).bg(p.panel_bg));
-+        }
-     }
- 
-     if let Some(crate::app::state::DragState {
-@@ -539,6 +545,11 @@ mod tests {
-         let row = buffer_row_text(terminal.backend().buffer(), app.view.tab_bar_rect, 0);
-         assert!(row.contains(" 1 Z"), "tab row: {row:?}");
-         assert!(row.contains(" test Z"), "tab row: {row:?}");
-+        for rect in &app.view.tab_hit_areas {
-+            if rect.width > 0 && rect.right() < app.view.tab_bar_rect.right() {
-+                assert_eq!(terminal.backend().buffer()[(rect.right(), 0)].symbol(), "│");
-+            }
-+        }
-         assert_eq!(app.workspaces[0].tab_display_name(0).as_deref(), Some("1"));
-         assert_eq!(
-             app.workspaces[0].tab_display_name(custom_tab).as_deref(),
-diff --git a/tests/cross_area.rs b/tests/cross_area.rs
-index 6f1ab82..36d613c 100644
---- a/tests/cross_area.rs
-+++ b/tests/cross_area.rs
-@@ -895,8 +895,9 @@ fn cross_area_client_and_api_workspace_views_are_consistent() {
- 
-     let before = workspace_count(&api_socket);
- 
--    // Create a workspace via API while the client is attached.
--    let created = workspace_create(&api_socket, "api-visible-workspace");
-+    // Keep the full label visible within the default padded sidebar.
-+    let label = "api-workspace";
-+    let created = workspace_create(&api_socket, label);
-     let created_workspace_id = created["result"]["workspace"]["workspace_id"]
-         .as_str()
-         .expect("workspace.create should return workspace_id")
-@@ -906,7 +907,7 @@ fn cross_area_client_and_api_workspace_views_are_consistent() {
-     // label, proving client-side state reflects the API surface.
-     let saw_workspace_on_client =
-         wait_for_frame_matching(&mut client, Duration::from_secs(3), |frame| {
--            frame_contains_text(frame, "api-visible-workspace")
-+            frame_contains_text(frame, label)
-         })
-         .expect("frame decoding should succeed");
-     assert!(
-@@ -929,7 +930,7 @@ fn cross_area_client_and_api_workspace_views_are_consistent() {
-     );
- 
-     let listed = workspace_list(&api_socket);
--    let listed_workspace_id = workspace_id_by_label(&listed, "api-visible-workspace");
-+    let listed_workspace_id = workspace_id_by_label(&listed, label);
-     assert_eq!(
-         listed_workspace_id, created_workspace_id,
-         "API and client-side state should reference the same created workspace"
-diff --git a/tests/live_handoff.rs b/tests/live_handoff.rs
-index 832079e..028f2c9 100644
---- a/tests/live_handoff.rs
-+++ b/tests/live_handoff.rs
-@@ -1212,6 +1212,12 @@ fn live_handoff_accepts_canonical_pane_id_from_child_env() {
-     cleanup_test_base(&base);
- }
- 
-+#[test]
-+#[ignore = "subprocess fixture for the unmanaged-agent handoff test"]
-+fn unmanaged_agent_process_fixture() {
-+    thread::sleep(Duration::from_secs(30));
-+}
-+
- #[test]
- fn live_handoff_keeps_unmanaged_agent_name_bound_to_saved_session() {
-     use std::os::unix::fs::PermissionsExt;
-@@ -1226,11 +1232,17 @@ fn live_handoff_keeps_unmanaged_agent_name_bound_to_saved_session() {
-     let started_marker = base.join("agent-started");
-     let fake_pi = base.join("pi");
-     fs::create_dir_all(&base).unwrap();
-+    // macOS does not expose /bin/sleep's environment hint. Use a real process
-+    // named pi so the fixture exercises normal foreground-agent detection.
-+    let mock_dir = base.join("mock");
-+    fs::create_dir_all(&mock_dir).unwrap();
-+    let mock_pi = mock_dir.join("pi");
-+    fs::copy(std::env::current_exe().unwrap(), &mock_pi).unwrap();
-     fs::write(
-         &fake_pi,
-         format!(
--            "#!/bin/sh\nexport HERDR_AGENT=pi\necho started > {}\nexec /bin/sleep 30\n",
--            started_marker.display()
-+            "#!/bin/sh\nexport HERDR_AGENT=pi\necho started > {}\nexec {} --ignored --exact unmanaged_agent_process_fixture\n",
-+            started_marker.display(), mock_pi.display()
-         ),
-     )
-     .unwrap();
-@@ -1379,6 +1391,7 @@ fn live_handoff_keeps_agent_started_pane_after_agent_exits() {
-     let started_marker = base.join("agent-started");
-     let exited_marker = base.join("agent-exited");
-     let shell_marker = base.join("shell-after-agent");
-+    let ready_marker = base.join("shell-ready");
-     let bin = base.join("bin");
-     fs::create_dir_all(&bin).unwrap();
-     let fake_pi = bin.join("pi");
-@@ -1416,6 +1429,21 @@ fn live_handoff_keeps_agent_started_pane_after_agent_exits() {
-         .unwrap()
-         .to_string();
- 
-+    // workspace.create returns before the PTY shell has necessarily started.
-+    assert_ok(request(
-+        &api_socket,
-+        serde_json::json!({
-+            "id": "test:shell-ready",
-+            "method": "pane.send_input",
-+            "params": {
-+                "pane_id": pane_id,
-+                "text": format!("echo ready > {}", ready_marker.display()),
-+                "keys": ["Enter"]
-+            }
-+        }),
-+    ));
-+    support::wait_for_file(&ready_marker, Duration::from_secs(5));
-+
-     let started = request(
-         &api_socket,
-         serde_json::json!({
