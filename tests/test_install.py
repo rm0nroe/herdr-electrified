@@ -121,6 +121,49 @@ class Install(unittest.TestCase):
         state = {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}
         self.assertEqual({p for p in self.files() - state if cache not in p.parents and p != cache}, before)
 
+    def test_settings_only_install_selects_codex_theme_and_undo_restores_config(self):
+        from importlib.resources import files
+        from herdr_electrified.cli import component
+        self.serve({})
+        config = self.root / '.codex/config.toml'
+        config.parent.mkdir()
+        original = 'model = "gpt"  # mine\n\n[tui]\ntheme = "dark"\nanimations = false\n'
+        config.write_text(original)
+        before = self.files()
+        # Opt-in only: the theme is dark-tuned and tui.theme applies in every terminal.
+        self.assertEqual(self.run_cli('install', '--settings-only', '--yes')[0], 0)
+        self.assertEqual(config.read_text(), original)
+        self.assertFalse((self.root / '.codex/themes').exists())
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        code, result = self.run_cli('install', '--settings-only', '--codex-theme', '--yes')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(config.read_text(), original.replace('"dark"', '"herdr-electric"'))
+        theme = self.root / '.codex/themes/herdr-electric.tmTheme'
+        self.assertEqual(theme.read_text(), files('herdr_electrified').joinpath('data/codex-electric.tmTheme').read_text())
+        self.assertEqual({component(row) for row in result['targets']}, {'Herdr config', 'Codex'})
+        code, result = self.run_cli('check')
+        self.assertEqual(code, 0, result)
+        self.assertTrue(all(row['configured'] for row in result['targets']), result)
+        # Once owned, the theme stays managed without the flag until undo.
+        code, result = self.run_cli('install', '--settings-only', '--yes')
+        self.assertEqual((code, [row['change'] for row in result['targets']]), (0, ['unchanged'] * 3), result)
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(config.read_text(), original)
+        state = {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}
+        self.assertEqual(self.files() - state, before)
+
+    def test_settings_only_codex_theme_on_a_fresh_codex_home_undoes_to_nothing(self):
+        self.serve({})
+        before = self.files()
+        self.assertEqual(self.run_cli('install', '--settings-only', '--codex-theme', '--yes')[0], 0)
+        self.assertEqual((self.root / '.codex/config.toml').read_text(), '[tui]\ntheme = "herdr-electric"\n')
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertFalse((self.root / '.codex').exists())
+        state = {self.ledger, self.ledger.with_name('lock'), self.ledger.parent, self.ledger.parent.parent}
+        self.assertEqual(self.files() - state, before)
+
     def test_font_archive_missing_a_font_is_refused_cleanly(self):
         from herdr_electrified import electric
         raw = io.BytesIO()

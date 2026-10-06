@@ -82,6 +82,15 @@ and 12) and resets both (OSC 111 and 112) on detach or exit. Herdr reads it
 at startup, so restart Herdr Electric after changing it. Existing per-agent row overrides
 are preserved and reported as partial coverage.
 
+With `--codex-theme` (opt-in, since the theme needs a dark terminal and `tui.theme`
+applies everywhere), `install --settings-only` also writes
+`themes/herdr-electric.tmTheme` under `CODEX_HOME` or `~/.codex` (owned as a whole
+file) and owns one key in its `config.toml`: `tui.theme = "herdr-electric"`. Your
+previous value is recorded and restored by undo; a later edit to that key is an undo
+conflict and stays as you set it. Once owned it stays managed without the flag until
+undo. New Codex sessions pick the theme up. Electric's own Codex pins this theme
+regardless of `tui.theme`, so the flag is refused with the Electric bundle.
+
 ## Claude theme
 
 Electric apply installs `themes/herdr-electrified.json` under `CLAUDE_CONFIG_DIR`
@@ -101,9 +110,9 @@ install also removes the theme file it owned.
 Settings writes (now only `statusLine`, below) keep hooks, permissions and other
 settings at their values. Settings must be a strict
 JSON object with unique keys and finite numbers. Settings previews show only the
-managed keys (`theme`, `statusLine`) and disclose that writes can change whole-file formatting, Unicode
-escapes and key order while preserving unrelated values. This applies to both
-apply and key-level undo; byte-for-byte formatting preservation is not promised.
+managed keys (`theme`, `statusLine`). Writes, including key-level undo, rewrite only
+the managed members: every other byte keeps its formatting, escapes and key order,
+and an added member follows the file's own indentation.
 The namespaced theme file is owned
 as a whole; later file edits or deletion are preserved as undo conflicts.
 

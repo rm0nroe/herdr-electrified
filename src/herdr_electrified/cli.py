@@ -21,6 +21,10 @@ def association(path):
                 and env.get('HERDR_CONFIG_PATH') and c.canonical(env['HERDR_CONFIG_PATH']) == path)
 
 
+def codex_home():
+    return str(Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))).expanduser().resolve())
+
+
 def python3_ok():
     """Claude Code runs the statusline as python3 from PATH, not uv's interpreter."""
     path = shutil.which('python3')
@@ -64,19 +68,27 @@ def execute(args):
             raise ValueError('Electric uses its bundled Herdr; omit --herdr-bin')
         args.herdr_config = str(target)
         args.herdr_bin = str(bundle_root / 'herdr')
-        codex_home = data.get('electric', {}).get('codex_home') or str(Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))).expanduser().resolve())
+        codex = data.get('electric', {}).get('codex_home') or codex_home()
         prior = data.get('electric', {})
         # Early pre-release receipts predate detection and always installed the Codex pieces.
         agents = set(prior.get('agents', ['codex'] if prior else []))
         if args.command != 'check' or not prior:
-            agents |= electric.detect(codex_home)
-        electric_targets = electric.targets(bundle_root, target, codex_home, agents)
+            agents |= electric.detect(codex)
+        electric_targets = electric.targets(bundle_root, target, codex, agents)
     # Settings-only Ghostty look: same appearance file as Electric, owned outside any bundle.
     layer = not bundle and args.command == 'apply' and (args.ghostty or 'ghostty' in data)
     xdg = Path(os.environ.get('XDG_CONFIG_HOME', str(Path.home() / '.config')))
     look = c.canonical((target.parent if bundle else xdg / 'herdr-electrified') / 'ghostty.conf') if bundle or layer else None
     if layer:
         electric_targets[look] = c.files('herdr_electrified').joinpath('data/ghostty.conf').read_text()
+    # Settings-only Codex theme: the theme file plus tui.theme, managed until undo once owned.
+    codex_config = next((c.canonical(p) for p, e in data['targets'].items() if e.get('kind') == 'codex-config'), None)
+    if bundle and args.codex_theme:
+        raise ValueError("--codex-theme is for settings-only installs; Electric's Codex has the theme built in")
+    themed = not bundle and args.command == 'apply' and bool(args.codex_theme or codex_config)
+    if themed:
+        codex_config = codex_config or c.canonical(Path(codex_home()) / 'config.toml')
+        electric_targets[c.canonical(codex_config.parent / 'themes/herdr-electric.tmTheme')] = c.files('herdr_electrified').joinpath('data/codex-electric.tmTheme').read_text()
     result = {'targets': [], 'loaded': 'unknown', 'tier2': 'Electric bundle verified' if bundle else 'not selected', 'installed': 'CLI available'}
     if bundle:
         result['agents'] = sorted(agents)
@@ -127,6 +139,8 @@ def execute(args):
             paths.append((owned[0], 'ghostty-config'))
             release.add(owned[0])
         paths.extend((p, 'electric-file') for p in electric_targets)
+        if themed:
+            paths.append((codex_config, 'codex-config'))
         paths = list(dict.fromkeys(paths))
     script = next((path for path, kind in paths if kind == 'claude-statusline'), None)
     values = {'statusLine': {'type': 'command', 'command': 'python3 ' + shlex.quote(str(script))}}
@@ -154,6 +168,16 @@ def execute(args):
                                       'notice': 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'})
             plans.append((path, before, after, updated, None, kind))
             continue
+        if kind == 'codex-config':
+            before, after, updated, conflicts = c.undo_plan(path, entry) if args.command == 'undo' else c.apply_plan(path, entry, 'codex.toml')
+            if updated:
+                updated.update(kind=kind, pin=None)
+            c.validate(None, before, after, kind)
+            result['targets'].append({'path': str(path), 'component': kind, 'diff': c.diff(path, before, after),
+                                      'conflicts': conflicts, 'configured': before == after, 'loaded': 'unknown',
+                                      'reload': 'skipped', 'validation': 'TOML valid; Codex selection unverified', 'confirmation_required': False})
+            plans.append((path, before, after, updated, None, kind))
+            continue
         if kind != 'herdr':
             before, after, updated, conflicts = c.claude_plan(path, entry, kind, args.command == 'undo' or path in release, values, requested)
             c.validate(None, before, after, kind)
@@ -168,8 +192,6 @@ def execute(args):
             notices = []
             if kind == 'claude-settings' and 'statusLine' in conflicts and args.command != 'undo' and not (entry and 'statusLine' in entry['owned']):
                 notices.append('An existing statusLine is never chained or silently replaced; replacing it needs an interactive review of this diff (not --yes), and undo restores it.')
-            if kind == 'claude-settings' and before != after:
-                notices.append('Managed-keys-only preview: writing settings.json can change whole-file formatting, Unicode escapes and key order; unrelated values are preserved.')
             if notices:
                 result['targets'][-1]['notice'] = ' '.join(notices)
             plans.append((path, before, after, updated, None, kind))
@@ -227,7 +249,7 @@ def execute(args):
     conflicts = any(row['conflicts'] for row in result['targets'])
     font_root = bundle_root if bundle and 'ghostty' in agents else args.fonts if layer else None
     fonts_due = bool(font_root and args.command == 'apply' and electric.missing_fonts(font_root))
-    cleanup_due = args.command == 'undo' and ('electric' in data or 'ghostty' in data) and not data['targets']
+    cleanup_due = args.command == 'undo' and ('electric' in data or 'ghostty' in data or 'codex' in data) and not data['targets']
     if not fonts_due and not cleanup_due and (not plans or all(before == after and data['targets'].get(str(path)) == updated for path,before,after,updated,binary,kind in plans)):
         return result, int(conflicts and args.command == 'undo')
     needs_identity = any(row['confirmation_required'] for row in result['targets'])
@@ -254,7 +276,7 @@ def execute(args):
     with c.locked(receipt):
         if c.load_receipt(receipt) != data:
             raise ValueError('receipt changed; retry with a fresh diff')
-        record = 'electric' if bundle else 'ghostty' if layer else None
+        record = 'electric' if bundle else 'ghostty' if layer else 'codex' if themed else None
         if record:
             created = data.get(record, {}).get('created_dirs', [])
             for path, before, after, updated, binary, kind in plans:
@@ -265,8 +287,11 @@ def execute(args):
         if layer:
             data['ghostty'] = {'fonts': data.get('ghostty', {}).get('fonts', []), 'created_dirs': created}
             c.save(receipt, data)
+        elif themed:
+            data['codex'] = {'created_dirs': created}
+            c.save(receipt, data)
         if bundle:
-            data['electric'] = {'root': str(bundle_root), 'config': str(target), 'codex_home': codex_home, 'manifest_hash': manifest_hash,
+            data['electric'] = {'root': str(bundle_root), 'config': str(target), 'codex_home': codex, 'manifest_hash': manifest_hash,
                                 'agents': sorted(agents), 'created_dirs': created, 'fonts': data.get('electric', {}).get('fonts', []),
                                 'session': data.get('electric', {}).get('session') or str(electric.session_dir())}
             c.save(receipt, data)
@@ -313,10 +338,11 @@ def execute(args):
             electric.cleanup(data['electric'])
             data.pop('electric')
             c.save(receipt, data)
-        if args.command == 'undo' and not data['targets'] and 'ghostty' in data:
-            electric.prune(data['ghostty'])
-            data.pop('ghostty')
-            c.save(receipt, data)
+        for layer_record in ('ghostty', 'codex'):
+            if args.command == 'undo' and not data['targets'] and layer_record in data:
+                electric.prune(data[layer_record])
+                data.pop(layer_record)
+                c.save(receipt, data)
     return result, int(any(row['conflicts'] for row in result['targets']) and args.command == 'undo')
 
 
@@ -332,6 +358,7 @@ def main(argv=None):
     parser.add_argument('--electric', metavar='BUNDLE', help='opt in to a verified macOS arm64 Electric bundle')
     parser.add_argument('--agent', choices=['claude'])
     parser.add_argument('--claude-statusline', action='store_true', help='opt in to the managed Claude statusline')
+    parser.add_argument('--codex-theme', action='store_true', help='settings-only: opt in to the Electric syntax theme in stock Codex')
     parser.add_argument('--yes', action='store_true')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args(argv)
@@ -341,6 +368,8 @@ def main(argv=None):
         parser.error('--electric is only valid for apply, preview-apply or check')
     if args.claude_statusline and args.command == 'undo':
         parser.error('--claude-statusline is only valid for install, apply, preview-apply or check')
+    if args.codex_theme and args.command == 'undo':
+        parser.error('--codex-theme is only valid for install, apply, preview-apply or check')
     if args.dry_run and args.command not in ('install', 'apply'):
         parser.error('--dry-run is only valid for install or apply')
     if args.settings_only and args.command != 'install':
@@ -375,14 +404,15 @@ def main(argv=None):
     return code
 
 
-COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty windows',
+COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty windows', 'codex-config': 'Codex',
               'claude-theme': 'Claude Code', 'claude-settings': 'Claude Code', 'claude-statusline': 'Claude Code'}
 THEMES = {'claude': 'Claude Code', 'codex': 'Codex', 'ghostty': 'Ghostty', 'opencode': 'OpenCode'}
 
 
 def component(row):
     # Electric owns the appearance file the Ghostty include points at; it only affects Ghostty windows.
-    return 'Ghostty windows' if row['path'].endswith('/ghostty.conf') else COMPONENTS[row.get('component', 'herdr')]
+    return ('Ghostty windows' if row['path'].endswith('/ghostty.conf') else 'Codex' if row['path'].endswith('.tmTheme')
+            else COMPONENTS[row.get('component', 'herdr')])
 
 
 def summary(result, stream=sys.stdout, written=False):
@@ -414,7 +444,7 @@ def summary(result, stream=sys.stdout, written=False):
             lines.extend([paint('31', f"Conflicts in {r['path']}: " + ', '.join(r['conflicts'])), r['diff']])
         if r.get('instruction'):
             lines.append(r['instruction'])
-    # outcome() gives the Ghostty reload as a terminal-aware next step; the settings.json formatting note is a preview caveat.
+    # outcome() gives the Ghostty reload as a terminal-aware next step; the settings.json statusLine note is a preview caveat.
     lines.extend(dict.fromkeys(r['notice'] for r in rows if r.get('notice') and r.get('component') != 'ghostty-config'
                                and not (written and r.get('component') == 'claude-settings')))
     if rows and not written:

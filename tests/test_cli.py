@@ -114,7 +114,6 @@ else: sys.exit(2)
             self.assertEqual(len(result['targets']), 3)
             self.assertNotIn('synthetic-private-value', json.dumps(result))
             self.assertIn('claude-statusline.py', result['targets'][2]['diff'])
-            self.assertIn('whole-file formatting', result['targets'][2]['notice'])
             self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
             self.assertFalse(self.ledger.parent.exists())
         class TTY(io.StringIO):
@@ -124,32 +123,47 @@ else: sys.exit(2)
             code, result = self.run_cli('apply', '--claude-statusline', '--herdr-bin', str(self.bin), stdin=TTY('n\n'))
         self.assertEqual(code, 0, result)
         self.assertNotIn('synthetic-private-value', err.getvalue())
-        self.assertIn('whole-file formatting', err.getvalue())
         self.assertEqual({str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}, before)
         self.assertFalse(self.ledger.parent.exists())
 
-    def test_claude_settings_write_notice_covers_apply_and_key_level_undo(self):
+    def test_claude_settings_writes_keep_formatting_through_apply_and_key_level_undo(self):
         from herdr_electrified.cli import render
         settings = self.root / '.claude/settings.json'
         settings.parent.mkdir()
-        original = {'theme': 'dark', 'secret_note': 'café ▸'}
-        settings.write_text(json.dumps(original, indent=4, ensure_ascii=False) + '\n')
-        for command in [('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin)), ('undo',)]:
-            code, result = self.run_cli(*command)
-            self.assertEqual(code, 0, result)
-            row = next(row for row in result['targets'] if row.get('component') == 'claude-settings')
-            for detail in ('whole-file formatting', 'Unicode escapes', 'key order'):
-                self.assertIn(detail, row['notice'])
-                self.assertIn(detail, render(result))
-            self.assertNotIn('secret_note', row['diff'].split('@@', 2)[-1])
-            self.assertNotIn(json.dumps(original['secret_note'])[1:-1], json.dumps(result))
-            current = json.loads(settings.read_text())
-            self.assertEqual(current['secret_note'], original['secret_note'])
-            if command[0] == 'apply':
-                self.assertEqual(self.run_cli('check')[1]['targets'][-1].get('notice'), None)
-                current['later'] = 'keep this edit'
-                settings.write_text(json.dumps(current, indent=4, ensure_ascii=False) + '\n')
-        self.assertEqual(json.loads(settings.read_text()), original | {'later': 'keep this edit'})
+        _, value = self.statusline()
+        indented = '{\n    "theme": "dark",\n    "secret_note": "caf\u00e9 \u25b8",\n    "hooks": {"a": [1, 2]}\n}\n'
+        member = ',\n    "statusLine": ' + json.dumps(value, indent=4).replace('\n', '\n    ')
+        minified = '{"theme":"dark","env":{"K":"v"}}'
+        for original, applied in ((indented, indented[:-3] + member + '\n}\n'),
+                                  (minified, minified[:-1] + ', "statusLine": ' + json.dumps(value) + '}')):
+            with self.subTest(original=original):
+                settings.write_text(original)
+                code, result = self.run_cli('apply', '--claude-statusline', '--yes', '--herdr-bin', str(self.bin))
+                self.assertEqual(code, 0, result)
+                row = next(row for row in result['targets'] if row.get('component') == 'claude-settings')
+                self.assertFalse('whole-file formatting' in row.get('notice', '') + render(result))
+                self.assertNotIn('secret_note', row['diff'].split('@@', 2)[-1])
+                self.assertEqual(settings.read_text(), applied)
+                # A later edit forces key-level undo, which removes only the statusLine member.
+                settings.write_text(applied.replace('"theme"', '"later": "keep this edit", "theme"'))
+                code, result = self.run_cli('undo')
+                self.assertEqual(code, 0, result)
+                self.assertEqual(settings.read_text(), original.replace('"theme"', '"later": "keep this edit", "theme"'))
+                self.assertFalse(self.ledger.exists() and json.loads(self.ledger.read_text())['targets'])
+
+    def test_settings_splice_edits_only_changed_members(self):
+        from herdr_electrified.config import splice
+        cases = [
+            ('{"statusLine": 1, "a": "}{\\"", "b": 2}', {'a': '}{"', 'b': 2}, '{"a": "}{\\"", "b": 2}'),
+            ('{"a": 1, "statusLine": [1], "b": 2}', {'a': 1, 'b': 2}, '{"a": 1, "b": 2}'),
+            ('{\r\n\t"statusLine": 1\r\n}\r\n', {}, '{}\r\n'),
+            ('{}', {'theme': 'x'}, '{\n  "theme": "x"\n}'),
+            ('{\r\n\t"a": {"k": 1}\r\n}\r\n', {'a': {'k': 2}}, '{\r\n\t"a": {\n\t\t"k": 2\n\t}\r\n}\r\n'),
+            (None, {'theme': 'x'}, '{\n  "theme": "x"\n}\n'),
+        ]
+        for before, doc, after in cases:
+            with self.subTest(before=before):
+                self.assertEqual(splice(before, doc), after)
 
     def test_claude_conflicts_require_confirmation_and_preserve_first_original(self):
         settings = self.root / '.claude/settings.json'

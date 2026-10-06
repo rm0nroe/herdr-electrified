@@ -8,6 +8,7 @@ import stat
 import tempfile
 from contextlib import contextmanager
 import os
+import re
 from importlib.resources import files
 from pathlib import Path
 import subprocess
@@ -128,7 +129,7 @@ def validate_receipt(data):
         if not isinstance(value, dict):
             return False
         kind = value.get('kind', 'herdr')
-        keys = allowed if kind == 'herdr' else set(SETTINGS) if kind == 'claude-settings' else {'$file'} if kind in ('claude-theme', 'claude-statusline', 'electric-file') else {'$include'} if kind == 'ghostty-config' else set()
+        keys = allowed if kind == 'herdr' else set(SETTINGS) if kind == 'claude-settings' else {'$file'} if kind in ('claude-theme', 'claude-statusline', 'electric-file') else {'$include'} if kind == 'ghostty-config' else {'tui.theme'} if kind == 'codex-config' else set()
         valid = ((pin(value['pin']) if kind == 'herdr' else value['pin'] is None)
                 and isinstance(value['installed_hash'], str) and len(value['installed_hash']) == 64
                 and (value['original_file'] is None or isinstance(value['original_file'], str))
@@ -164,6 +165,8 @@ def validate_receipt(data):
             valid = valid and all(isinstance(f['path'], str) and Path(f['path']).is_absolute() and len(f['sha256']) == 64 for f in bundle.get('fonts', []))
             valid = valid and (bundle.get('session') is None or isinstance(bundle['session'], str) and Path(bundle['session']).is_absolute())
             valid = valid and all(isinstance(d, str) and Path(d).is_absolute() for d in bundle.get('created_dirs', []))
+        if 'codex' in data:
+            valid = valid and isinstance(data['codex'], dict) and all(isinstance(d, str) and Path(d).is_absolute() for d in data['codex'].get('created_dirs', []))
         if 'ghostty' in data:
             layer = data['ghostty']
             valid = valid and isinstance(layer, dict) and all(isinstance(f['path'], str) and Path(f['path']).is_absolute() and len(f['sha256']) == 64 for f in layer.get('fonts', []))
@@ -171,7 +174,7 @@ def validate_receipt(data):
         if 'pending' in data:
             p = data['pending']
             kind = p.get('kind', 'herdr')
-            valid = valid and kind in ('herdr', 'claude-settings', 'claude-theme', 'claude-statusline', 'electric-file', 'ghostty-config') and (pin(p['pin']) if kind == 'herdr' else p['pin'] is None)
+            valid = valid and kind in ('herdr', 'claude-settings', 'claude-theme', 'claude-statusline', 'electric-file', 'ghostty-config', 'codex-config') and (pin(p['pin']) if kind == 'herdr' else p['pin'] is None)
             valid = valid and Path(p['path']).is_absolute() and str(canonical(p['path'])) == p['path'] and isinstance(p['mode'], int) and 0 <= p['mode'] <= 0o777
             valid = valid and (p['entry'] is None or entry(p['entry']))
             valid = valid and (p['entry'] is None or p['entry'].get('kind', 'herdr') == kind)
@@ -356,6 +359,59 @@ def json_object(text):
     return doc
 
 
+WS = re.compile(r'[ \t\n\r]*')
+
+
+def members(text):
+    """A JSON object's top-level members as (key, key start, value start, value end), plus its brace offsets."""
+    skip = lambda i: WS.match(text, i).end()
+    decode = json.JSONDecoder().raw_decode
+    start = skip(0)
+    i, found = skip(start + 1), []
+    while text[i] != '}':
+        key, end = decode(text, i)
+        value = skip(skip(end) + 1)
+        end = decode(text, value)[1]
+        found.append((key, i, value, end))
+        i = skip(end)
+        if text[i] == ',':
+            i = skip(i + 1)
+    return start, i, found
+
+
+def splice(before, doc):
+    """settings.json as doc, rewriting only the top-level members that change; every other byte stays as written."""
+    if before is None:
+        return json.dumps(doc, indent=2) + '\n'
+    text = before
+    while True:
+        start, close, found = members(text)
+        current = {key: json.loads(text[value:end]) for key, _, value, end in found}
+        lead = text[start + 1:found[0][1]] if found else '\n  '
+        indent = lead.rpartition('\n')[2] if '\n' in lead else None
+        dump = lambda value: (json.dumps(value, ensure_ascii=False) if indent is None
+                              else json.dumps(value, indent=indent, ensure_ascii=False).replace('\n', '\n' + indent))
+        gone = [n for n, member in enumerate(found) if member[0] not in doc]
+        changed = [member for member in found if member[0] in doc and current[member[0]] != doc[member[0]]]
+        added = [key for key in doc if key not in current]
+        if gone:
+            n, (_, key_start, _, end) = gone[0], found[gone[0]]
+            text = (text[:key_start] + text[found[n + 1][1]:] if n + 1 < len(found)
+                    else text[:found[n - 1][3]] + text[end:] if n else text[:start + 1] + text[close:])
+        elif changed:
+            key, _, value, end = changed[0]
+            text = text[:value] + dump(doc[key]) + text[end:]
+        elif added:
+            member = json.dumps(added[0], ensure_ascii=False) + ': ' + dump(doc[added[0]])
+            text = (text[:found[-1][3]] + (',' + lead if indent is not None else ', ') + member + text[found[-1][3]:] if found
+                    else text[:start + 1] + lead + member + '\n' + text[close:])
+        else:
+            break
+    # Guard against a splice bug costing a value: fall back to a full rewrite, which preserves every value.
+    same = json.dumps(json_object(text), sort_keys=True) == json.dumps(doc, sort_keys=True)
+    return text if same else json.dumps(doc, indent=2) + '\n'
+
+
 def claude_plan(path, entry, kind, undo=False, values=None, requested=()):
     """Claude files: the theme or statusline script owned whole, or chosen keys in settings.json."""
     before = read(path)
@@ -396,7 +452,7 @@ def settings_plan(before, entry, undo, values, requested):
         for key in [key for key in owned if key not in conflicts]:
             doc.pop(key, None)
             doc.update(json.loads(owned.pop(key)['original']))
-        return before, json.dumps(doc, indent=2) + '\n', dict(copy.deepcopy(entry), owned=owned) if owned else None, conflicts
+        return before, splice(before, doc), dict(copy.deepcopy(entry), owned=owned) if owned else None, conflicts
     # Keys no longer managed (the global theme before v1.0.6) are released: restored if still ours, else left as the user set them.
     released = [key for key in owned if key not in values]
     for key in released:
@@ -416,8 +472,8 @@ def settings_plan(before, entry, undo, values, requested):
     if entry and not owned:
         if entry.get('exact_restore', True) and digest(before) == entry['installed_hash']:
             return before, entry['original_file'], None, conflicts
-        return before, before if doc == json_object(before) else json.dumps(doc, indent=2) + '\n', None, conflicts
-    after = json.dumps(doc, indent=2) + '\n'
+        return before, before if doc == json_object(before) else splice(before, doc), None, conflicts
+    after = splice(before, doc)
     updated = {'kind': 'claude-settings', 'pin': None, 'original_file': entry['original_file'] if entry else before,
                'installed_hash': digest(after),
                'exact_restore': (entry.get('exact_restore', True) and digest(before) == entry['installed_hash']) if entry else True,
@@ -453,6 +509,10 @@ def ghostty_plan(path, entry, include, undo=False, release=False):
 
 def validate(binary, before, after, kind='herdr'):
     if kind in ('electric-file', 'ghostty-config', 'claude-statusline'):
+        return []
+    if kind == 'codex-config':
+        tomlkit.parse(before or '')
+        tomlkit.parse(after or '')
         return []
     if kind != 'herdr':
         json_object(before)
