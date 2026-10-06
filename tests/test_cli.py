@@ -90,6 +90,21 @@ else: sys.exit(2)
         self.assertEqual(self.target.read_bytes(), before)
         self.assertEqual(json.loads(self.ledger.read_text())['targets'], {})
 
+    def test_undo_dry_run_previews_without_writing_and_empty_undo_says_so(self):
+        code, result = self.run_cli('undo', '--dry-run')
+        self.assertEqual((code, result['notice']), (0, 'Nothing to undo.'), result)
+        self.assertFalse(self.ledger.parent.exists())
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        applied, receipt = self.target.read_bytes(), self.ledger.read_bytes()
+        code, result = self.run_cli('undo', '--dry-run')
+        self.assertEqual(code, 0, result)
+        self.assertNotIn('notice', result)
+        self.assertIn('-sidebar_width = 31', result['targets'][0]['diff'])
+        self.assertEqual((self.target.read_bytes(), self.ledger.read_bytes()), (applied, receipt))
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        code, result = self.run_cli('undo')
+        self.assertEqual((code, result['notice'], result['targets']), (0, 'Nothing to undo.', []), result)
+
     def test_claude_invalid_json_blocks_all_selected_writes(self):
         claude = self.root / '.claude'
         claude.mkdir()
@@ -571,6 +586,17 @@ else: sys.exit(2)
         result['targets'].append({'path': '/h/.config/ghostty/config.ghostty', 'component': 'ghostty-config', 'change': 'new', 'conflicts': [],
                                   'notice': 'Reload Ghostty (cmd+shift+,); restart Ghostty once if fonts were installed.'})
         self.assertNotIn('Reload Ghostty', summary(result, io.StringIO()))
+
+    def test_summary_colors_a_pipe_only_when_forced(self):
+        # The plugin popup pipes output into a pager, which renders colors with less -R.
+        from herdr_electrified.cli import summary
+        result = {'targets': [{'path': '/h/c.toml', 'component': 'herdr', 'change': 'new', 'conflicts': []}]}
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertNotIn('\033[', summary(result, io.StringIO()))
+        with patch.dict(os.environ, {'CLICOLOR_FORCE': '1'}, clear=True):
+            self.assertIn('\033[', summary(result, io.StringIO()))
+        with patch.dict(os.environ, {'CLICOLOR_FORCE': '1', 'NO_COLOR': '1'}, clear=True):
+            self.assertNotIn('\033[', summary(result, io.StringIO()))
 
     def test_unanswered_prompt_times_out_without_writing(self):
         class TTY(io.StringIO):

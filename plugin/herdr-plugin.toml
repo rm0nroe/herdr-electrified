@@ -1,6 +1,6 @@
 id = "herdr-electrified"
 name = "Herdr Electrified"
-version = "1.0.0"
+version = "1.1.0"
 min_herdr_version = "0.8.2"
 description = "Preview, check, and undo your installed appearance settings"
 platforms = ["macos"]
@@ -12,16 +12,40 @@ command = ["uv", "sync", "--frozen", "--no-dev", "--no-editable", "--project", "
 id = "preview"
 title = "Preview Herdr Electrified"
 contexts = ["workspace", "pane"]
-command = ["../.venv/bin/python", "-m", "herdr_electrified.cli", "preview-apply"]
+command = ["sh", "-c", "exec \"$HERDR_BIN_PATH\" plugin pane open --plugin herdr-electrified --entrypoint preview"]
 
 [[actions]]
 id = "check"
 title = "Check Herdr Electrified"
 contexts = ["workspace", "pane"]
-command = ["../.venv/bin/python", "-m", "herdr_electrified.cli", "check"]
+command = ["sh", "-c", "exec \"$HERDR_BIN_PATH\" plugin pane open --plugin herdr-electrified --entrypoint check"]
 
 [[actions]]
 id = "undo"
 title = "Undo Herdr Electrified"
 contexts = ["workspace", "pane"]
-command = ["../.venv/bin/python", "-m", "herdr_electrified.cli", "undo"]
+command = ["sh", "-c", "exec \"$HERDR_BIN_PATH\" plugin pane open --plugin herdr-electrified --entrypoint undo"]
+
+[[panes]]
+id = "preview"
+title = "Preview Herdr Electrified"
+placement = "popup"
+width = "90%"
+height = "80%"
+command = ["sh", "-c", "cd \"$HERDR_PLUGIN_ROOT\" && exec sh show.sh preview-apply"]
+
+[[panes]]
+id = "check"
+title = "Check Herdr Electrified"
+placement = "popup"
+width = "90%"
+height = "80%"
+command = ["sh", "-c", "cd \"$HERDR_PLUGIN_ROOT\" && exec sh show.sh check"]
+
+[[panes]]
+id = "undo"
+title = "Undo Herdr Electrified"
+placement = "popup"
+width = "90%"
+height = "80%"
+command = ["sh", "-c", "cd \"$HERDR_PLUGIN_ROOT\" && exec sh show.sh undo"]

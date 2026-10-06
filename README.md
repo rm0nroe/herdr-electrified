@@ -176,8 +176,8 @@ herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.5.0 --ye
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.
-Run its actions from Herdr's plugin menu. Output goes to
-`herdr-electric plugin log list`, not the pane.
+Run its actions from Herdr's plugin menu. Each opens a popup with its output:
+`q` closes it. Undo shows what it will restore and asks before writing.
 
 ## Limitations
 

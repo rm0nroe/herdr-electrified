@@ -176,24 +176,13 @@ index d55e4c48..11113743 100644
      .map_err(|err| {
          eprintln!("herdr: failed to set up terminal: {err}");
 diff --git a/src/client/shell.rs b/src/client/shell.rs
-index 2d180443..5857cd3e 100644
+index 2d180443..daa175d1 100644
 --- a/src/client/shell.rs
 +++ b/src/client/shell.rs
-@@ -236,6 +236,22 @@ fn status_color(
+@@ -236,6 +236,11 @@ fn status_color(
      }
  }
  
-+/// State text dims once an agent is idle; the icon keeps its status color.
-+fn status_text_color(
-+    status: crate::api::schema::AgentStatus,
-+    palette: &Palette,
-+) -> ratatui::style::Color {
-+    match status {
-+        crate::api::schema::AgentStatus::Idle => palette.overlay0,
-+        _ => status_color(status, palette),
-+    }
-+}
-+
 +/// `padding_x` cells trimmed from both sides for text; hit regions keep the full rect.
 +fn sidebar_text_rect(area: Rect, padding_x: u16) -> Rect {
 +    area.inner(ratatui::layout::Margin::new(padding_x.min(area.width / 2), 0))
@@ -203,7 +192,7 @@ index 2d180443..5857cd3e 100644
      match palette.panel_bg {
          ratatui::style::Color::Reset => palette.surface_dim,
 diff --git a/src/client/shell/agent_sidebar.rs b/src/client/shell/agent_sidebar.rs
-index e43ab8cc..b16fd58e 100644
+index e43ab8cc..c7d29b53 100644
 --- a/src/client/shell/agent_sidebar.rs
 +++ b/src/client/shell/agent_sidebar.rs
 @@ -108,11 +108,12 @@ pub(super) fn render_agent_panel_header(
@@ -233,15 +222,6 @@ index e43ab8cc..b16fd58e 100644
          area.y + 1,
          sort_width,
          1,
-@@ -339,7 +340,7 @@ pub(super) fn render_agent_row(
-             .fg(palette.subtext0)
-             .add_modifier(Modifier::BOLD)
-     };
--    let status_style = Style::default().fg(status_color(row.status, palette));
-+    let status_style = Style::default().fg(status_text_color(row.status, palette));
-     let secondary = Style::default().fg(palette.overlay0);
-     let icon = (
-         status_icon(row.status, config.status_indicators),
 @@ -353,6 +354,8 @@ pub(super) fn render_agent_row(
      } else {
          row.rows.clone()
@@ -317,7 +297,7 @@ index 96982487..48020fce 100644
                      config.status_indicators,
                      entry,
 diff --git a/src/client/shell/sidebar.rs b/src/client/shell/sidebar.rs
-index f94f6bdc..2ad72217 100644
+index f94f6bdc..a4a9fb22 100644
 --- a/src/client/shell/sidebar.rs
 +++ b/src/client/shell/sidebar.rs
 @@ -215,11 +215,12 @@ pub(crate) fn render_sidebar(
@@ -395,13 +375,7 @@ index f94f6bdc..2ad72217 100644
                  prefix,
                  Style::default().fg(palette.overlay0),
              );
-@@ -719,17 +727,15 @@ pub(in crate::client::shell) fn render_workspace_rows(
-                 status_icon(status, indicators),
-                 Style::default().fg(status_color(status, palette)),
-             ),
--            Style::default().fg(status_color(status, palette)),
-+            Style::default().fg(status_text_color(status, palette)),
-             workspace_style,
+@@ -724,12 +732,10 @@ pub(in crate::client::shell) fn render_workspace_rows(
              secondary_style,
              Style::default().fg(palette.overlay1),
              palette,

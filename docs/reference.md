@@ -49,7 +49,7 @@ the extracted bundle and downloaded fonts in place; remove
 
 ## Check, dry runs and reloads
 
-`check` and `apply --dry-run` never create a receipt, lock or state directory,
+`check`, `apply --dry-run` and `undo --dry-run` never create a receipt, lock or state directory,
 change a target, or prompt. Native validation uses disposable private temporary
 files. Without an explicitly selected executable or matching pin, validation is
 reported as not run; that is not a pass. A pin identifies the selected executable,

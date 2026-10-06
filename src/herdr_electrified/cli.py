@@ -109,6 +109,8 @@ def execute(args):
                 c.recover(receipt, data)
             result['pending'] = 'recovered'
     release = set()
+    if args.command == 'undo' and not data['targets'] and not any(record in data for record in ('electric', 'ghostty', 'codex')):
+        result['notice'] = ' '.join(filter(None, [result.get('notice'), 'Nothing to undo.']))
     if args.command == 'undo':
         paths = [(c.canonical(p), e.get('kind', 'herdr')) for p, e in data['targets'].items()]
         paths.sort(key=lambda item: item[1] != 'claude-settings')
@@ -351,7 +353,7 @@ def main(argv=None):
     parser.add_argument('--version', action='version', version='herdr-electrified ' + __version__)
     parser.add_argument('command', choices=['install', 'apply', 'preview-apply', 'check', 'undo'])
     parser.add_argument('--settings-only', action='store_true', help='install: stock Herdr settings, no Electric bundle')
-    parser.add_argument('--dry-run', action='store_true', help='install or apply: show what would change, write nothing')
+    parser.add_argument('--dry-run', action='store_true', help='install, apply or undo: show what would change, write nothing')
     parser.add_argument('--diff', action='store_true', help='install or apply: show full diffs instead of the summary')
     parser.add_argument('--herdr-config')
     parser.add_argument('--herdr-bin')
@@ -370,8 +372,8 @@ def main(argv=None):
         parser.error('--claude-statusline is only valid for install, apply, preview-apply or check')
     if args.codex_theme and args.command == 'undo':
         parser.error('--codex-theme is only valid for install, apply, preview-apply or check')
-    if args.dry_run and args.command not in ('install', 'apply'):
-        parser.error('--dry-run is only valid for install or apply')
+    if args.dry_run and args.command not in ('install', 'apply', 'undo'):
+        parser.error('--dry-run is only valid for install, apply or undo')
     if args.settings_only and args.command != 'install':
         parser.error('--settings-only is only valid for install')
     if args.command == 'install' and args.electric:
@@ -417,7 +419,7 @@ def component(row):
 
 def summary(result, stream=sys.stdout, written=False):
     """What apply will change (or changed), grouped by component; the full diff is behind --diff."""
-    color = stream.isatty() and not os.environ.get('NO_COLOR')
+    color = (stream.isatty() or bool(os.environ.get('CLICOLOR_FORCE'))) and not os.environ.get('NO_COLOR')
     def paint(code, text):
         return f'\033[{code}m{text}\033[0m' if color else text
     home = str(Path.home().resolve()) + os.sep
