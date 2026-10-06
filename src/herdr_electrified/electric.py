@@ -24,10 +24,10 @@ REQUIRED = {'herdr', 'codex/bin/codex', 'codex/bin/codex-code-mode-host',
 GHOSTTY_APPS = ('/Applications', '~/Applications')
 OPEN = '/usr/bin/open'
 # Pinned at release: install trusts only these exact archives.
-BUNDLE = 'herdr-electrified-0.6.0-macos-arm64'
+BUNDLE = 'herdr-electrified-0.7.0-macos-arm64'
 BUNDLE_URL = f'https://github.com/rm0nroe/herdr-electrified/releases/download/v{__version__}/{BUNDLE}.tar.gz'
-VERSIONS = ('0.1.0', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.4.0', '0.5.0', '0.6.0')
-BUNDLE_SHA = '3ca74ffd05d7a83bf47c799bf99f4212688f9784f690d085715836fc4c68912b'
+VERSIONS = ('0.1.0', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0')
+BUNDLE_SHA = '84d865f91a8be6aaf6b9c5dd823dae998a2c2c148eae4a79490a2f873e9c6fa7'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
 FONT_SHA = '04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf'
 FONTS = [f'JetBrainsMonoNerdFontMono-{style}.ttf' for style in ('Regular', 'Bold', 'Italic', 'BoldItalic')]
