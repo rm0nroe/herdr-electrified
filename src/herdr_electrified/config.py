@@ -280,6 +280,18 @@ def transact(receipt, data, path, before, after, entry, binary, kind='herdr', mo
     save(receipt, data)
 
 
+# Values a release wrote without recording them in the receipt: 1.6.0 changed Electric's agent rows
+# but kept 1.5.0's in the receipt. Every other release recorded what it wrote.
+UNRECORDED = {'ui.sidebar.agents.rows': [
+    [['state_icon', {'token': 'tab', 'fg': '#cdd6f4', 'bold': True, 'dim': False}],
+     [{'token': 'state_text', 'dim': False, 'rules': [{'equals': 'idle', 'fg': '#6c7086'}]},
+      {'token': 'agent', 'fg': '#6c7086', 'dim': False}]]]}
+
+
+def ours(key, current, recorded):
+    return current == recorded or current in UNRECORDED.get(key, ())
+
+
 def apply_plan(path, entry, preset_name='herdr.toml'):
     before = read(path)
     doc = tomlkit.parse(before or '')
@@ -292,7 +304,7 @@ def apply_plan(path, entry, preset_name='herdr.toml'):
         installed = value.unwrap() if hasattr(value, 'unwrap') else value
         if key in owned:
             # A value an earlier release installed, or this release's value, is ours; anything else is a user edit.
-            if current not in (owned[key]['installed'], installed):
+            if current != installed and not ours(key, current, owned[key]['installed']):
                 conflicts.append(key)
             owned[key]['installed'] = installed
         if current == value:
@@ -325,7 +337,7 @@ def undo_plan(path, entry):
     conflicts = []
     for key, values in entry['owned'].items():
         keys = key.split('.')
-        if get(doc, keys) != values['installed']:
+        if not ours(key, get(doc, keys), values['installed']):
             conflicts.append(key)
             continue
         fragment = tomlkit.parse(values['original'])

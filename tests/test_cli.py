@@ -358,6 +358,47 @@ else: sys.exit(2)
         owned = json.loads(self.ledger.read_text())['targets'][str(self.target.resolve())]['owned']
         self.assertEqual(owned['ui.sidebar_width']['installed'], 31)
 
+    ROWS_1_5_0 = [['state_icon', {'token': 'tab', 'fg': '#cdd6f4', 'bold': True, 'dim': False}],
+                  [{'token': 'state_text', 'dim': False}, {'token': 'agent', 'fg': '#6c7086', 'dim': False}]]
+    ROWS_1_6_0 = [['state_icon', {'token': 'tab', 'fg': '#cdd6f4', 'bold': True, 'dim': False}],
+                  [{'token': 'state_text', 'dim': False, 'rules': [{'equals': 'idle', 'fg': '#6c7086'}]},
+                   {'token': 'agent', 'fg': '#6c7086', 'dim': False}]]
+
+    def as_left_by_1_6_0(self, user_edit=''):
+        """1.6.0 wrote its agent rows but its receipt kept the 1.5.0 value."""
+        import tomlkit
+        from herdr_electrified.config import digest
+        doc = tomlkit.parse(self.target.read_text())
+        doc['ui']['sidebar']['agents']['rows'] = self.ROWS_1_6_0
+        self.target.write_text(tomlkit.dumps(doc))
+        data = json.loads(self.ledger.read_text())
+        entry = data['targets'][str(self.target.resolve())]
+        entry['owned']['ui.sidebar.agents.rows']['installed'] = self.ROWS_1_5_0
+        entry['installed_hash'] = digest(self.target.read_text())
+        self.ledger.write_text(json.dumps(data))
+        if user_edit:
+            self.target.write_text(self.target.read_text() + user_edit)
+
+    def test_upgrade_from_1_6_0_takes_back_its_unrecorded_agent_rows(self):
+        original = self.target.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.as_left_by_1_6_0()
+        self.assertEqual(self.run_cli('check')[1]['targets'][0]['conflicts'], [])
+        code, result = self.run_cli('apply', '--yes')
+        self.assertEqual(code, 0, result)
+        owned = json.loads(self.ledger.read_text())['targets'][str(self.target.resolve())]['owned']
+        self.assertNotEqual(owned['ui.sidebar.agents.rows']['installed'], self.ROWS_1_5_0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(self.target.read_bytes(), original)
+
+    def test_undo_on_a_1_6_0_receipt_restores_its_unrecorded_agent_rows(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        self.as_left_by_1_6_0(user_edit='\n[custom]\nanswer = 42\n')
+        code, result = self.run_cli('undo')
+        self.assertEqual(code, 0, result)
+        self.assertNotIn('rows', self.target.read_text())
+        self.assertIn('answer = 42', self.target.read_text())
+
     def test_undo_keeps_user_edits_arrays_and_all_owned_targets(self):
         original = self.target.read_text()
         self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
