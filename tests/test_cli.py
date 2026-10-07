@@ -1159,3 +1159,12 @@ else: sys.exit(2)
                 code, result = self.run_cli('check')
                 self.assertEqual(code, 1, result)
                 self.assertIn('receipt', result['error'])
+
+
+class PluginManifest(unittest.TestCase):
+    def test_plugin_version_tracks_package(self):
+        # Herdr prints this on `plugin install`; a stale value misreports what was installed.
+        import tomllib
+        from herdr_electrified import __version__
+        manifest = tomllib.loads((Path(__file__).parents[1] / 'plugin/herdr-plugin.toml').read_text())
+        self.assertEqual(manifest['version'], __version__)

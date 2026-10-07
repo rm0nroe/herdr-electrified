@@ -1,6 +1,6 @@
 id = "herdr-electrified"
 name = "Herdr Electrified"
-version = "1.1.0"
+version = "1.7.0"
 min_herdr_version = "0.8.2"
 description = "Preview, check, and undo your installed appearance settings"
 platforms = ["macos"]
