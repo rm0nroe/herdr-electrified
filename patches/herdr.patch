@@ -245,24 +245,23 @@ index e43ab8cc..c7d29b53 100644
          );
      }
 diff --git a/src/client/shell/composition.rs b/src/client/shell/composition.rs
-index b7ab4a96..347e886f 100644
+index b7ab4a96..e68d264b 100644
 --- a/src/client/shell/composition.rs
 +++ b/src/client/shell/composition.rs
-@@ -720,6 +720,19 @@ impl ClientShellState {
+@@ -720,6 +720,18 @@ impl ClientShellState {
              self.hits.pane_splits.clear();
              self.hits.popup = None;
          }
-+        // Leave the top-right cell on the host default background so Ghostty's
++        // Leave one top-row cell on the host default background so Ghostty's
 +        // `window-padding-color = extend` never stretches the tab bar into the top
 +        // padding, while the fully painted bottom row still extends to the window edge.
++        // The rightmost cell painted with the terminal background is the top-right cell
++        // on desktop; the compact header ends in its `switch` button, so it is further left.
 +        if let Some(bg) = self.config.terminal_background {
-+            if let Some(cell) = usize::from(frame.width)
-+                .checked_sub(1)
-+                .and_then(|x| frame.cells.get_mut(x))
-+            {
-+                if cell.bg == crate::protocol::color_to_u32(bg) {
-+                    cell.bg = crate::protocol::color_to_u32(ratatui::style::Color::Reset);
-+                }
++            let bg = crate::protocol::color_to_u32(bg);
++            let width = usize::from(frame.width).min(frame.cells.len());
++            if let Some(cell) = frame.cells[..width].iter_mut().rev().find(|cell| cell.bg == bg) {
++                cell.bg = crate::protocol::color_to_u32(ratatui::style::Color::Reset);
 +            }
 +        }
          let graphics = self.compose_graphics(layout, &occlusion);
@@ -450,10 +449,10 @@ index 5b8b1224..302df4a5 100644
          state
              .hits
 diff --git a/src/client/shell/tests/chrome_context.rs b/src/client/shell/tests/chrome_context.rs
-index ed21bc8a..99e87cd4 100644
+index ed21bc8a..17071626 100644
 --- a/src/client/shell/tests/chrome_context.rs
 +++ b/src/client/shell/tests/chrome_context.rs
-@@ -523,3 +523,63 @@ fn close_confirmation_error_becomes_client_owned_overlay_and_stable_group_close(
+@@ -523,3 +523,80 @@ fn close_confirmation_error_becomes_client_owned_overlay_and_stable_group_close(
              if params.workspace_id == "ws_1" && params.close_group
      ));
  }
@@ -516,6 +515,23 @@ index ed21bc8a..99e87cd4 100644
 +        crate::protocol::color_to_u32(ratatui::style::Color::Reset)
 +    );
 +    assert_eq!(frame.cells[104].bg, painted);
++}
++
++#[test]
++fn terminal_background_leaves_a_top_row_cell_on_the_host_default_in_the_compact_layout() {
++    let config: Config = toml::from_str(
++        "[theme.custom]\npanel_bg = \"#11111b\"\n[theme.terminal]\nbackground = \"#11111b\"\n",
++    )
++    .unwrap();
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&config));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    // The compact header ends in the `switch` button, so its top-right cell is not the
++    // terminal background; without any default cell, Ghostty extends the header upward.
++    let frame = state.compose(44, 30).expect("compact header").frame;
++    let reset = crate::protocol::color_to_u32(ratatui::style::Color::Reset);
++    let top = &frame.cells[..usize::from(frame.width)];
++    assert!(top.iter().any(|cell| cell.bg == reset), "{:?}", top.iter().map(|c| c.bg).collect::<Vec<_>>());
 +}
 diff --git a/src/client/terminal_setup.rs b/src/client/terminal_setup.rs
 index 249e29ad..97c886b3 100644

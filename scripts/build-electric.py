@@ -22,7 +22,7 @@ PACKAGE_SHA = '007df41b607dbbc8d204b9746ce7fed2d4ce6c813f44c32ceee54175ca796525'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
 FONT_SHA = '04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf'
 FONTS = [f'JetBrainsMonoNerdFontMono-{style}.ttf' for style in ('Regular', 'Bold', 'Italic', 'BoldItalic')]
-BUNDLE_VERSION = '0.8.0'
+BUNDLE_VERSION = '0.9.0'
 
 
 def build_env():

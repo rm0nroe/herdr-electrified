@@ -4323,3 +4323,21 @@ index 0000000..db1cbca
 +        assert_eq!(rows.matches("> input").count(), 1, "{height}: {rows}");
 +    }
 +}
+diff --git a/codex-rs/tui/src/updates.rs b/codex-rs/tui/src/updates.rs
+index 9bbdf31..eb18402 100644
+--- a/codex-rs/tui/src/updates.rs
++++ b/codex-rs/tui/src/updates.rs
+@@ -25,7 +25,12 @@ use crate::version::CODEX_CLI_VERSION;
+ pub(crate) use crate::updates_cache::dismiss_version;
+ 
+ pub fn get_upgrade_version(config: &Config) -> Option<String> {
+-    if !config.check_for_update_on_startup || is_source_build_version(CODEX_CLI_VERSION) {
++    // Herdr Electric bundles this binary and updates it with herdr-electrified, so the shared
++    // version cache (filled by the user's own Codex) must not offer an update it cannot install.
++    if !config.check_for_update_on_startup
++        || is_source_build_version(CODEX_CLI_VERSION)
++        || crate::style::herdr_reference_ui()
++    {
+         return None;
+     }
+ 
