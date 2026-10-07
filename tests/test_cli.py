@@ -312,6 +312,52 @@ else: sys.exit(2)
         self.assertEqual(code, 0, result)
         self.assertEqual(result['targets'][0]['validation'], 'not run: pin mismatch')
 
+    def test_agent_rows_always_have_a_title(self):
+        import tomlkit
+        from importlib.resources import files
+        name = lambda token: token if isinstance(token, str) else token['token']
+        for preset in ('herdr.toml', 'electric.toml'):
+            rows = tomlkit.parse(files('herdr_electrified').joinpath('data/' + preset).read_text()).unwrap()['ui']['sidebar']['agents']['rows']
+            # Herdr leaves `tab` empty for a workspace's single unnamed tab; `workspace` always has a value.
+            self.assertEqual([name(t) for t in rows[0]], ['state_icon', 'workspace'], preset)
+            self.assertIn('tab', [name(t) for t in rows[1]], preset)
+
+    def stale_owned_value(self, key, old, rewrite_file):
+        """Leave the receipt (and optionally the file) holding an earlier release's value for an owned key."""
+        from herdr_electrified.config import digest
+        data = json.loads(self.ledger.read_text())
+        entry = data['targets'][str(self.target.resolve())]
+        entry['owned'][key]['installed'] = old
+        if rewrite_file:
+            self.target.write_text(self.target.read_text().replace('sidebar_width = 31', f'sidebar_width = {old}'))
+            entry['installed_hash'] = digest(self.target.read_text())
+        self.ledger.write_text(json.dumps(data))
+
+    def test_upgrade_that_changes_an_owned_value_updates_the_receipt(self):
+        original = self.target.read_bytes()
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        # Simulate an install made by an earlier release whose preset held another value.
+        self.stale_owned_value('ui.sidebar_width', 29, rewrite_file=True)
+        code, result = self.run_cli('apply', '--yes')
+        self.assertEqual(code, 0, result)
+        self.assertIn('sidebar_width = 31', self.target.read_text())
+        owned = json.loads(self.ledger.read_text())['targets'][str(self.target.resolve())]['owned']
+        self.assertEqual(owned['ui.sidebar_width']['installed'], 31)
+        self.assertEqual(self.run_cli('check')[1]['targets'][0]['conflicts'], [])
+        self.assertEqual(self.run_cli('apply', '--yes')[0], 0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertEqual(self.target.read_bytes(), original)
+
+    def test_receipt_left_stale_by_an_upgrade_is_not_a_conflict_and_apply_repairs_it(self):
+        self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)
+        # v1.6.0 wrote the new value but kept the old one in the receipt.
+        self.stale_owned_value('ui.sidebar_width', 29, rewrite_file=False)
+        self.assertEqual(self.run_cli('check')[1]['targets'][0]['conflicts'], [])
+        code, result = self.run_cli('apply', '--yes')
+        self.assertEqual(code, 0, result)
+        owned = json.loads(self.ledger.read_text())['targets'][str(self.target.resolve())]['owned']
+        self.assertEqual(owned['ui.sidebar_width']['installed'], 31)
+
     def test_undo_keeps_user_edits_arrays_and_all_owned_targets(self):
         original = self.target.read_text()
         self.assertEqual(self.run_cli('apply', '--yes', '--herdr-bin', str(self.bin))[0], 0)

@@ -58,6 +58,6 @@ notices, native dependency notices, and MPL component sources. See
 `licenses/components.json` and `licenses/native/*sources.json` for provenance.
 
 Run the installer suite with `PYTHONPATH=src python -m unittest discover -s tests -v`.
-`tests/native_check.py` accepts the built Herdr binary for config validation. Pass `--stock` first to check upstream Herdr, which does not know `[theme.terminal]`.
+`tests/native_check.py` accepts the built Herdr binary for config validation. Pass `--stock` first to check upstream Herdr at the bundle's version (0.9.3), which does not know `[theme.terminal]`; older stock Herdr cannot parse the Electric config's sidebar `rules` (added in 0.9.2), which only the bundled Herdr reads.
 Native session, rendering, clean-machine, and public-install checks are manual
 and not part of this suite.

@@ -297,6 +297,25 @@ fi
 CLAUDE = '''#!/bin/sh
 # herdr-electrified: Claude Code with the Electric theme, inside Herdr Electric panes only.
 commands=@COMMANDS@
+# Herdr resumes each pane's last conversation when its server starts, even one since moved to another
+# Herdr. Claude Code records live sessions as <pid>.json (start time in UTC, so a reused pid never matches).
+resume= prev=
+for arg in "$@"; do
+  case $prev in --resume|-r) resume=$arg ;; esac
+  case $arg in --resume=*) resume=${arg#--resume=} ;; esac
+  prev=$arg
+done
+if [ -n "$resume" ]; then
+  for file in "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"/sessions/*.json; do
+    [ -f "$file" ] && grep -Fq -e "\\"sessionId\\":\\"$resume\\"" -e "\\"sessionId\\": \\"$resume\\"" "$file" || continue
+    pid=${file##*/} && pid=${pid%.json}
+    started=$(sed -nE 's/.*"procStart": ?"([^"]*)".*/\\1/p' "$file")
+    if [ -n "$started" ] && [ "$(TZ=UTC0 ps -o lstart= -p "$pid" 2>/dev/null | sed 's/ *$//')" = "$started" ]; then
+      echo "herdr-electric: Claude conversation $resume is already open (pid $pid); close it there to resume it here." >&2
+      exit 1
+    fi
+  done
+fi
 IFS=:
 set -f
 for dir in $PATH; do

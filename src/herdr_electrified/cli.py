@@ -54,7 +54,8 @@ def execute(args):
     data = c.load_receipt(receipt)
     electric_targets = {}
     agents = set()
-    if args.command == 'undo' and data.get('electric') and electric.running(electric.recorded_session(data['electric'])):
+    blocked = args.command == 'undo' and data.get('electric') and electric.running(electric.recorded_session(data['electric']))
+    if blocked and not readonly:
         raise ValueError('Herdr Electric is running; quit it, then rerun herdr-electrified undo')
     bundle = args.electric or (data.get('electric', {}).get('root') if args.command != 'undo' else None)
     if bundle:
@@ -247,7 +248,10 @@ def execute(args):
     for row, (path, before, after, *_) in zip(result['targets'], plans):
         row['change'] = 'unchanged' if before == after else 'new' if before is None else 'removed' if after is None else 'changed'
     if readonly:
-        return result, 0
+        if blocked:
+            # Undo would fail now (plugin Undo always runs inside Electric): still preview, then say why.
+            result['notice'] = ' '.join(filter(None, [result.get('notice'), 'Herdr Electric is running; quit it (herdr-electric server stop closes its panes), then run herdr-electrified undo.']))
+        return result, int(bool(blocked))
     conflicts = any(row['conflicts'] for row in result['targets'])
     font_root = bundle_root if bundle and 'ghostty' in agents else args.fonts if layer else None
     fonts_due = bool(font_root and args.command == 'apply' and electric.missing_fonts(font_root))

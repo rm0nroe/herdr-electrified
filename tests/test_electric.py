@@ -212,6 +212,22 @@ class Electric(unittest.TestCase):
         self.assertIn('unsafe bundle member', result['error'])
         self.assertFalse(self.ledger.exists())
 
+    def test_electric_binds_keys_to_the_plugin_actions_and_undo_removes_them(self):
+        import tomlkit
+        root = self.bundle()
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes')[0], 0)
+        config = self.root / 'config/herdr-electrified/electric/config.toml'
+        # Herdr has no plugin menu: a [[keys.command]] binding is its only in-app way to run an action.
+        commands = tomlkit.parse(config.read_text()).unwrap()['keys']['command']
+        self.assertEqual({(c['key'], c['type'], c['command']) for c in commands},
+                         {('prefix+shift+c', 'plugin_action', 'herdr-electrified.check'),
+                          ('prefix+shift+v', 'plugin_action', 'herdr-electrified.preview'),
+                          ('prefix+shift+u', 'plugin_action', 'herdr-electrified.undo')})
+        self.assertEqual(self.run_cli('check')[1]['targets'][0]['conflicts'], [])
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes')[0], 0)
+        self.assertEqual(self.run_cli('undo')[0], 0)
+        self.assertFalse(config.exists())
+
     def test_settings_only_and_electric_keep_separate_configs(self):
         root = self.bundle()
         self.assertEqual(self.run_cli('apply', '--herdr-bin', str(self.bin), '--yes')[0], 0)
@@ -329,6 +345,35 @@ class Agents(unittest.TestCase):
         self.assertIn('claude not found', out.stderr)
         self.assertEqual(self.run_cli('undo', env=env)[0], 0)
         self.assertFalse(commands.exists())
+
+    def test_pane_claude_wrapper_will_not_resume_a_conversation_open_elsewhere(self):
+        import subprocess
+        root = self.bundle()
+        env = self.hermetic(claude=True)
+        self.assertEqual(self.run_cli('apply', '--electric', str(root), '--yes', env=env)[0], 0)
+        tools = self.root / 'tools'
+        (tools / 'claude').write_text('#!/bin/sh\necho started "$@"\n')
+        commands = self.root / '.local/share/herdr-electrified/commands'
+        sessions = self.root / 'claude-home/sessions'
+        sessions.mkdir(parents=True)
+        # Claude Code records each live session as <pid>.json with its start time in UTC.
+        live = os.getpid()
+        started = subprocess.run(['ps', '-o', 'lstart=', '-p', str(live)], env={'TZ': 'UTC0', 'PATH': '/bin:/usr/bin'},
+                                 capture_output=True, text=True, check=True).stdout.strip()
+        (sessions / f'{live}.json').write_text(json.dumps({'pid': live, 'sessionId': 'open-1', 'procStart': started}))
+        (sessions / '1.json').write_text(json.dumps({'pid': 1, 'sessionId': 'reused-pid', 'procStart': 'Thu Jan  1 00:00:00 1970'}))
+        def run(*args):
+            return subprocess.run([str(commands / 'claude'), *args], env={'PATH': f'{tools}:/usr/bin:/bin', 'HOME': str(self.root),
+                                  'CLAUDE_CONFIG_DIR': str(self.root / 'claude-home')}, capture_output=True, text=True, timeout=10)
+        # Herdr restores a pane by running `claude --resume <id>`; a second process on one transcript is refused.
+        out = run('--resume', 'open-1')
+        self.assertEqual(out.returncode, 1, out)
+        self.assertNotIn('started', out.stdout)
+        self.assertIn('already open', out.stderr)
+        for args in (('--resume', 'reused-pid'), ('--resume', 'closed-2'), ('-c',)):
+            out = run(*args)
+            self.assertEqual(out.returncode, 0, out)
+            self.assertIn('started', out.stdout)
 
     def test_existing_equivalent_claude_theme_is_not_owned_or_reformatted(self):
         from importlib.resources import files
@@ -473,6 +518,14 @@ class Agents(unittest.TestCase):
         code, result = self.run_cli('undo', env=env)
         self.assertEqual(code, 1, result)
         self.assertIn('Herdr Electric is running', result['error'])
+        self.assertEqual(self.ledger.read_bytes(), before)
+        # The read-only preview still shows what undo would restore, says why it cannot run yet,
+        # and exits 1 so the plugin popup does not offer a y/N that would fail.
+        code, result = self.run_cli('undo', '--dry-run', env=env)
+        self.assertEqual(code, 1, result)
+        self.assertNotIn('error', result)
+        self.assertTrue(result['targets'])
+        self.assertIn('Herdr Electric is running', result['notice'])
         self.assertEqual(self.ledger.read_bytes(), before)
 
     def test_launcher_clears_inherited_claude_child_marker(self):

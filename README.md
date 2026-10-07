@@ -36,7 +36,7 @@ and 0.9.3.
 ```sh
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.6.0
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.6.1
 herdr-electrified install
 ```
 
@@ -59,8 +59,8 @@ To verify the archive yourself:
 
 ```sh
 mkdir -p ~/.local/share/herdr-electrified/bundles && cd ~/.local/share/herdr-electrified/bundles
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.6.0/herdr-electrified-0.8.0-macos-arm64.tar.gz
-curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.6.0/SHA256SUMS
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.6.1/herdr-electrified-0.8.0-macos-arm64.tar.gz
+curl -fLO https://github.com/rm0nroe/herdr-electrified/releases/download/v1.6.1/SHA256SUMS
 shasum -a 256 -c SHA256SUMS
 gh attestation verify herdr-electrified-0.8.0-macos-arm64.tar.gz --repo rm0nroe/herdr-electrified
 tar -xzf herdr-electrified-0.8.0-macos-arm64.tar.gz
@@ -99,7 +99,9 @@ xattr -dr com.apple.quarantine ./herdr-electrified-0.8.0-macos-arm64
   not edited, so `claude` elsewhere keeps your own theme. Installs from before
   v1.0.6 set the theme globally; reinstalling restores your previous theme.
   Running `/theme` inside a pane changes your global choice, while Electric panes
-  stay Electric.
+  stay Electric. If a restored pane would resume a Claude conversation that another
+  Claude Code process still has open, the `claude` command stops and names that
+  process instead of opening the conversation twice.
 - **OpenCode** (when `opencode` is on PATH or `~/.config/opencode` exists): the
   OpenCode theme in `~/.config/opencode/themes`, selected (with a mauve Build
   accent) only inside Electric panes. Your own OpenCode settings are not edited.
@@ -126,7 +128,7 @@ pick up the new launcher.
 For stock Herdr on PATH, without the bundle:
 
 ```sh
-uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.6.0
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.6.1
 herdr-electrified install --settings-only
 ```
 
@@ -172,12 +174,17 @@ Details on targets, conflicts and recovery are in [reference](https://github.com
 ## Herdr plugin
 
 ```sh
-herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.6.0 --yes
+herdr-electric plugin install rm0nroe/herdr-electrified/plugin --ref v1.6.1 --yes
 ```
 
 Install the appearance first; the plugin only previews, checks and undoes it.
-Run its actions from Herdr's plugin menu. Each opens a popup with its output:
-`q` closes it. Undo shows what it will restore and asks before writing.
+Herdr has no plugin menu, so Herdr Electric binds keys to its actions:
+`prefix+shift+c` checks, `prefix+shift+v` previews and `prefix+shift+u` undoes.
+For stock Herdr, add the same bindings yourself; see
+[reference](https://github.com/rm0nroe/herdr-electrified/blob/main/docs/reference.md#plugin-keys).
+Each action opens a popup with its output: `q` closes it. Undo shows what it
+will restore and asks before writing. Inside Herdr Electric, Undo can only show
+what it would restore: quit Electric first, then run `herdr-electrified undo`.
 
 ## Limitations
 

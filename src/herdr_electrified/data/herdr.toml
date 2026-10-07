@@ -23,4 +23,4 @@ rows = [["state_icon", { token = "workspace", fg = "#cdd6f4", bold = true, dim =
 
 [ui.sidebar.agents]
 row_gap = 1
-rows = [["state_icon", { token = "tab", fg = "#cdd6f4", bold = true, dim = false }], [{ token = "state_text", dim = false }, { token = "agent", fg = "#6c7086", dim = false }]]
+rows = [["state_icon", { token = "workspace", fg = "#cdd6f4", bold = true, dim = false }], [{ token = "state_text", dim = false }, { token = "agent", fg = "#6c7086", dim = false }, { token = "tab", fg = "#6c7086", dim = false }]]

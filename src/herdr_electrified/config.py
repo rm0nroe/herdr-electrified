@@ -289,21 +289,25 @@ def apply_plan(path, entry, preset_name='herdr.toml'):
     for keys, value in leaves(preset):
         key = '.'.join(keys)
         current = get(doc, keys)
-        if key in owned and current != owned[key]['installed']:
-            conflicts.append(key)
+        installed = value.unwrap() if hasattr(value, 'unwrap') else value
+        if key in owned:
+            # A value an earlier release installed, or this release's value, is ours; anything else is a user edit.
+            if current not in (owned[key]['installed'], installed):
+                conflicts.append(key)
+            owned[key]['installed'] = installed
         if current == value:
             continue
         if key not in owned:
             fragment = tomlkit.document()
             if current is not None:
                 fragment['value'] = copy.deepcopy(current)
-            owned[key] = {'original': tomlkit.dumps(fragment), 'installed': value.unwrap() if hasattr(value, 'unwrap') else value}
+            owned[key] = {'original': tomlkit.dumps(fragment), 'installed': installed}
         put(doc, keys, value)
     after = tomlkit.dumps(doc)
     result = {'original_file': entry['original_file'] if entry else before,
               'installed_hash': digest(after), 'owned': owned,
               'exact_restore': (entry.get('exact_restore', True) and digest(before) == entry['installed_hash']) if entry else True}
-    if before == after and entry:
+    if before == after and entry and owned == entry['owned']:
         result = copy.deepcopy(entry)
     if not owned:
         result = None

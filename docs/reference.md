@@ -43,7 +43,8 @@ every owned file is restored, undo also removes the files Herdr Electric writes
 at runtime (`release-notes.json` beside the Electric config and the
 `herdr-electrified` session directory) and any directory apply created, if
 it is empty. A config file apply created is removed even after Herdr records
-its `onboarding = false` flag in it; any other setting you added keeps it. Undo refuses while Herdr Electric is running. Undo leaves
+its `onboarding = false` flag in it; any other setting you added keeps it. Undo refuses while Herdr Electric is running. `undo --dry-run` still shows what
+undo would restore, then exits 1 with a notice to quit Electric first. Undo leaves
 the extracted bundle and downloaded fonts in place; remove
 `~/.local/share/herdr-electrified` manually once you no longer need them. Each write is journaled, and an interrupted operation can be retried.
 
@@ -178,6 +179,38 @@ only appears in OpenCode's theme list. The `herdr-electric` launcher sets
 that select that theme and the Build accent; OpenCode layers them over your global
 settings, so only OpenCode in an Electric pane changes. A project's own `tui.json`
 still wins over the theme selection. Undo removes all three files.
+
+## Plugin keys
+
+Herdr has no plugin menu: a `[[keys.command]]` binding with
+`type = "plugin_action"` is the only way to run a plugin action from inside
+Herdr. Herdr Electric's config includes these three. Apply never writes
+keybindings to the stock `~/.config/herdr/config.toml`; add them there yourself
+to use the plugin from stock Herdr.
+
+```toml
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "herdr-electrified.check"
+description = "check Herdr Electrified"
+
+[[keys.command]]
+key = "prefix+shift+v"
+type = "plugin_action"
+command = "herdr-electrified.preview"
+description = "preview Herdr Electrified"
+
+[[keys.command]]
+key = "prefix+shift+u"
+type = "plugin_action"
+command = "herdr-electrified.undo"
+description = "undo Herdr Electrified"
+```
+
+A binding replaces any default Herdr binding on the same key, so pick another
+key if you use one of these. Without the plugin installed, a key shows
+"plugin action not found".
 
 ## Removing the plugin after undo
 
