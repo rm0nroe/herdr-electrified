@@ -46,7 +46,7 @@ Without Ghostty, run it from a new terminal window (not from inside a Herdr
 pane; Herdr refuses to nest).
 
 `install` downloads the Electric bundle 0.9.0 (patched Herdr 0.9.3, patched
-Codex 0.160.0, JetBrainsMono Nerd Font Mono 3.5.1) into
+Codex 0.162.0, JetBrainsMono Nerd Font Mono 3.5.1) into
 `~/.local/share/herdr-electrified/bundles/`, refuses it unless its SHA-256
 matches the checksum pinned in the CLI, lists the files it will write, and
 asks once before writing (`--yes` skips the prompt, `--diff` shows full diffs,

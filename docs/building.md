@@ -36,8 +36,8 @@ failed to link Zig 0.15.2's build runner with unresolved Darwin C symbols.
 | Component | Pinned source |
 | --- | --- |
 | Herdr 0.9.3 | `herdrdev/herdr@7b116c05bfda646af39d2524c54e70c751f57ee8` |
-| Codex 0.160.0 | `openai/codex@a956835d020762cb2b570053af06f643a11c0ecc` |
-| Codex helpers | official `rust-v0.160.0` macOS arm64 package |
+| Codex 0.162.0 | `openai/codex@c1382380de69521303b416720a52f42d51af6248` |
+| Codex helpers | official `rust-v0.162.0` macOS arm64 package |
 | Font | Nerd Fonts `v3.5.1` `JetBrainsMono.tar.xz` (Mono Regular, Bold, Italic, BoldItalic) |
 | Zig | 0.16.0 |
 

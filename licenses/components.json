@@ -2039,12 +2039,12 @@
   },
   {
     "name": "codex-code-mode-host",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-code-mode-host-0.160.0/LICENSE",
-      "codex-code-mode-host-0.160.0/NOTICE"
+      "codex-code-mode-host-0.162.0/LICENSE",
+      "codex-code-mode-host-0.162.0/NOTICE"
     ]
   },
   {
@@ -3098,12 +3098,12 @@
   },
   {
     "name": "codex-protocol",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-protocol-0.160.0/LICENSE",
-      "codex-protocol-0.160.0/NOTICE"
+      "codex-protocol-0.162.0/LICENSE",
+      "codex-protocol-0.162.0/NOTICE"
     ]
   },
   {
@@ -3590,12 +3590,12 @@
   },
   {
     "name": "codex-utils-string",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-string-0.160.0/LICENSE",
-      "codex-utils-string-0.160.0/NOTICE"
+      "codex-utils-string-0.162.0/LICENSE",
+      "codex-utils-string-0.162.0/NOTICE"
     ]
   },
   {
@@ -3610,22 +3610,22 @@
   },
   {
     "name": "codex-utils-redacted-string",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-redacted-string-0.160.0/LICENSE",
-      "codex-utils-redacted-string-0.160.0/NOTICE"
+      "codex-utils-redacted-string-0.162.0/LICENSE",
+      "codex-utils-redacted-string-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-path-uri",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-path-uri-0.160.0/LICENSE",
-      "codex-utils-path-uri-0.160.0/NOTICE"
+      "codex-utils-path-uri-0.162.0/LICENSE",
+      "codex-utils-path-uri-0.162.0/NOTICE"
     ]
   },
   {
@@ -3715,12 +3715,12 @@
   },
   {
     "name": "codex-utils-absolute-path",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-absolute-path-0.160.0/LICENSE",
-      "codex-utils-absolute-path-0.160.0/NOTICE"
+      "codex-utils-absolute-path-0.162.0/LICENSE",
+      "codex-utils-absolute-path-0.162.0/NOTICE"
     ]
   },
   {
@@ -3755,12 +3755,12 @@
   },
   {
     "name": "codex-utils-image",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-image-0.160.0/LICENSE",
-      "codex-utils-image-0.160.0/NOTICE"
+      "codex-utils-image-0.162.0/LICENSE",
+      "codex-utils-image-0.162.0/NOTICE"
     ]
   },
   {
@@ -3969,12 +3969,12 @@
   },
   {
     "name": "codex-utils-cache",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-cache-0.160.0/LICENSE",
-      "codex-utils-cache-0.160.0/NOTICE"
+      "codex-utils-cache-0.162.0/LICENSE",
+      "codex-utils-cache-0.162.0/NOTICE"
     ]
   },
   {
@@ -3988,12 +3988,12 @@
   },
   {
     "name": "codex-network-proxy",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-network-proxy-0.160.0/LICENSE",
-      "codex-network-proxy-0.160.0/NOTICE"
+      "codex-network-proxy-0.162.0/LICENSE",
+      "codex-network-proxy-0.162.0/NOTICE"
     ]
   },
   {
@@ -4754,22 +4754,22 @@
   },
   {
     "name": "codex-utils-rustls-provider",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-rustls-provider-0.160.0/LICENSE",
-      "codex-utils-rustls-provider-0.160.0/NOTICE"
+      "codex-utils-rustls-provider-0.162.0/LICENSE",
+      "codex-utils-rustls-provider-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-home-dir",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-home-dir-0.160.0/LICENSE",
-      "codex-utils-home-dir-0.160.0/NOTICE"
+      "codex-utils-home-dir-0.162.0/LICENSE",
+      "codex-utils-home-dir-0.162.0/NOTICE"
     ]
   },
   {
@@ -4884,12 +4884,12 @@
   },
   {
     "name": "codex-http-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-http-client-0.160.0/LICENSE",
-      "codex-http-client-0.160.0/NOTICE"
+      "codex-http-client-0.162.0/LICENSE",
+      "codex-http-client-0.162.0/NOTICE"
     ]
   },
   {
@@ -5108,22 +5108,22 @@
   },
   {
     "name": "codex-extension-items",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-extension-items-0.160.0/LICENSE",
-      "codex-extension-items-0.160.0/NOTICE"
+      "codex-extension-items-0.162.0/LICENSE",
+      "codex-extension-items-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-execpolicy",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-execpolicy-0.160.0/LICENSE",
-      "codex-execpolicy-0.160.0/NOTICE"
+      "codex-execpolicy-0.162.0/LICENSE",
+      "codex-execpolicy-0.162.0/NOTICE"
     ]
   },
   {
@@ -5984,12 +5984,12 @@
   },
   {
     "name": "codex-async-utils",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-async-utils-0.160.0/LICENSE",
-      "codex-async-utils-0.160.0/NOTICE"
+      "codex-async-utils-0.162.0/LICENSE",
+      "codex-async-utils-0.162.0/NOTICE"
     ]
   },
   {
@@ -6005,22 +6005,22 @@
   },
   {
     "name": "codex-otel-trace-websocket",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-otel-trace-websocket-0.160.0/LICENSE",
-      "codex-otel-trace-websocket-0.160.0/NOTICE"
+      "codex-otel-trace-websocket-0.162.0/LICENSE",
+      "codex-otel-trace-websocket-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-otel",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-otel-0.160.0/LICENSE",
-      "codex-otel-0.160.0/NOTICE"
+      "codex-otel-0.162.0/LICENSE",
+      "codex-otel-0.162.0/NOTICE"
     ]
   },
   {
@@ -6218,42 +6218,42 @@
   },
   {
     "name": "codex-utils-stream-parser",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-stream-parser-0.160.0/LICENSE",
-      "codex-utils-stream-parser-0.160.0/NOTICE"
+      "codex-utils-stream-parser-0.162.0/LICENSE",
+      "codex-utils-stream-parser-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-api",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-api-0.160.0/LICENSE",
-      "codex-api-0.160.0/NOTICE"
+      "codex-api-0.162.0/LICENSE",
+      "codex-api-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-websocket-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-websocket-client-0.160.0/LICENSE",
-      "codex-websocket-client-0.160.0/NOTICE"
+      "codex-websocket-client-0.162.0/LICENSE",
+      "codex-websocket-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-client-0.160.0/LICENSE",
-      "codex-client-0.160.0/NOTICE"
+      "codex-client-0.162.0/LICENSE",
+      "codex-client-0.162.0/NOTICE"
     ]
   },
   {
@@ -6309,12 +6309,12 @@
   },
   {
     "name": "codex-code-mode-runtime",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-code-mode-runtime-0.160.0/LICENSE",
-      "codex-code-mode-runtime-0.160.0/NOTICE"
+      "codex-code-mode-runtime-0.162.0/LICENSE",
+      "codex-code-mode-runtime-0.162.0/NOTICE"
     ]
   },
   {
@@ -6595,12 +6595,12 @@
   },
   {
     "name": "codex-code-mode-protocol",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-code-mode-protocol-0.160.0/LICENSE",
-      "codex-code-mode-protocol-0.160.0/NOTICE"
+      "codex-code-mode-protocol-0.162.0/LICENSE",
+      "codex-code-mode-protocol-0.162.0/NOTICE"
     ]
   },
   {
@@ -6772,12 +6772,12 @@
   },
   {
     "name": "codex-cli",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-cli-0.160.0/LICENSE",
-      "codex-cli-0.160.0/NOTICE"
+      "codex-cli-0.162.0/LICENSE",
+      "codex-cli-0.162.0/NOTICE"
     ]
   },
   {
@@ -6895,12 +6895,12 @@
   },
   {
     "name": "codex-websocket-auth",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-websocket-auth-0.160.0/LICENSE",
-      "codex-websocket-auth-0.160.0/NOTICE"
+      "codex-websocket-auth-0.162.0/LICENSE",
+      "codex-websocket-auth-0.162.0/NOTICE"
     ]
   },
   {
@@ -6923,42 +6923,42 @@
   },
   {
     "name": "codex-utils-process",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-process-0.160.0/LICENSE",
-      "codex-utils-process-0.160.0/NOTICE"
+      "codex-utils-process-0.162.0/LICENSE",
+      "codex-utils-process-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-path",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-path-0.160.0/LICENSE",
-      "codex-utils-path-0.160.0/NOTICE"
+      "codex-utils-path-0.162.0/LICENSE",
+      "codex-utils-path-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-cli",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-cli-0.160.0/LICENSE",
-      "codex-utils-cli-0.160.0/NOTICE"
+      "codex-utils-cli-0.162.0/LICENSE",
+      "codex-utils-cli-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-shell-command",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-shell-command-0.160.0/LICENSE",
-      "codex-shell-command-0.160.0/NOTICE"
+      "codex-shell-command-0.162.0/LICENSE",
+      "codex-shell-command-0.162.0/NOTICE"
     ]
   },
   {
@@ -7011,12 +7011,12 @@
   },
   {
     "name": "codex-tui",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-tui-0.160.0/LICENSE",
-      "codex-tui-0.160.0/NOTICE"
+      "codex-tui-0.162.0/LICENSE",
+      "codex-tui-0.162.0/NOTICE"
     ]
   },
   {
@@ -7193,16 +7193,6 @@
     ]
   },
   {
-    "name": "rmcp",
-    "version": "3.2.0",
-    "license": "Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "rmcp-3.2.0/LICENSE-upstream"
-    ],
-    "notice_source": "https://github.com/modelcontextprotocol/rust-sdk/blob/51ccb42993d6eb5075399672ce7a0c21a0e55eea/LICENSE"
-  },
-  {
     "name": "sse-stream",
     "version": "0.2.5",
     "license": "MIT OR Apache-2.0",
@@ -7211,16 +7201,6 @@
       "sse-stream-0.2.5/LICENSE-APACHE",
       "sse-stream-0.2.5/LICENSE-MIT"
     ]
-  },
-  {
-    "name": "rmcp-macros",
-    "version": "3.2.0",
-    "license": "Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "rmcp-macros-3.2.0/LICENSE-upstream"
-    ],
-    "notice_source": "https://github.com/modelcontextprotocol/rust-sdk/blob/51ccb42993d6eb5075399672ce7a0c21a0e55eea/LICENSE"
   },
   {
     "name": "darling",
@@ -7257,17 +7237,6 @@
     "notices": [
       "reqwest-0.13.4/LICENSE-MIT",
       "reqwest-0.13.4/LICENSE-APACHE"
-    ]
-  },
-  {
-    "name": "process-wrap",
-    "version": "9.0.1",
-    "license": "Apache-2.0 OR MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "process-wrap-9.0.1/LICENSE-MIT",
-      "process-wrap-9.0.1/COPYRIGHT",
-      "process-wrap-9.0.1/LICENSE-APACHE"
     ]
   },
   {
@@ -7650,22 +7619,22 @@
   },
   {
     "name": "codex-worktree",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-worktree-0.160.0/LICENSE",
-      "codex-worktree-0.160.0/NOTICE"
+      "codex-worktree-0.162.0/LICENSE",
+      "codex-worktree-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-git-utils",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-git-utils-0.160.0/LICENSE",
-      "codex-git-utils-0.160.0/NOTICE"
+      "codex-git-utils-0.162.0/LICENSE",
+      "codex-git-utils-0.162.0/NOTICE"
     ]
   },
   {
@@ -8362,12 +8331,12 @@
   },
   {
     "name": "codex-utils-pty",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-pty-0.160.0/LICENSE",
-      "codex-utils-pty-0.160.0/NOTICE"
+      "codex-utils-pty-0.162.0/LICENSE",
+      "codex-utils-pty-0.162.0/NOTICE"
     ]
   },
   {
@@ -8391,22 +8360,22 @@
   },
   {
     "name": "codex-file-system",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-file-system-0.160.0/LICENSE",
-      "codex-file-system-0.160.0/NOTICE"
+      "codex-file-system-0.162.0/LICENSE",
+      "codex-file-system-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-windows-sandbox",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-windows-sandbox-0.160.0/LICENSE",
-      "codex-windows-sandbox-0.160.0/NOTICE"
+      "codex-windows-sandbox-0.162.0/LICENSE",
+      "codex-windows-sandbox-0.162.0/NOTICE"
     ]
   },
   {
@@ -8501,76 +8470,76 @@
   },
   {
     "name": "codex-utils-sleep-inhibitor",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-sleep-inhibitor-0.160.0/LICENSE",
-      "codex-utils-sleep-inhibitor-0.160.0/NOTICE"
+      "codex-utils-sleep-inhibitor-0.162.0/LICENSE",
+      "codex-utils-sleep-inhibitor-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-sandbox-summary",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-sandbox-summary-0.160.0/LICENSE",
-      "codex-utils-sandbox-summary-0.160.0/NOTICE"
+      "codex-utils-sandbox-summary-0.162.0/LICENSE",
+      "codex-utils-sandbox-summary-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-plugins",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-plugins-0.160.0/LICENSE",
-      "codex-utils-plugins-0.160.0/NOTICE"
+      "codex-utils-plugins-0.162.0/LICENSE",
+      "codex-utils-plugins-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-exec-server-protocol",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-exec-server-protocol-0.160.0/LICENSE",
-      "codex-exec-server-protocol-0.160.0/NOTICE"
+      "codex-exec-server-protocol-0.162.0/LICENSE",
+      "codex-exec-server-protocol-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-exec-server",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-exec-server-0.160.0/LICENSE",
-      "codex-exec-server-0.160.0/NOTICE"
+      "codex-exec-server-0.162.0/LICENSE",
+      "codex-exec-server-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-uds",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-uds-0.160.0/LICENSE",
-      "codex-uds-0.160.0/NOTICE"
+      "codex-uds-0.162.0/LICENSE",
+      "codex-uds-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-skills",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-skills-0.160.0/LICENSE",
-      "codex-skills-0.160.0/NOTICE",
-      "codex-skills-0.160.0/nested/src/assets/samples/skill-creator/license.txt",
-      "codex-skills-0.160.0/nested/src/assets/samples/skill-installer/LICENSE.txt",
-      "codex-skills-0.160.0/nested/src/assets/samples/openai-docs/LICENSE.txt",
-      "codex-skills-0.160.0/nested/src/assets/samples/imagegen/LICENSE.txt"
+      "codex-skills-0.162.0/LICENSE",
+      "codex-skills-0.162.0/NOTICE",
+      "codex-skills-0.162.0/nested/src/assets/samples/skill-creator/license.txt",
+      "codex-skills-0.162.0/nested/src/assets/samples/skill-installer/LICENSE.txt",
+      "codex-skills-0.162.0/nested/src/assets/samples/openai-docs/LICENSE.txt",
+      "codex-skills-0.162.0/nested/src/assets/samples/imagegen/LICENSE.txt"
     ]
   },
   {
@@ -8614,22 +8583,22 @@
   },
   {
     "name": "codex-sandboxing",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-sandboxing-0.160.0/LICENSE",
-      "codex-sandboxing-0.160.0/NOTICE"
+      "codex-sandboxing-0.162.0/LICENSE",
+      "codex-sandboxing-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-mxc-sandbox",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-mxc-sandbox-0.160.0/LICENSE",
-      "codex-mxc-sandbox-0.160.0/NOTICE"
+      "codex-mxc-sandbox-0.162.0/LICENSE",
+      "codex-mxc-sandbox-0.162.0/NOTICE"
     ]
   },
   {
@@ -8688,12 +8657,12 @@
   },
   {
     "name": "codex-file-watcher",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-file-watcher-0.160.0/LICENSE",
-      "codex-file-watcher-0.160.0/NOTICE"
+      "codex-file-watcher-0.162.0/LICENSE",
+      "codex-file-watcher-0.162.0/NOTICE"
     ]
   },
   {
@@ -8726,22 +8695,22 @@
   },
   {
     "name": "codex-core-plugin-common",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-core-plugin-common-0.160.0/LICENSE",
-      "codex-core-plugin-common-0.160.0/NOTICE"
+      "codex-core-plugin-common-0.162.0/LICENSE",
+      "codex-core-plugin-common-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-config",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-config-0.160.0/LICENSE",
-      "codex-config-0.160.0/NOTICE"
+      "codex-config-0.162.0/LICENSE",
+      "codex-config-0.162.0/NOTICE"
     ]
   },
   {
@@ -8756,42 +8725,42 @@
   },
   {
     "name": "codex-model-provider-info",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-model-provider-info-0.160.0/LICENSE",
-      "codex-model-provider-info-0.160.0/NOTICE"
+      "codex-model-provider-info-0.162.0/LICENSE",
+      "codex-model-provider-info-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-features",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-features-0.160.0/LICENSE",
-      "codex-features-0.160.0/NOTICE"
+      "codex-features-0.162.0/LICENSE",
+      "codex-features-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-build-info",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-build-info-0.160.0/LICENSE",
-      "codex-build-info-0.160.0/NOTICE"
+      "codex-build-info-0.162.0/LICENSE",
+      "codex-build-info-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-install-context",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-install-context-0.160.0/LICENSE",
-      "codex-install-context-0.160.0/NOTICE"
+      "codex-install-context-0.162.0/LICENSE",
+      "codex-install-context-0.162.0/NOTICE"
     ]
   },
   {
@@ -9014,22 +8983,22 @@
   },
   {
     "name": "codex-utils-oss",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-oss-0.160.0/LICENSE",
-      "codex-utils-oss-0.160.0/NOTICE"
+      "codex-utils-oss-0.162.0/LICENSE",
+      "codex-utils-oss-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-ollama",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-ollama-0.160.0/LICENSE",
-      "codex-ollama-0.160.0/NOTICE"
+      "codex-ollama-0.162.0/LICENSE",
+      "codex-ollama-0.162.0/NOTICE"
     ]
   },
   {
@@ -9083,12 +9052,12 @@
   },
   {
     "name": "codex-core",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-core-0.160.0/LICENSE",
-      "codex-core-0.160.0/NOTICE"
+      "codex-core-0.162.0/LICENSE",
+      "codex-core-0.162.0/NOTICE"
     ]
   },
   {
@@ -9104,32 +9073,32 @@
   },
   {
     "name": "codex-utils-output-truncation",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-output-truncation-0.160.0/LICENSE",
-      "codex-utils-output-truncation-0.160.0/NOTICE"
+      "codex-utils-output-truncation-0.162.0/LICENSE",
+      "codex-utils-output-truncation-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-git-discovery",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-git-discovery-0.160.0/LICENSE",
-      "codex-utils-git-discovery-0.160.0/NOTICE"
+      "codex-utils-git-discovery-0.162.0/LICENSE",
+      "codex-utils-git-discovery-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-audio",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-audio-0.160.0/LICENSE",
-      "codex-utils-audio-0.160.0/NOTICE"
+      "codex-utils-audio-0.162.0/LICENSE",
+      "codex-utils-audio-0.162.0/NOTICE"
     ]
   },
   {
@@ -9243,12 +9212,12 @@
   },
   {
     "name": "codex-tools",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-tools-0.160.0/LICENSE",
-      "codex-tools-0.160.0/NOTICE"
+      "codex-tools-0.162.0/LICENSE",
+      "codex-tools-0.162.0/NOTICE"
     ]
   },
   {
@@ -9263,32 +9232,32 @@
   },
   {
     "name": "codex-connectors",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-connectors-0.160.0/LICENSE",
-      "codex-connectors-0.160.0/NOTICE"
+      "codex-connectors-0.162.0/LICENSE",
+      "codex-connectors-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-plugin",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-plugin-0.160.0/LICENSE",
-      "codex-plugin-0.160.0/NOTICE"
+      "codex-plugin-0.162.0/LICENSE",
+      "codex-plugin-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-login",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-login-0.160.0/LICENSE",
-      "codex-login-0.160.0/NOTICE"
+      "codex-login-0.162.0/LICENSE",
+      "codex-login-0.162.0/NOTICE"
     ]
   },
   {
@@ -9323,52 +9292,52 @@
   },
   {
     "name": "codex-workload-identity",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-workload-identity-0.160.0/LICENSE",
-      "codex-workload-identity-0.160.0/NOTICE"
+      "codex-workload-identity-0.162.0/LICENSE",
+      "codex-workload-identity-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-template",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-template-0.160.0/LICENSE",
-      "codex-utils-template-0.160.0/NOTICE"
+      "codex-utils-template-0.162.0/LICENSE",
+      "codex-utils-template-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-terminal-detection",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-terminal-detection-0.160.0/LICENSE",
-      "codex-terminal-detection-0.160.0/NOTICE"
+      "codex-terminal-detection-0.162.0/LICENSE",
+      "codex-terminal-detection-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-secrets",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-secrets-0.160.0/LICENSE",
-      "codex-secrets-0.160.0/NOTICE"
+      "codex-secrets-0.162.0/LICENSE",
+      "codex-secrets-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-keyring-store",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-keyring-store-0.160.0/LICENSE",
-      "codex-keyring-store-0.160.0/NOTICE"
+      "codex-keyring-store-0.162.0/LICENSE",
+      "codex-keyring-store-0.162.0/NOTICE"
     ]
   },
   {
@@ -9380,16 +9349,6 @@
       "keyring-3.6.3/LICENSE-APACHE",
       "keyring-3.6.3/LICENSE-MIT"
     ]
-  },
-  {
-    "name": "age",
-    "version": "0.11.2",
-    "license": "MIT OR Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "age-0.11.2/LICENSE-upstream"
-    ],
-    "notice_source": "https://github.com/str4d/rage/blob/1465e602c83c5e4d3db8f58d9bdfc2a10063f90d/LICENSE-APACHE"
   },
   {
     "name": "scrypt",
@@ -9459,15 +9418,6 @@
     ]
   },
   {
-    "name": "i18n-embed-fl",
-    "version": "0.9.4",
-    "license": "MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "i18n-embed-fl-0.9.4/LICENSE.txt"
-    ]
-  },
-  {
     "name": "unic-langid",
     "version": "0.9.6",
     "license": "MIT OR Apache-2.0",
@@ -9485,35 +9435,6 @@
     "notices": [
       "unic-langid-impl-0.9.6/LICENSE-MIT",
       "unic-langid-impl-0.9.6/LICENSE-APACHE"
-    ]
-  },
-  {
-    "name": "proc-macro-error2",
-    "version": "2.0.1",
-    "license": "MIT OR Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "proc-macro-error2-2.0.1/LICENSE-APACHE",
-      "proc-macro-error2-2.0.1/LICENSE-MIT"
-    ]
-  },
-  {
-    "name": "proc-macro-error-attr2",
-    "version": "2.0.0",
-    "license": "MIT OR Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "proc-macro-error-attr2-2.0.0/LICENSE-MIT",
-      "proc-macro-error-attr2-2.0.0/LICENSE-APACHE"
-    ]
-  },
-  {
-    "name": "i18n-embed",
-    "version": "0.15.4",
-    "license": "MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "i18n-embed-0.15.4/LICENSE.txt"
     ]
   },
   {
@@ -9585,16 +9506,6 @@
     ]
   },
   {
-    "name": "fluent-syntax",
-    "version": "0.11.1",
-    "license": "Apache-2.0 OR MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "fluent-syntax-0.11.1/LICENSE-MIT",
-      "fluent-syntax-0.11.1/LICENSE-APACHE"
-    ]
-  },
-  {
     "name": "fluent-langneg",
     "version": "0.13.1",
     "license": "Apache-2.0 OR MIT",
@@ -9605,35 +9516,6 @@
     "notice_source": "https://github.com/projectfluent/fluent-langneg-rs/blob/7fdc590466ea63ca2367ac10fb1b881fe561f1a8/LICENSE-APACHE"
   },
   {
-    "name": "fluent",
-    "version": "0.16.1",
-    "license": "Apache-2.0 OR MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "fluent-0.16.1/LICENSE-MIT",
-      "fluent-0.16.1/LICENSE-APACHE"
-    ]
-  },
-  {
-    "name": "fluent-bundle",
-    "version": "0.15.3",
-    "license": "Apache-2.0 OR MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "fluent-bundle-0.15.3/LICENSE-MIT",
-      "fluent-bundle-0.15.3/LICENSE-APACHE"
-    ]
-  },
-  {
-    "name": "self_cell",
-    "version": "0.10.3",
-    "license": "Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "self_cell-0.10.3/LICENSE"
-    ]
-  },
-  {
     "name": "self_cell",
     "version": "1.2.2",
     "license": "Apache-2.0 OR GPL-2.0-only",
@@ -9641,16 +9523,6 @@
     "notices": [
       "self_cell-1.2.2/LICENSE-APACHE",
       "self_cell-1.2.2/LICENSE-GPLv2"
-    ]
-  },
-  {
-    "name": "rustc-hash",
-    "version": "1.1.0",
-    "license": "Apache-2.0/MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "rustc-hash-1.1.0/LICENSE-APACHE",
-      "rustc-hash-1.1.0/LICENSE-MIT"
     ]
   },
   {
@@ -9710,39 +9582,6 @@
     ]
   },
   {
-    "name": "bech32",
-    "version": "0.9.1",
-    "license": "MIT",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "bech32-0.9.1/Cargo.toml",
-      "bech32-0.9.1/Cargo.toml.orig",
-      "bech32-0.9.1/README.md",
-      "bech32-0.9.1/SOURCE-NOTICE"
-    ],
-    "review_status": "full upstream grant preserved from source header"
-  },
-  {
-    "name": "base64",
-    "version": "0.21.7",
-    "license": "MIT OR Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "base64-0.21.7/LICENSE-APACHE",
-      "base64-0.21.7/LICENSE-MIT"
-    ]
-  },
-  {
-    "name": "age-core",
-    "version": "0.11.0",
-    "license": "MIT OR Apache-2.0",
-    "source": "registry+https://github.com/rust-lang/crates.io-index",
-    "notices": [
-      "age-core-0.11.0/LICENSE-upstream"
-    ],
-    "notice_source": "https://github.com/str4d/rage/blob/17446612f865c705e44fe392d9d41dd102fed137/LICENSE-APACHE"
-  },
-  {
     "name": "secrecy",
     "version": "0.10.3",
     "license": "Apache-2.0 OR MIT",
@@ -9777,12 +9616,12 @@
   },
   {
     "name": "codex-agent-identity",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-agent-identity-0.160.0/LICENSE",
-      "codex-agent-identity-0.160.0/NOTICE"
+      "codex-agent-identity-0.162.0/LICENSE",
+      "codex-agent-identity-0.162.0/NOTICE"
     ]
   },
   {
@@ -9906,22 +9745,22 @@
   },
   {
     "name": "codex-code-mode",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-code-mode-0.160.0/LICENSE",
-      "codex-code-mode-0.160.0/NOTICE"
+      "codex-code-mode-0.162.0/LICENSE",
+      "codex-code-mode-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-thread-store",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-thread-store-0.160.0/LICENSE",
-      "codex-thread-store-0.160.0/NOTICE"
+      "codex-thread-store-0.162.0/LICENSE",
+      "codex-thread-store-0.162.0/NOTICE"
     ]
   },
   {
@@ -10227,42 +10066,42 @@
   },
   {
     "name": "codex-state",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-state-0.160.0/LICENSE",
-      "codex-state-0.160.0/NOTICE"
+      "codex-state-0.162.0/LICENSE",
+      "codex-state-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-history",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-history-0.160.0/LICENSE",
-      "codex-history-0.160.0/NOTICE"
+      "codex-history-0.162.0/LICENSE",
+      "codex-history-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-rollout",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-rollout-0.160.0/LICENSE",
-      "codex-rollout-0.160.0/NOTICE"
+      "codex-rollout-0.162.0/LICENSE",
+      "codex-rollout-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-file-search",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-file-search-0.160.0/LICENSE",
-      "codex-file-search-0.160.0/NOTICE"
+      "codex-file-search-0.162.0/LICENSE",
+      "codex-file-search-0.162.0/NOTICE"
     ]
   },
   {
@@ -10308,142 +10147,142 @@
   },
   {
     "name": "codex-app-server-protocol",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-protocol-0.160.0/LICENSE",
-      "codex-app-server-protocol-0.160.0/NOTICE"
+      "codex-app-server-protocol-0.162.0/LICENSE",
+      "codex-app-server-protocol-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-experimental-api-macros",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-experimental-api-macros-0.160.0/LICENSE",
-      "codex-experimental-api-macros-0.160.0/NOTICE"
+      "codex-experimental-api-macros-0.162.0/LICENSE",
+      "codex-experimental-api-macros-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server-protocol-noop-macros",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-protocol-noop-macros-0.160.0/LICENSE",
-      "codex-app-server-protocol-noop-macros-0.160.0/NOTICE"
+      "codex-app-server-protocol-noop-macros-0.162.0/LICENSE",
+      "codex-app-server-protocol-noop-macros-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-skills-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-skills-extension-0.160.0/LICENSE",
-      "codex-skills-extension-0.160.0/NOTICE"
+      "codex-skills-extension-0.162.0/LICENSE",
+      "codex-skills-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-mcp",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-mcp-0.160.0/LICENSE",
-      "codex-mcp-0.160.0/NOTICE"
+      "codex-mcp-0.162.0/LICENSE",
+      "codex-mcp-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-rmcp-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-rmcp-client-0.160.0/LICENSE",
-      "codex-rmcp-client-0.160.0/NOTICE"
+      "codex-rmcp-client-0.162.0/LICENSE",
+      "codex-rmcp-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-model-provider",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-model-provider-0.160.0/LICENSE",
-      "codex-model-provider-0.160.0/NOTICE"
+      "codex-model-provider-0.162.0/LICENSE",
+      "codex-model-provider-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-response-debug-context",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-response-debug-context-0.160.0/LICENSE",
-      "codex-response-debug-context-0.160.0/NOTICE"
+      "codex-response-debug-context-0.162.0/LICENSE",
+      "codex-response-debug-context-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-models-manager",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-models-manager-0.160.0/LICENSE",
-      "codex-models-manager-0.160.0/NOTICE"
+      "codex-models-manager-0.162.0/LICENSE",
+      "codex-models-manager-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-prompts",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-prompts-0.160.0/LICENSE",
-      "codex-prompts-0.160.0/NOTICE"
+      "codex-prompts-0.162.0/LICENSE",
+      "codex-prompts-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-guardian-context",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-guardian-context-0.160.0/LICENSE",
-      "codex-guardian-context-0.160.0/NOTICE"
+      "codex-guardian-context-0.162.0/LICENSE",
+      "codex-guardian-context-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-context-fragments",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-context-fragments-0.160.0/LICENSE",
-      "codex-context-fragments-0.160.0/NOTICE"
+      "codex-context-fragments-0.162.0/LICENSE",
+      "codex-context-fragments-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-collaboration-mode-templates",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-collaboration-mode-templates-0.160.0/LICENSE",
-      "codex-collaboration-mode-templates-0.160.0/NOTICE"
+      "codex-collaboration-mode-templates-0.162.0/LICENSE",
+      "codex-collaboration-mode-templates-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-feedback",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-feedback-0.160.0/LICENSE",
-      "codex-feedback-0.160.0/NOTICE"
+      "codex-feedback-0.162.0/LICENSE",
+      "codex-feedback-0.162.0/NOTICE"
     ]
   },
   {
@@ -10484,12 +10323,12 @@
   },
   {
     "name": "codex-aws-auth",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-aws-auth-0.160.0/LICENSE",
-      "codex-aws-auth-0.160.0/NOTICE"
+      "codex-aws-auth-0.162.0/LICENSE",
+      "codex-aws-auth-0.162.0/NOTICE"
     ]
   },
   {
@@ -10843,92 +10682,92 @@
   },
   {
     "name": "codex-diagnostics",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-diagnostics-0.160.0/LICENSE",
-      "codex-diagnostics-0.160.0/NOTICE"
+      "codex-diagnostics-0.162.0/LICENSE",
+      "codex-diagnostics-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-extension-api",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-extension-api-0.160.0/LICENSE",
-      "codex-extension-api-0.160.0/NOTICE"
+      "codex-extension-api-0.162.0/LICENSE",
+      "codex-extension-api-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-analytics",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-analytics-0.160.0/LICENSE",
-      "codex-analytics-0.160.0/NOTICE"
+      "codex-analytics-0.162.0/LICENSE",
+      "codex-analytics-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-shell-escalation",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-shell-escalation-0.160.0/LICENSE",
-      "codex-shell-escalation-0.160.0/NOTICE"
+      "codex-shell-escalation-0.162.0/LICENSE",
+      "codex-shell-escalation-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-rollout-trace",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-rollout-trace-0.160.0/LICENSE",
-      "codex-rollout-trace-0.160.0/NOTICE"
+      "codex-rollout-trace-0.162.0/LICENSE",
+      "codex-rollout-trace-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-memories-read",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-memories-read-0.160.0/LICENSE",
-      "codex-memories-read-0.160.0/NOTICE"
+      "codex-memories-read-0.162.0/LICENSE",
+      "codex-memories-read-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-hooks",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-hooks-0.160.0/LICENSE",
-      "codex-hooks-0.160.0/NOTICE"
+      "codex-hooks-0.162.0/LICENSE",
+      "codex-hooks-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-guardian-reviewer",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-guardian-reviewer-0.160.0/LICENSE",
-      "codex-guardian-reviewer-0.160.0/NOTICE"
+      "codex-guardian-reviewer-0.162.0/LICENSE",
+      "codex-guardian-reviewer-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-core-plugins",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-core-plugins-0.160.0/LICENSE",
-      "codex-core-plugins-0.160.0/NOTICE"
+      "codex-core-plugins-0.162.0/LICENSE",
+      "codex-core-plugins-0.162.0/NOTICE"
     ]
   },
   {
@@ -11033,42 +10872,42 @@
   },
   {
     "name": "codex-attachment-store",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-attachment-store-0.160.0/LICENSE",
-      "codex-attachment-store-0.160.0/NOTICE"
+      "codex-attachment-store-0.162.0/LICENSE",
+      "codex-attachment-store-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-apply-patch",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-apply-patch-0.160.0/LICENSE",
-      "codex-apply-patch-0.160.0/NOTICE"
+      "codex-apply-patch-0.162.0/LICENSE",
+      "codex-apply-patch-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-agent-roles",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-agent-roles-0.160.0/LICENSE",
-      "codex-agent-roles-0.160.0/NOTICE"
+      "codex-agent-roles-0.162.0/LICENSE",
+      "codex-agent-roles-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-agent-message-board-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-agent-message-board-extension-0.160.0/LICENSE",
-      "codex-agent-message-board-extension-0.160.0/NOTICE"
+      "codex-agent-message-board-extension-0.162.0/LICENSE",
+      "codex-agent-message-board-extension-0.162.0/NOTICE"
     ]
   },
   {
@@ -11082,12 +10921,12 @@
   },
   {
     "name": "codex-agent-graph-store",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-agent-graph-store-0.160.0/LICENSE",
-      "codex-agent-graph-store-0.160.0/NOTICE"
+      "codex-agent-graph-store-0.162.0/LICENSE",
+      "codex-agent-graph-store-0.162.0/NOTICE"
     ]
   },
   {
@@ -11213,192 +11052,192 @@
   },
   {
     "name": "codex-lmstudio",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-lmstudio-0.160.0/LICENSE",
-      "codex-lmstudio-0.160.0/NOTICE"
+      "codex-lmstudio-0.162.0/LICENSE",
+      "codex-lmstudio-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-fuzzy-match",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-fuzzy-match-0.160.0/LICENSE",
-      "codex-utils-fuzzy-match-0.160.0/NOTICE"
+      "codex-utils-fuzzy-match-0.162.0/LICENSE",
+      "codex-utils-fuzzy-match-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-elapsed",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-elapsed-0.160.0/LICENSE",
-      "codex-utils-elapsed-0.160.0/NOTICE"
+      "codex-utils-elapsed-0.162.0/LICENSE",
+      "codex-utils-elapsed-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-approval-presets",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-approval-presets-0.160.0/LICENSE",
-      "codex-utils-approval-presets-0.160.0/NOTICE"
+      "codex-utils-approval-presets-0.162.0/LICENSE",
+      "codex-utils-approval-presets-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-realtime-webrtc",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-realtime-webrtc-0.160.0/LICENSE",
-      "codex-realtime-webrtc-0.160.0/NOTICE"
+      "codex-realtime-webrtc-0.162.0/LICENSE",
+      "codex-realtime-webrtc-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-message-history",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-message-history-0.160.0/LICENSE",
-      "codex-message-history-0.160.0/NOTICE"
+      "codex-message-history-0.162.0/LICENSE",
+      "codex-message-history-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-mermaid",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-mermaid-0.160.0/LICENSE",
-      "codex-mermaid-0.160.0/NOTICE"
+      "codex-mermaid-0.162.0/LICENSE",
+      "codex-mermaid-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-cloud-config",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-cloud-config-0.160.0/LICENSE",
-      "codex-cloud-config-0.160.0/NOTICE"
+      "codex-cloud-config-0.162.0/LICENSE",
+      "codex-cloud-config-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-backend-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-backend-client-0.160.0/LICENSE",
-      "codex-backend-client-0.160.0/NOTICE"
+      "codex-backend-client-0.162.0/LICENSE",
+      "codex-backend-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-backend-openapi-models",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-backend-openapi-models-0.160.0/LICENSE",
-      "codex-backend-openapi-models-0.160.0/NOTICE"
+      "codex-backend-openapi-models-0.162.0/LICENSE",
+      "codex-backend-openapi-models-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-arg0",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-arg0-0.160.0/LICENSE",
-      "codex-arg0-0.160.0/NOTICE"
+      "codex-arg0-0.162.0/LICENSE",
+      "codex-arg0-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-linux-sandbox",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-linux-sandbox-0.160.0/LICENSE",
-      "codex-linux-sandbox-0.160.0/NOTICE"
+      "codex-linux-sandbox-0.162.0/LICENSE",
+      "codex-linux-sandbox-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server-daemon",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-daemon-0.160.0/LICENSE",
-      "codex-app-server-daemon-0.160.0/NOTICE"
+      "codex-app-server-daemon-0.162.0/LICENSE",
+      "codex-app-server-daemon-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server-transport",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-transport-0.160.0/LICENSE",
-      "codex-app-server-transport-0.160.0/NOTICE"
+      "codex-app-server-transport-0.162.0/LICENSE",
+      "codex-app-server-transport-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-client-0.160.0/LICENSE",
-      "codex-app-server-client-0.160.0/NOTICE"
+      "codex-app-server-client-0.162.0/LICENSE",
+      "codex-app-server-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-0.160.0/LICENSE",
-      "codex-app-server-0.160.0/NOTICE"
+      "codex-app-server-0.162.0/LICENSE",
+      "codex-app-server-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-web-search-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-web-search-extension-0.160.0/LICENSE",
-      "codex-web-search-extension-0.160.0/NOTICE"
+      "codex-web-search-extension-0.162.0/LICENSE",
+      "codex-web-search-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-utils-json-to-toml",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-utils-json-to-toml-0.160.0/LICENSE",
-      "codex-utils-json-to-toml-0.160.0/NOTICE"
+      "codex-utils-json-to-toml-0.162.0/LICENSE",
+      "codex-utils-json-to-toml-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-user-verification",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-user-verification-0.160.0/LICENSE",
-      "codex-user-verification-0.160.0/NOTICE"
+      "codex-user-verification-0.162.0/LICENSE",
+      "codex-user-verification-0.162.0/NOTICE"
     ]
   },
   {
@@ -11413,152 +11252,152 @@
   },
   {
     "name": "codex-queue-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-queue-extension-0.160.0/LICENSE",
-      "codex-queue-extension-0.160.0/NOTICE"
+      "codex-queue-extension-0.162.0/LICENSE",
+      "codex-queue-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-memories-write",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-memories-write-0.160.0/LICENSE",
-      "codex-memories-write-0.160.0/NOTICE"
+      "codex-memories-write-0.162.0/LICENSE",
+      "codex-memories-write-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-memories-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-memories-extension-0.160.0/LICENSE",
-      "codex-memories-extension-0.160.0/NOTICE"
+      "codex-memories-extension-0.162.0/LICENSE",
+      "codex-memories-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-mcp-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-mcp-extension-0.160.0/LICENSE",
-      "codex-mcp-extension-0.160.0/NOTICE"
+      "codex-mcp-extension-0.162.0/LICENSE",
+      "codex-mcp-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-connectors-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-connectors-extension-0.160.0/LICENSE",
-      "codex-connectors-extension-0.160.0/NOTICE"
+      "codex-connectors-extension-0.162.0/LICENSE",
+      "codex-connectors-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-image-generation-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-image-generation-extension-0.160.0/LICENSE",
-      "codex-image-generation-extension-0.160.0/NOTICE"
+      "codex-image-generation-extension-0.162.0/LICENSE",
+      "codex-image-generation-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-home",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-home-0.160.0/LICENSE",
-      "codex-home-0.160.0/NOTICE"
+      "codex-home-0.162.0/LICENSE",
+      "codex-home-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-history-notes-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-history-notes-extension-0.160.0/LICENSE",
-      "codex-history-notes-extension-0.160.0/NOTICE"
+      "codex-history-notes-extension-0.162.0/LICENSE",
+      "codex-history-notes-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-guardian-v2",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-guardian-v2-0.160.0/LICENSE",
-      "codex-guardian-v2-0.160.0/NOTICE"
+      "codex-guardian-v2-0.162.0/LICENSE",
+      "codex-guardian-v2-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-goal-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-goal-extension-0.160.0/LICENSE",
-      "codex-goal-extension-0.160.0/NOTICE"
+      "codex-goal-extension-0.162.0/LICENSE",
+      "codex-goal-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-git-attribution",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-git-attribution-0.160.0/LICENSE",
-      "codex-git-attribution-0.160.0/NOTICE"
+      "codex-git-attribution-0.162.0/LICENSE",
+      "codex-git-attribution-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-external-agent-migration",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-external-agent-migration-0.160.0/LICENSE",
-      "codex-external-agent-migration-0.160.0/NOTICE"
+      "codex-external-agent-migration-0.162.0/LICENSE",
+      "codex-external-agent-migration-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-chatgpt",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-chatgpt-0.160.0/LICENSE",
-      "codex-chatgpt-0.160.0/NOTICE"
+      "codex-chatgpt-0.162.0/LICENSE",
+      "codex-chatgpt-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-agent-extension",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-agent-extension-0.160.0/LICENSE",
-      "codex-agent-extension-0.160.0/NOTICE"
+      "codex-agent-extension-0.162.0/LICENSE",
+      "codex-agent-extension-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-ansi-escape",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-ansi-escape-0.160.0/LICENSE",
-      "codex-ansi-escape-0.160.0/NOTICE"
+      "codex-ansi-escape-0.162.0/LICENSE",
+      "codex-ansi-escape-0.162.0/NOTICE"
     ]
   },
   {
@@ -11592,12 +11431,12 @@
   },
   {
     "name": "codex-tcp-tunnel",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-tcp-tunnel-0.160.0/LICENSE",
-      "codex-tcp-tunnel-0.160.0/NOTICE"
+      "codex-tcp-tunnel-0.162.0/LICENSE",
+      "codex-tcp-tunnel-0.162.0/NOTICE"
     ]
   },
   {
@@ -11620,22 +11459,22 @@
   },
   {
     "name": "codex-stdio-to-uds",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-stdio-to-uds-0.160.0/LICENSE",
-      "codex-stdio-to-uds-0.160.0/NOTICE"
+      "codex-stdio-to-uds-0.162.0/LICENSE",
+      "codex-stdio-to-uds-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-responses-api-proxy",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-responses-api-proxy-0.160.0/LICENSE",
-      "codex-responses-api-proxy-0.160.0/NOTICE"
+      "codex-responses-api-proxy-0.162.0/LICENSE",
+      "codex-responses-api-proxy-0.162.0/NOTICE"
     ]
   },
   {
@@ -11680,62 +11519,62 @@
   },
   {
     "name": "codex-process-hardening",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-process-hardening-0.160.0/LICENSE",
-      "codex-process-hardening-0.160.0/NOTICE"
+      "codex-process-hardening-0.162.0/LICENSE",
+      "codex-process-hardening-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-exec",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-exec-0.160.0/LICENSE",
-      "codex-exec-0.160.0/NOTICE"
+      "codex-exec-0.162.0/LICENSE",
+      "codex-exec-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-cloud-tasks",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-cloud-tasks-0.160.0/LICENSE",
-      "codex-cloud-tasks-0.160.0/NOTICE"
+      "codex-cloud-tasks-0.162.0/LICENSE",
+      "codex-cloud-tasks-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-cloud-tasks-mock-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-cloud-tasks-mock-client-0.160.0/LICENSE",
-      "codex-cloud-tasks-mock-client-0.160.0/NOTICE"
+      "codex-cloud-tasks-mock-client-0.162.0/LICENSE",
+      "codex-cloud-tasks-mock-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-cloud-tasks-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-cloud-tasks-client-0.160.0/LICENSE",
-      "codex-cloud-tasks-client-0.160.0/NOTICE"
+      "codex-cloud-tasks-client-0.162.0/LICENSE",
+      "codex-cloud-tasks-client-0.162.0/NOTICE"
     ]
   },
   {
     "name": "codex-app-server-test-client",
-    "version": "0.160.0",
+    "version": "0.162.0",
     "license": "Apache-2.0",
     "source": "codex",
     "notices": [
-      "codex-app-server-test-client-0.160.0/LICENSE",
-      "codex-app-server-test-client-0.160.0/NOTICE"
+      "codex-app-server-test-client-0.162.0/LICENSE",
+      "codex-app-server-test-client-0.162.0/NOTICE"
     ]
   },
   {
@@ -12711,6 +12550,173 @@
     "source": "herdr",
     "notices": [
       "ghostty-vt-0.0.0/LICENSE"
+    ]
+  },
+  {
+    "name": "age",
+    "version": "0.12.1",
+    "license": "MIT OR Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "age-0.12.1/LICENSE-upstream"
+    ],
+    "notice_source": "https://github.com/str4d/rage/blob/7a854c9c8c02dab2ebea19e02e6693a5730a8b2a/LICENSE-APACHE"
+  },
+  {
+    "name": "age-core",
+    "version": "0.12.0",
+    "license": "MIT OR Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "age-core-0.12.0/LICENSE-upstream"
+    ],
+    "notice_source": "https://github.com/str4d/rage/blob/f6383f367e9aa514a3b5fbce7feede08a425d647/LICENSE-APACHE"
+  },
+  {
+    "name": "bech32",
+    "version": "0.11.1",
+    "license": "MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "bech32-0.11.1/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "file-id",
+    "version": "0.2.3",
+    "license": "MIT OR Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "file-id-0.2.3/LICENSE-APACHE",
+      "file-id-0.2.3/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "fluent",
+    "version": "0.17.0",
+    "license": "Apache-2.0 OR MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "fluent-0.17.0/LICENSE-APACHE",
+      "fluent-0.17.0/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "fluent-bundle",
+    "version": "0.16.0",
+    "license": "Apache-2.0 OR MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "fluent-bundle-0.16.0/LICENSE-APACHE",
+      "fluent-bundle-0.16.0/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "fluent-syntax",
+    "version": "0.12.0",
+    "license": "Apache-2.0 OR MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "fluent-syntax-0.12.0/LICENSE-APACHE",
+      "fluent-syntax-0.12.0/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "hpke",
+    "version": "0.12.0",
+    "license": "MIT/Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "hpke-0.12.0/LICENSE-APACHE",
+      "hpke-0.12.0/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "i18n-embed",
+    "version": "0.16.0",
+    "license": "MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "i18n-embed-0.16.0/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "i18n-embed-fl",
+    "version": "0.10.1",
+    "license": "MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "i18n-embed-fl-0.10.1/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "nix",
+    "version": "0.31.3",
+    "license": "MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "nix-0.31.3/LICENSE"
+    ]
+  },
+  {
+    "name": "proc-macro-error-attr3",
+    "version": "3.1.1",
+    "license": "MIT OR Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "proc-macro-error-attr3-3.1.1/LICENSE-APACHE",
+      "proc-macro-error-attr3-3.1.1/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "proc-macro-error3",
+    "version": "3.1.1",
+    "license": "MIT OR Apache-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "proc-macro-error3-3.1.1/LICENSE-APACHE",
+      "proc-macro-error3-3.1.1/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "process-wrap",
+    "version": "10.0.0",
+    "license": "Apache-2.0 OR MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "notices": [
+      "process-wrap-10.0.0/COPYRIGHT",
+      "process-wrap-10.0.0/LICENSE-APACHE",
+      "process-wrap-10.0.0/LICENSE-MIT"
+    ]
+  },
+  {
+    "name": "rmcp",
+    "version": "3.3.0",
+    "license": "Apache-2.0",
+    "source": "git+https://github.com/modelcontextprotocol/rust-sdk?rev=3e636cab26c013eca5131103c03d20237f12c4df#3e636cab26c013eca5131103c03d20237f12c4df",
+    "notices": [
+      "rmcp-3.3.0/LICENSE-upstream"
+    ],
+    "notice_source": "https://github.com/modelcontextprotocol/rust-sdk/blob/3e636cab26c013eca5131103c03d20237f12c4df/LICENSE"
+  },
+  {
+    "name": "rmcp-macros",
+    "version": "3.3.0",
+    "license": "Apache-2.0",
+    "source": "git+https://github.com/modelcontextprotocol/rust-sdk?rev=3e636cab26c013eca5131103c03d20237f12c4df#3e636cab26c013eca5131103c03d20237f12c4df",
+    "notices": [
+      "rmcp-macros-3.3.0/LICENSE-upstream"
+    ],
+    "notice_source": "https://github.com/modelcontextprotocol/rust-sdk/blob/3e636cab26c013eca5131103c03d20237f12c4df/LICENSE"
+  },
+  {
+    "name": "codex-agent-message-board-client",
+    "version": "0.162.0",
+    "license": "Apache-2.0",
+    "source": "codex",
+    "notices": [
+      "codex-agent-message-board-client-0.162.0/LICENSE",
+      "codex-agent-message-board-client-0.162.0/NOTICE"
     ]
   }
 ]

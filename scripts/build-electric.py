@@ -16,13 +16,13 @@ import urllib.request
 
 REPO = Path(__file__).resolve().parents[1]
 SOURCES = {'herdr': ('https://github.com/herdrdev/herdr.git', '7b116c05bfda646af39d2524c54e70c751f57ee8'),
-           'codex': ('https://github.com/openai/codex.git', 'a956835d020762cb2b570053af06f643a11c0ecc')}
-PACKAGE_URL = 'https://github.com/openai/codex/releases/download/rust-v0.160.0/codex-package-aarch64-apple-darwin.tar.gz'
-PACKAGE_SHA = '007df41b607dbbc8d204b9746ce7fed2d4ce6c813f44c32ceee54175ca796525'
+           'codex': ('https://github.com/openai/codex.git', 'c1382380de69521303b416720a52f42d51af6248')}
+PACKAGE_URL = 'https://github.com/openai/codex/releases/download/rust-v0.162.0/codex-package-aarch64-apple-darwin.tar.gz'
+PACKAGE_SHA = '5809ee90a9c3b59d438bb2663aefa0b43d86f825438b65d4504b31f82343628b'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
 FONT_SHA = '04d5e8f903693f9dd13e16f867e994834e681eb3c72c0d337a770dcda09010cf'
 FONTS = [f'JetBrainsMonoNerdFontMono-{style}.ttf' for style in ('Regular', 'Bold', 'Italic', 'BoldItalic')]
-BUNDLE_VERSION = '0.9.0'
+BUNDLE_VERSION = '0.10.0'
 
 
 def build_env():

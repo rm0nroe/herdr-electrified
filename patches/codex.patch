@@ -1,1112 +1,1121 @@
 diff --git a/codex-rs/Cargo.lock b/codex-rs/Cargo.lock
-index 19885ae..baab9c0 100644
+index 1cee117..d5061cd 100644
 --- a/codex-rs/Cargo.lock
 +++ b/codex-rs/Cargo.lock
-@@ -268,7 +268,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
+@@ -276,7 +276,7 @@ checksum = "2a4385e2e34eb35d6b3efe798b9eb88096925d87726c0798709bf56d9ed84af3"
  
  [[package]]
  name = "app_test_support"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1893,7 +1893,7 @@ dependencies = [
+@@ -1895,7 +1895,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-core",
-@@ -1905,7 +1905,7 @@ dependencies = [
+@@ -1907,7 +1907,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-graph-store"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-state",
-@@ -1920,7 +1920,7 @@ dependencies = [
+@@ -1922,7 +1922,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-identity"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -1940,7 +1940,7 @@ dependencies = [
+@@ -1942,7 +1942,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-message-board-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -1960,7 +1960,7 @@ dependencies = [
+@@ -1965,7 +1965,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-message-board-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "caseless",
-@@ -1983,7 +1983,7 @@ dependencies = [
+@@ -1988,7 +1988,7 @@ dependencies = [
  
  [[package]]
  name = "codex-agent-roles"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-config",
   "codex-file-system",
-@@ -1996,7 +1996,7 @@ dependencies = [
+@@ -2001,7 +2001,7 @@ dependencies = [
  
  [[package]]
  name = "codex-analytics"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-app-server-protocol",
   "codex-git-utils",
-@@ -2018,7 +2018,7 @@ dependencies = [
+@@ -2024,7 +2024,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ansi-escape"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "ansi-to-tui",
-  "ratatui",
-@@ -2027,7 +2027,7 @@ dependencies = [
+  "pretty_assertions",
+@@ -2035,7 +2035,7 @@ dependencies = [
  
  [[package]]
  name = "codex-api"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "assert_matches",
-@@ -2065,7 +2065,7 @@ dependencies = [
+@@ -2073,7 +2073,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2177,7 +2177,7 @@ dependencies = [
+@@ -2187,7 +2187,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-app-server",
   "codex-app-server-protocol",
-@@ -2204,7 +2204,7 @@ dependencies = [
+@@ -2214,7 +2214,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-daemon"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "blake3",
-@@ -2229,7 +2229,7 @@ dependencies = [
+@@ -2240,7 +2240,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-protocol"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-app-server-protocol-noop-macros",
-@@ -2263,11 +2263,11 @@ dependencies = [
+@@ -2274,11 +2274,11 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-protocol-noop-macros"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  
  [[package]]
  name = "codex-app-server-test-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2289,7 +2289,7 @@ dependencies = [
+@@ -2300,7 +2300,7 @@ dependencies = [
  
  [[package]]
  name = "codex-app-server-transport"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "axum",
   "base64 0.22.1",
-@@ -2331,7 +2331,7 @@ dependencies = [
+@@ -2342,7 +2342,7 @@ dependencies = [
  
  [[package]]
  name = "codex-apply-patch"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -2351,7 +2351,7 @@ dependencies = [
+@@ -2362,7 +2362,7 @@ dependencies = [
  
  [[package]]
  name = "codex-arg0"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-apply-patch",
-@@ -2374,7 +2374,7 @@ dependencies = [
+@@ -2386,7 +2386,7 @@ dependencies = [
  
  [[package]]
  name = "codex-async-utils"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "rand 0.9.3",
-@@ -2384,7 +2384,7 @@ dependencies = [
+@@ -2396,7 +2396,7 @@ dependencies = [
  
  [[package]]
  name = "codex-attachment-store"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "serde",
-@@ -2394,7 +2394,7 @@ dependencies = [
+@@ -2406,7 +2406,7 @@ dependencies = [
  
  [[package]]
  name = "codex-aws-auth"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "aws-config",
   "aws-credential-types",
-@@ -2420,7 +2420,7 @@ dependencies = [
+@@ -2432,7 +2432,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-api",
-@@ -2440,7 +2440,7 @@ dependencies = [
+@@ -2452,7 +2452,7 @@ dependencies = [
  
  [[package]]
  name = "codex-backend-openapi-models"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "serde",
   "serde_json",
-@@ -2449,7 +2449,7 @@ dependencies = [
+@@ -2461,7 +2461,7 @@ dependencies = [
  
  [[package]]
  name = "codex-build-info"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-install-context",
   "pretty_assertions",
-@@ -2462,7 +2462,7 @@ dependencies = [
+@@ -2474,7 +2474,7 @@ dependencies = [
  
  [[package]]
  name = "codex-bwrap"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "cc",
   "libc",
-@@ -2471,7 +2471,7 @@ dependencies = [
+@@ -2483,7 +2483,7 @@ dependencies = [
  
  [[package]]
  name = "codex-chatgpt"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2493,7 +2493,7 @@ dependencies = [
+@@ -2505,7 +2505,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cli"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -2594,7 +2594,7 @@ dependencies = [
+@@ -2607,7 +2607,7 @@ dependencies = [
  
  [[package]]
  name = "codex-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-http-client",
   "eventsource-stream",
-@@ -2608,7 +2608,7 @@ dependencies = [
+@@ -2621,7 +2621,7 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-cloud-client"
+-version = "0.0.0"
++version = "0.162.0"
+ dependencies = [
+  "anyhow",
+  "async-stream",
+@@ -2645,7 +2645,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-config"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "chrono",
-@@ -2634,7 +2634,7 @@ dependencies = [
+@@ -2671,7 +2671,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2667,7 +2667,7 @@ dependencies = [
+@@ -2704,7 +2704,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -2682,7 +2682,7 @@ dependencies = [
+@@ -2719,7 +2719,7 @@ dependencies = [
  
  [[package]]
  name = "codex-cloud-tasks-mock-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "chrono",
   "codex-cloud-tasks-client",
-@@ -2691,7 +2691,7 @@ dependencies = [
+@@ -2728,7 +2728,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-code-mode-protocol",
   "codex-http-client",
-@@ -2714,7 +2714,7 @@ dependencies = [
+@@ -2751,7 +2751,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-host"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -2743,7 +2743,7 @@ dependencies = [
+@@ -2780,7 +2780,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-protocol"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "glob",
-@@ -2761,7 +2761,7 @@ dependencies = [
+@@ -2798,7 +2798,7 @@ dependencies = [
  
  [[package]]
  name = "codex-code-mode-runtime"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-code-mode-protocol",
-@@ -2779,11 +2779,11 @@ dependencies = [
+@@ -2816,11 +2816,11 @@ dependencies = [
  
  [[package]]
  name = "codex-collaboration-mode-templates"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  
  [[package]]
  name = "codex-config"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -2833,7 +2833,7 @@ dependencies = [
+@@ -2870,7 +2870,7 @@ dependencies = [
  
  [[package]]
  name = "codex-config-schema"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -2842,7 +2842,7 @@ dependencies = [
+@@ -2879,7 +2879,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -2864,7 +2864,7 @@ dependencies = [
+@@ -2901,7 +2901,7 @@ dependencies = [
  
  [[package]]
  name = "codex-connectors-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-connectors",
   "codex-core-plugins",
-@@ -2878,7 +2878,7 @@ dependencies = [
+@@ -2915,7 +2915,7 @@ dependencies = [
  
  [[package]]
  name = "codex-context-fragments"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-string",
-@@ -2888,7 +2888,7 @@ dependencies = [
+@@ -2925,7 +2925,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3026,7 +3026,7 @@ dependencies = [
+@@ -3067,7 +3067,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-api"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-analytics",
   "codex-app-server-protocol",
-@@ -3049,7 +3049,7 @@ dependencies = [
+@@ -3090,7 +3090,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-plugin-common"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-utils-absolute-path",
   "semver",
-@@ -3060,7 +3060,7 @@ dependencies = [
+@@ -3101,7 +3101,7 @@ dependencies = [
  
  [[package]]
  name = "codex-core-plugins"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3116,7 +3116,7 @@ dependencies = [
+@@ -3158,7 +3158,7 @@ dependencies = [
  
  [[package]]
  name = "codex-diagnostics"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "libc",
   "pretty_assertions",
-@@ -3124,7 +3124,7 @@ dependencies = [
+@@ -3166,7 +3166,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
-@@ -3176,7 +3176,7 @@ dependencies = [
+@@ -3218,7 +3218,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3244,7 +3244,7 @@ dependencies = [
+@@ -3287,7 +3287,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-protocol"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-file-system",
-@@ -3260,7 +3260,7 @@ dependencies = [
+@@ -3304,7 +3304,7 @@ dependencies = [
  
  [[package]]
  name = "codex-exec-server-test-support"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-exec-server",
-@@ -3275,7 +3275,7 @@ dependencies = [
+@@ -3319,7 +3319,7 @@ dependencies = [
  
  [[package]]
  name = "codex-execpolicy"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3293,7 +3293,7 @@ dependencies = [
+@@ -3337,7 +3337,7 @@ dependencies = [
  
  [[package]]
  name = "codex-experimental-api-macros"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "proc-macro2",
   "quote",
-@@ -3302,7 +3302,7 @@ dependencies = [
+@@ -3346,7 +3346,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-api"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-api",
   "codex-config",
-@@ -3324,7 +3324,7 @@ dependencies = [
+@@ -3368,7 +3368,7 @@ dependencies = [
  
  [[package]]
  name = "codex-extension-items"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-utils-absolute-path",
   "pretty_assertions",
-@@ -3336,7 +3336,7 @@ dependencies = [
+@@ -3380,7 +3380,7 @@ dependencies = [
  
  [[package]]
  name = "codex-external-agent-migration"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "chrono",
   "codex-analytics",
-@@ -3366,7 +3366,7 @@ dependencies = [
+@@ -3410,7 +3410,7 @@ dependencies = [
  
  [[package]]
  name = "codex-features"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-network-proxy",
   "codex-protocol",
-@@ -3379,7 +3379,7 @@ dependencies = [
+@@ -3424,7 +3424,7 @@ dependencies = [
  
  [[package]]
  name = "codex-feedback"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "bytes",
-@@ -3404,7 +3404,7 @@ dependencies = [
+@@ -3451,7 +3451,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-search"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -3420,7 +3420,7 @@ dependencies = [
+@@ -3467,7 +3467,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-system"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "bytes",
   "codex-protocol",
-@@ -3432,7 +3432,7 @@ dependencies = [
+@@ -3479,7 +3479,7 @@ dependencies = [
  
  [[package]]
  name = "codex-file-watcher"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "notify",
   "pretty_assertions",
-@@ -3443,7 +3443,7 @@ dependencies = [
+@@ -3490,7 +3490,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-attribution"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-backend-client",
   "codex-extension-api",
-@@ -3456,7 +3456,7 @@ dependencies = [
+@@ -3503,7 +3503,7 @@ dependencies = [
  
  [[package]]
  name = "codex-git-utils"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3483,7 +3483,7 @@ dependencies = [
+@@ -3531,7 +3531,7 @@ dependencies = [
  
  [[package]]
  name = "codex-goal-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3508,7 +3508,7 @@ dependencies = [
+@@ -3556,7 +3556,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-context"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-context-fragments",
   "codex-history",
-@@ -3519,7 +3519,7 @@ dependencies = [
+@@ -3568,7 +3568,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-reviewer"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-analytics",
-@@ -3544,7 +3544,7 @@ dependencies = [
+@@ -3593,7 +3593,7 @@ dependencies = [
  
  [[package]]
  name = "codex-guardian-v2"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-analytics",
-@@ -3580,7 +3580,7 @@ dependencies = [
+@@ -3630,7 +3630,7 @@ dependencies = [
  
  [[package]]
  name = "codex-history"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-protocol",
-@@ -3592,7 +3592,7 @@ dependencies = [
+@@ -3642,7 +3642,7 @@ dependencies = [
  
  [[package]]
  name = "codex-history-notes-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-analytics",
   "codex-client",
-@@ -3617,7 +3617,7 @@ dependencies = [
+@@ -3667,7 +3667,7 @@ dependencies = [
  
  [[package]]
  name = "codex-home"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-extension-api",
   "codex-utils-absolute-path",
-@@ -3629,7 +3629,7 @@ dependencies = [
+@@ -3679,7 +3679,7 @@ dependencies = [
  
  [[package]]
  name = "codex-hooks"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "async-channel",
-@@ -3657,7 +3657,7 @@ dependencies = [
+@@ -3707,7 +3707,7 @@ dependencies = [
  
  [[package]]
  name = "codex-http-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "bytes",
   "codex-utils-cargo-bin",
-@@ -3693,7 +3693,7 @@ dependencies = [
+@@ -3743,7 +3743,7 @@ dependencies = [
  
  [[package]]
  name = "codex-image-generation-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -3721,7 +3721,7 @@ dependencies = [
+@@ -3771,7 +3771,7 @@ dependencies = [
  
  [[package]]
  name = "codex-install-context"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-utils-absolute-path",
   "codex-utils-home-dir",
-@@ -3734,7 +3734,7 @@ dependencies = [
+@@ -3784,7 +3784,7 @@ dependencies = [
  
  [[package]]
  name = "codex-keyring-store"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "keyring",
   "pretty_assertions",
-@@ -3745,7 +3745,7 @@ dependencies = [
+@@ -3795,7 +3795,7 @@ dependencies = [
  
  [[package]]
  name = "codex-linux-sandbox"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "clap",
   "codex-core",
-@@ -3773,7 +3773,7 @@ dependencies = [
+@@ -3824,7 +3824,7 @@ dependencies = [
  
  [[package]]
  name = "codex-lmstudio"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-core",
   "codex-http-client",
-@@ -3787,7 +3787,7 @@ dependencies = [
+@@ -3838,7 +3838,7 @@ dependencies = [
  
  [[package]]
  name = "codex-login"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -3831,7 +3831,7 @@ dependencies = [
+@@ -3884,7 +3884,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "arc-swap",
-@@ -3871,7 +3871,7 @@ dependencies = [
+@@ -3924,7 +3924,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mcp-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -3904,7 +3904,7 @@ dependencies = [
+@@ -3957,7 +3957,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-core",
   "codex-extension-api",
-@@ -3926,7 +3926,7 @@ dependencies = [
+@@ -3979,7 +3979,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-read"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-shell-command",
-@@ -3936,7 +3936,7 @@ dependencies = [
+@@ -3989,7 +3989,7 @@ dependencies = [
  
  [[package]]
  name = "codex-memories-write"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -3973,7 +3973,7 @@ dependencies = [
+@@ -4026,7 +4026,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mermaid"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "insta",
   "pretty_assertions",
-@@ -3982,7 +3982,7 @@ dependencies = [
+@@ -4035,7 +4035,7 @@ dependencies = [
  
  [[package]]
  name = "codex-message-history"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-config",
   "memchr",
-@@ -3996,7 +3996,7 @@ dependencies = [
+@@ -4049,7 +4049,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "chrono",
-@@ -4029,7 +4029,7 @@ dependencies = [
+@@ -4083,7 +4083,7 @@ dependencies = [
  
  [[package]]
  name = "codex-model-provider-info"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-client",
   "codex-protocol",
-@@ -4047,7 +4047,7 @@ dependencies = [
+@@ -4101,7 +4101,7 @@ dependencies = [
  
  [[package]]
  name = "codex-models-manager"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "chrono",
   "codex-http-client",
-@@ -4066,7 +4066,7 @@ dependencies = [
+@@ -4120,7 +4120,7 @@ dependencies = [
  
  [[package]]
  name = "codex-mxc-sandbox"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "appcontainer_common",
-@@ -4088,7 +4088,7 @@ dependencies = [
+@@ -4142,7 +4142,7 @@ dependencies = [
  
  [[package]]
  name = "codex-network-proxy"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -4137,7 +4137,7 @@ dependencies = [
+@@ -4191,7 +4191,7 @@ dependencies = [
  
  [[package]]
  name = "codex-ollama"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "assert_matches",
   "async-stream",
-@@ -4157,7 +4157,7 @@ dependencies = [
+@@ -4211,7 +4211,7 @@ dependencies = [
  
  [[package]]
  name = "codex-otel"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "bytes",
   "chrono",
-@@ -4194,7 +4194,7 @@ dependencies = [
+@@ -4248,7 +4248,7 @@ dependencies = [
  
  [[package]]
  name = "codex-otel-trace-websocket"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -4205,7 +4205,7 @@ dependencies = [
+@@ -4259,7 +4259,7 @@ dependencies = [
  
  [[package]]
  name = "codex-plugin"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-config",
   "codex-core-plugin-common",
-@@ -4220,7 +4220,7 @@ dependencies = [
+@@ -4274,7 +4274,7 @@ dependencies = [
  
  [[package]]
  name = "codex-process-hardening"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "libc",
   "pretty_assertions",
-@@ -4228,7 +4228,7 @@ dependencies = [
+@@ -4282,7 +4282,7 @@ dependencies = [
  
  [[package]]
  name = "codex-prompts"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-collaboration-mode-templates",
-@@ -4245,7 +4245,7 @@ dependencies = [
+@@ -4299,7 +4299,7 @@ dependencies = [
  
  [[package]]
  name = "codex-protocol"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chardetng",
-@@ -4289,7 +4289,7 @@ dependencies = [
+@@ -4344,7 +4344,7 @@ dependencies = [
  
  [[package]]
  name = "codex-queue-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-core",
-@@ -4310,7 +4310,7 @@ dependencies = [
+@@ -4365,7 +4365,7 @@ dependencies = [
  
  [[package]]
  name = "codex-realtime-webrtc"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-build-info",
-@@ -4328,7 +4328,7 @@ dependencies = [
+@@ -4384,7 +4384,7 @@ dependencies = [
  
  [[package]]
  name = "codex-response-debug-context"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-api",
-@@ -4339,7 +4339,7 @@ dependencies = [
+@@ -4395,7 +4395,7 @@ dependencies = [
  
  [[package]]
  name = "codex-responses-api-proxy"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4356,7 +4356,7 @@ dependencies = [
+@@ -4412,7 +4412,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rmcp-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "axum",
-@@ -4405,7 +4405,7 @@ dependencies = [
+@@ -4463,7 +4463,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4433,7 +4433,7 @@ dependencies = [
+@@ -4494,7 +4494,7 @@ dependencies = [
  
  [[package]]
  name = "codex-rollout-trace"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-code-mode",
-@@ -4449,7 +4449,7 @@ dependencies = [
+@@ -4510,7 +4510,7 @@ dependencies = [
  
  [[package]]
  name = "codex-sandboxing"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-mxc-sandbox",
-@@ -4476,7 +4476,7 @@ dependencies = [
+@@ -4538,7 +4538,7 @@ dependencies = [
  
  [[package]]
  name = "codex-secrets"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "age",
   "anyhow",
-@@ -4497,7 +4497,7 @@ dependencies = [
+@@ -4559,7 +4559,7 @@ dependencies = [
  
  [[package]]
  name = "codex-shell-command"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -4520,7 +4520,7 @@ dependencies = [
+@@ -4582,7 +4582,7 @@ dependencies = [
  
  [[package]]
  name = "codex-shell-escalation"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4540,7 +4540,7 @@ dependencies = [
+@@ -4602,7 +4602,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-shell-command",
-@@ -4557,7 +4557,7 @@ dependencies = [
+@@ -4619,7 +4619,7 @@ dependencies = [
  
  [[package]]
  name = "codex-skills-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "assert_matches",
   "blake3",
-@@ -4594,7 +4594,7 @@ dependencies = [
+@@ -4657,7 +4657,7 @@ dependencies = [
  
  [[package]]
  name = "codex-state"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "chrono",
-@@ -4620,7 +4620,7 @@ dependencies = [
+@@ -4684,7 +4684,7 @@ dependencies = [
  
  [[package]]
  name = "codex-stdio-to-uds"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-uds",
-@@ -4632,7 +4632,7 @@ dependencies = [
+@@ -4696,7 +4696,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tcp-tunnel"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "bytes",
-@@ -4653,7 +4653,7 @@ dependencies = [
+@@ -4717,7 +4717,7 @@ dependencies = [
  
  [[package]]
  name = "codex-terminal-detection"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "tracing",
-@@ -4661,7 +4661,7 @@ dependencies = [
+@@ -4725,7 +4725,7 @@ dependencies = [
  
  [[package]]
  name = "codex-test-binary-support"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-arg0",
   "tempfile",
-@@ -4669,7 +4669,7 @@ dependencies = [
+@@ -4733,7 +4733,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-manager-sample"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "clap",
-@@ -4680,7 +4680,7 @@ dependencies = [
+@@ -4744,7 +4744,7 @@ dependencies = [
  
  [[package]]
  name = "codex-thread-store"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "chrono",
   "codex-app-server-protocol",
-@@ -4711,7 +4711,7 @@ dependencies = [
+@@ -4775,7 +4775,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tools"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "bitflags 2.13.1",
   "codex-code-mode",
-@@ -4737,7 +4737,7 @@ dependencies = [
+@@ -4801,7 +4801,7 @@ dependencies = [
  
  [[package]]
  name = "codex-tui"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "app_test_support",
-@@ -4863,7 +4863,7 @@ dependencies = [
+@@ -4927,7 +4927,7 @@ dependencies = [
  
  [[package]]
  name = "codex-uds"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "async-io",
   "libc",
-@@ -4877,7 +4877,7 @@ dependencies = [
+@@ -4941,7 +4941,7 @@ dependencies = [
  
  [[package]]
  name = "codex-user-verification"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "core-foundation 0.10.1",
-@@ -4897,7 +4897,7 @@ dependencies = [
+@@ -4961,7 +4961,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-absolute-path"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "dirs",
   "dunce",
-@@ -4911,14 +4911,14 @@ dependencies = [
+@@ -4975,14 +4975,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-approval-presets"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
  ]
@@ -1114,170 +1123,170 @@ index 19885ae..baab9c0 100644
  [[package]]
  name = "codex-utils-audio"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-protocol",
-@@ -4932,7 +4932,7 @@ dependencies = [
+@@ -4996,7 +4996,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cache"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "lru",
   "sha1 0.10.6",
-@@ -4941,7 +4941,7 @@ dependencies = [
+@@ -5005,7 +5005,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cargo-bin"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "assert_cmd",
   "runfiles",
-@@ -4950,7 +4950,7 @@ dependencies = [
+@@ -5014,7 +5014,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-cli"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "clap",
   "codex-protocol",
-@@ -4962,15 +4962,15 @@ dependencies = [
+@@ -5026,15 +5026,15 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-elapsed"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  
  [[package]]
  name = "codex-utils-fuzzy-match"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  
  [[package]]
  name = "codex-utils-git-discovery"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-git-utils",
   "codex-utils-absolute-path",
-@@ -4983,7 +4983,7 @@ dependencies = [
+@@ -5047,7 +5047,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-home-dir"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dirs",
-@@ -4993,7 +4993,7 @@ dependencies = [
+@@ -5057,7 +5057,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-image"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-cache",
-@@ -5007,7 +5007,7 @@ dependencies = [
+@@ -5071,7 +5071,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-json-to-toml"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "serde_json",
-@@ -5016,7 +5016,7 @@ dependencies = [
+@@ -5080,7 +5080,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-oss"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-core",
   "codex-lmstudio",
-@@ -5026,7 +5026,7 @@ dependencies = [
+@@ -5090,7 +5090,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-output-truncation"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-string",
-@@ -5035,7 +5035,7 @@ dependencies = [
+@@ -5100,7 +5100,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-utils-absolute-path",
   "dunce",
-@@ -5046,7 +5046,7 @@ dependencies = [
+@@ -5111,7 +5111,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-path-uri"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "base64 0.22.1",
   "codex-utils-absolute-path",
-@@ -5062,7 +5062,7 @@ dependencies = [
+@@ -5127,7 +5127,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-plugins"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-exec-server",
   "codex-exec-server-protocol",
-@@ -5076,7 +5076,7 @@ dependencies = [
+@@ -5141,7 +5141,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-process"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "tokio",
-@@ -5084,7 +5084,7 @@ dependencies = [
+@@ -5149,7 +5149,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-pty"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
-  "ctor 0.6.3",
-@@ -5102,7 +5102,7 @@ dependencies = [
+  "codex-utils-cargo-bin",
+@@ -5168,7 +5168,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-readiness"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "assert_matches",
   "thiserror 2.0.18",
-@@ -5112,7 +5112,7 @@ dependencies = [
+@@ -5178,7 +5178,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-redacted-string"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "schemars 0.8.22",
   "serde",
-@@ -5120,14 +5120,14 @@ dependencies = [
+@@ -5186,14 +5186,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-rustls-provider"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "rustls",
  ]
@@ -1285,25 +1294,25 @@ index 19885ae..baab9c0 100644
  [[package]]
  name = "codex-utils-sandbox-summary"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-protocol",
   "codex-utils-absolute-path",
-@@ -5137,7 +5137,7 @@ dependencies = [
+@@ -5203,7 +5203,7 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-sleep-inhibitor"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "core-foundation 0.9.4",
   "libc",
-@@ -5147,14 +5147,14 @@ dependencies = [
+@@ -5213,14 +5213,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-stream-parser"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1311,16 +1320,16 @@ index 19885ae..baab9c0 100644
  [[package]]
  name = "codex-utils-string"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "regex-lite",
-@@ -5164,14 +5164,14 @@ dependencies = [
+@@ -5230,14 +5230,14 @@ dependencies = [
  
  [[package]]
  name = "codex-utils-template"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
  ]
@@ -1328,93 +1337,101 @@ index 19885ae..baab9c0 100644
  [[package]]
  name = "codex-v8-poc"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "pretty_assertions",
   "v8",
-@@ -5179,7 +5179,7 @@ dependencies = [
+@@ -5245,7 +5245,7 @@ dependencies = [
  
  [[package]]
  name = "codex-voice-host"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-install-context",
-@@ -5206,7 +5206,7 @@ dependencies = [
+@@ -5272,7 +5272,7 @@ dependencies = [
  
  [[package]]
  name = "codex-web-search-extension"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-api",
   "codex-core",
-@@ -5228,7 +5228,7 @@ dependencies = [
+@@ -5294,7 +5294,7 @@ dependencies = [
  
  [[package]]
  name = "codex-websocket-auth"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -5247,7 +5247,7 @@ dependencies = [
+@@ -5313,7 +5313,7 @@ dependencies = [
  
  [[package]]
  name = "codex-websocket-client"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-http-client",
   "codex-utils-rustls-provider",
-@@ -5263,7 +5263,7 @@ dependencies = [
+@@ -5329,7 +5329,7 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "base64 0.22.1",
-@@ -5291,7 +5291,7 @@ dependencies = [
+@@ -5359,7 +5359,7 @@ dependencies = [
  
  [[package]]
  name = "codex-windows-sandbox-service"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-cloud-config",
-@@ -5308,7 +5308,7 @@ dependencies = [
+@@ -5376,14 +5376,14 @@ dependencies = [
+ 
+ [[package]]
+ name = "codex-windows-sandbox-test-support"
+-version = "0.0.0"
++version = "0.162.0"
+ dependencies = [
+  "dirs",
+ ]
  
  [[package]]
  name = "codex-workload-identity"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "codex-http-client",
   "pretty_assertions",
-@@ -5323,7 +5323,7 @@ dependencies = [
+@@ -5398,7 +5398,7 @@ dependencies = [
  
  [[package]]
  name = "codex-worktree"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "codex-git-utils",
-@@ -5563,7 +5563,7 @@ dependencies = [
+@@ -5639,7 +5639,7 @@ dependencies = [
  
  [[package]]
  name = "core_test_support"
 -version = "0.0.0"
-+version = "0.160.0"
++version = "0.162.0"
  dependencies = [
   "anyhow",
   "assert_cmd",
 diff --git a/codex-rs/tui/src/app/agent_message_consolidation.rs b/codex-rs/tui/src/app/agent_message_consolidation.rs
-index 4b81201..200dc8d 100644
+index bf1627c..bd79059 100644
 --- a/codex-rs/tui/src/app/agent_message_consolidation.rs
 +++ b/codex-rs/tui/src/app/agent_message_consolidation.rs
 @@ -2,8 +2,9 @@
@@ -1429,7 +1446,7 @@ index 4b81201..200dc8d 100644
  //! transcript the canonical owner of the raw markdown source used for future
  //! resize re-renders. The retained view preserves its displayed revision before that
  //! replacement, then repaints without replaying terminal scrollback.
-@@ -46,15 +47,30 @@ impl App {
+@@ -42,21 +43,42 @@ impl App {
              self.transcript_cells.push(cell);
          }
  
@@ -1440,7 +1457,7 @@ index 4b81201..200dc8d 100644
          let end = self.transcript_cells.len();
          tracing::debug!(
              "ConsolidateAgentMessage: transcript_cells.len()={end}, source_len={}",
-             source.len()
+             source.copy_source().map_or(/*default*/ 0, str::len)
          );
 -        let start = trailing_run_start::<history_cell::AgentMessageCell>(&self.transcript_cells);
 +        let start = self
@@ -1463,10 +1480,7 @@ index 4b81201..200dc8d 100644
              tracing::debug!(
                  "ConsolidateAgentMessage: replacing cells [{start}..{end}] with AgentMarkdownCell"
              );
-@@ -65,8 +81,14 @@ impl App {
-                     inline_visualization_context,
-                 ),
-             );
+             let consolidated: Arc<dyn HistoryCell> = Arc::new(source);
 -            self.native_history
 -                .consolidate(&self.transcript_cells[start..end], &consolidated);
 +            self.native_history.consolidate(
@@ -1480,7 +1494,7 @@ index 4b81201..200dc8d 100644
              if tui.is_owned_screen() {
                  self.transcript_view.replace_group(
                      &self.transcript_cells,
-@@ -80,15 +102,30 @@ impl App {
+@@ -70,15 +92,30 @@ impl App {
                      &consolidated,
                  );
              }
@@ -1516,61 +1530,58 @@ index 4b81201..200dc8d 100644
              tracing::debug!(
                  "ConsolidateAgentMessage: no cells to consolidate(start={start}, end={end})",
 diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
-index 4de9db0..dff218a 100644
+index 4a94611..7f09312 100644
 --- a/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
 +++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__daemon_menu__tests__daemon_cli_confirmation.snap
-@@ -1,9 +1,10 @@
- ---
- source: tui/src/app/daemon_menu_tests.rs
-+assertion_line: 125
- expression: "render_bottom_popup(&app.chat_widget,\nwidth).replace(r\"C:\\cli-build\\bin\\codex\", \"/x/cli-build/bin/codex\")"
- ---
-   Update daemon and exit Codex?
--  Use this CLI package v0.0.0 from /x/cli-build/bin/codex. Copy the complete package and pin it
-+  Use this CLI package v0.160.0 from /x/cli-build/bin/codex. Copy the complete package and pin it
-   against automatic updates.
-   This may restart the daemon and interrupt active or queued work.
-   Codex exits to update in this terminal. Relaunch it afterward.
+@@ -11,7 +11,7 @@ expression: "render_bottom_popup(&app.chat_widget,\nwidth).replace(r\"C:\\cli-bu
+                                                           │
+ 
+                 Update daemon and exit Codex?
+-                Use this CLI package v0.0.0 from /x/cli-build/bin/codex. Copy the
++                Use this CLI package v0.162.0 from /x/cli-build/bin/codex. Copy the
+                 complete package and pin it against automatic updates.
+                 This may restart the daemon and interrupt active or queued work.
+                 Codex exits to update in this terminal. Relaunch it afterward.
 diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
-index 1261499..9d97453 100644
+index 789d6e4..6fe2d30 100644
 --- a/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
 +++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__owned_transcript__empty_state_animation_tests__fresh_thread_header.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/app/empty_state_animation_tests.rs
-+assertion_line: 217
++assertion_line: 208
  expression: "format!(\"enabled:\\n{}\\n---\\ndisabled:\\n{}\", text(after), text(&before))"
  ---
  enabled:
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
-   Pull up a prompt.
+ 
 @@ -50,7 +51,7 @@ enabled:
  ---
  disabled:
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
-   Pull up a prompt.
+ 
 diff --git a/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap b/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
-index 8aa1bca..ec3b53a 100644
+index 8aa1bca..73cb823 100644
 --- a/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
 +++ b/codex-rs/tui/src/app/snapshots/codex_tui__app__tests__app_server_thread_replacement_clears_previous_transcript_before_replay-2.snap
 @@ -1,10 +1,10 @@
  ---
  source: tui/src/app/tests.rs
 -assertion_line: 6513
-+assertion_line: 6509
++assertion_line: 6696
  expression: rendered
  ---
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       <thread cwd>
  
  
@@ -1588,7 +1599,7 @@ index 335071a..b37853d 100644
  
    gpt-test default · /tmp/project
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
-index 9ccef21..43b278a 100644
+index a8997b3..17da348 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__navigation_reconnect__daemon_command_center_vanished_rename.snap
 @@ -1,5 +1,6 @@
@@ -1605,84 +1616,107 @@ index 9ccef21..43b278a 100644
 -  Service v2.0.0 ≠ Codex CLI v0.0.0 · /daemon
 +  ? help  esc back  ↑/↓ move  enter open  n new
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
-index ab3a8c8..97b769f 100644
+index ab3a8c8..8e86302 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_buffered_replay_reconciles_captions.snap
-@@ -4,7 +4,7 @@ assertion_line: 889
+@@ -1,10 +1,10 @@
+ ---
+ source: tui/src/app/tests/realtime_requests.rs
+-assertion_line: 889
++assertion_line: 891
  expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
  ---
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
    To get started, describe a task or try one of these commands:
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
-index 2ecde20..e5aa0f0 100644
+index 2ecde20..8997ee4 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_completed_after_thread_switch.snap
-@@ -4,7 +4,7 @@ assertion_line: 1093
+@@ -1,10 +1,10 @@
+ ---
+ source: tui/src/app/tests/realtime_requests.rs
+-assertion_line: 1093
++assertion_line: 1096
  expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
  ---
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
    To get started, describe a task or try one of these commands:
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
-index 5c3a9d2..618ab2c 100644
+index 95d7bc6..3e98c54 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_partial_completed_after_thread_switch.snap
-@@ -15,7 +15,7 @@ Restored owner:
+@@ -1,5 +1,6 @@
+ ---
+ source: tui/src/app/tests/realtime_requests.rs
++assertion_line: 480
+ expression: "normalize_voice_snapshot_directory(&format!(\"Other task:\\n{other_ui}\\nRestored owner:\\n{}\\n{rendered}\",\nrender_bottom_popup(&app.chat_widget, 80)), &app.config.cwd,)"
+ ---
+ Other task:
+@@ -14,7 +15,7 @@ Restored owner:
  
    gpt-test default · /tmp/project
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
    To get started, describe a task or try one of these commands:
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
-index 0dfd733..2451b92 100644
+index 0dfd733..d6bf9d9 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__realtime_requests__voice_replay_reconciles_matching_captions.snap
-@@ -4,7 +4,7 @@ assertion_line: 716
+@@ -1,10 +1,10 @@
+ ---
+ source: tui/src/app/tests/realtime_requests.rs
+-assertion_line: 716
++assertion_line: 718
  expression: "normalize_voice_snapshot_directory(&rendered, &app.config.cwd)"
  ---
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
    To get started, describe a task or try one of these commands:
 diff --git a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
-index 8ed7c18..17c666d 100644
+index d45000e..0d11e95 100644
 --- a/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
 +++ b/codex-rs/tui/src/app/tests/snapshots/codex_tui__app__tests__startup_frame_tests__startup_tip_in_transcript.snap
-@@ -5,7 +5,7 @@ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/app/tests/startup_frame_tests.rs
++assertion_line: 64
+ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.join(\"\\n\\n\")))"
  ---
  80 columns
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
-   Pull up a prompt.
-@@ -27,7 +27,7 @@ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.
+ • Conversation continues here.
+@@ -26,7 +27,7 @@ expression: "normalize_snapshot_paths(normalize_agent_center_snapshot(snapshots.
  
  32 columns
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
-   Pull up a prompt.
+ • Conversation continues here.
 diff --git a/codex-rs/tui/src/app/tests/stream_animation_tests.rs b/codex-rs/tui/src/app/tests/stream_animation_tests.rs
-index e8dbb09..03d89d2 100644
+index e8dbb09..b31b2d9 100644
 --- a/codex-rs/tui/src/app/tests/stream_animation_tests.rs
 +++ b/codex-rs/tui/src/app/tests/stream_animation_tests.rs
-@@ -49,3 +49,85 @@ async fn stream_animation_preserves_pacing_and_discards_stopped_ticks() -> Resul
+@@ -49,3 +49,87 @@ async fn stream_animation_preserves_pacing_and_discards_stopped_ticks() -> Resul
      time::resume();
      Ok(())
  }
@@ -1716,12 +1750,14 @@ index e8dbb09..03d89d2 100644
 +            app.transcript_cells.clone(),
 +            crate::keymap::RuntimeKeymap::defaults().pager,
 +            /*copy_on_select*/ false,
++            /*mouse_scroll_speed*/ 1.0,
 +        ));
 +        app.handle_consolidate_agent_message(
 +            &mut tui,
-+            format!("{prefix}\n\nDONE"),
-+            PathBuf::from("/tmp"),
-+            /*inline_visualization_context*/ None,
++            history_cell::AgentMarkdownCell::new(
++                format!("{prefix}\n\nDONE"),
++                &PathBuf::from("/tmp"),
++            ),
 +            crate::app_event::ConsolidationScrollbackReflow::IfResizeReflowRan,
 +            /*deferred_history_cell*/ None,
 +        )?;
@@ -1769,10 +1805,10 @@ index e8dbb09..03d89d2 100644
 +    Ok(())
 +}
 diff --git a/codex-rs/tui/src/bottom_pane/chat_composer.rs b/codex-rs/tui/src/bottom_pane/chat_composer.rs
-index 7272255..55edd40 100644
+index c919e31..dc36f99 100644
 --- a/codex-rs/tui/src/bottom_pane/chat_composer.rs
 +++ b/codex-rs/tui/src/bottom_pane/chat_composer.rs
-@@ -599,6 +599,8 @@ impl ChatComposerConfig {
+@@ -594,6 +594,8 @@ impl ChatComposerConfig {
  }
  
  pub(crate) struct ChatComposer {
@@ -1781,7 +1817,7 @@ index 7272255..55edd40 100644
      draft: DraftState,
      popups: PopupState,
      app_event_tx: AppEventSender,
-@@ -733,6 +735,7 @@ impl ChatComposer {
+@@ -728,6 +730,7 @@ impl ChatComposer {
              draft: DraftState::new(),
              popups: PopupState::default(),
              app_event_tx,
@@ -1789,7 +1825,7 @@ index 7272255..55edd40 100644
              history: ChatComposerHistory::new(),
              agents_navigation_enabled: false,
              footer: FooterState {
-@@ -4922,8 +4925,22 @@ impl ChatComposer {
+@@ -4800,8 +4803,22 @@ impl ChatComposer {
          if let Some((warning_area, line)) = warning_notice {
              line.render(warning_area, buf);
          }
@@ -1811,9 +1847,9 @@ index 7272255..55edd40 100644
 +                );
 +        }
          if !remote_images_rect.is_empty() {
-             Paragraph::new(self.attachments.remote_image_lines())
-                 .style(style)
-@@ -4945,6 +4962,8 @@ impl ChatComposer {
+             let first = self
+                 .attachments
+@@ -4834,6 +4851,8 @@ impl ChatComposer {
                          .map(EffortIgnition::charge_alpha)
                          .unwrap_or(1.0);
                      tier.prompt(charge)
@@ -1822,7 +1858,7 @@ index 7272255..55edd40 100644
                  } else {
                      "›".bold()
                  }
-@@ -5005,7 +5024,11 @@ impl ChatComposer {
+@@ -4897,7 +4916,11 @@ impl ChatComposer {
                      .to_string()
              };
              if !textarea_rect.is_empty() {
@@ -1835,7 +1871,7 @@ index 7272255..55edd40 100644
                  Line::from(vec![placeholder]).render(textarea_rect.inner(Margin::new(0, 0)), buf);
              }
          }
-@@ -5115,6 +5138,60 @@ mod tests {
+@@ -5031,6 +5054,60 @@ mod tests {
          );
      }
  
@@ -1897,7 +1933,7 @@ index 7272255..55edd40 100644
      fn light_terminal_palette_renders_light_composer_snapshot() {
          let colors = crate::terminal_probe::DefaultColors {
 diff --git a/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs b/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
-index b79c28b..15ebc24 100644
+index 949edcf..8d86eaf 100644
 --- a/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
 +++ b/codex-rs/tui/src/bottom_pane/chat_composer/composer_layout.rs
 @@ -101,6 +101,11 @@ impl ChatComposer {
@@ -1993,10 +2029,10 @@ index aaae8c2..cb946d0 100644
  fn effort_composer_baseline_repeat_and_lowering_do_not_replay() {
      let (mut composer, _rx) = new_test_composer();
 diff --git a/codex-rs/tui/src/bottom_pane/mod.rs b/codex-rs/tui/src/bottom_pane/mod.rs
-index 912880e..545af95 100644
+index c0e3902..90098d4 100644
 --- a/codex-rs/tui/src/bottom_pane/mod.rs
 +++ b/codex-rs/tui/src/bottom_pane/mod.rs
-@@ -627,6 +627,15 @@ impl BottomPane {
+@@ -639,6 +639,15 @@ impl BottomPane {
          self.request_redraw();
      }
  
@@ -2097,10 +2133,10 @@ index 0000000..1e0336c
 +    ]
 +}
 diff --git a/codex-rs/tui/src/bottom_pane/status_line_style.rs b/codex-rs/tui/src/bottom_pane/status_line_style.rs
-index 8c44ce4..5715a01 100644
+index 2fd4b2c..e7efa47 100644
 --- a/codex-rs/tui/src/bottom_pane/status_line_style.rs
 +++ b/codex-rs/tui/src/bottom_pane/status_line_style.rs
-@@ -96,9 +96,16 @@ pub(crate) fn status_line_from_segments<I>(
+@@ -98,9 +98,16 @@ pub(crate) fn status_line_from_segments<I>(
  where
      I: IntoIterator<Item = (StatusLineItem, String)>,
  {
@@ -2120,7 +2156,7 @@ index 8c44ce4..5715a01 100644
  }
  
  fn status_line_from_segments_with_resolver<I, F>(
-@@ -334,6 +341,44 @@ mod tests {
+@@ -336,6 +343,44 @@ mod tests {
          assert_eq!(line.spans[0].style, secondary_text_style().underlined());
      }
  
@@ -2166,10 +2202,10 @@ index 8c44ce4..5715a01 100644
      fn status_line_segments_return_none_when_empty() {
          assert_eq!(
 diff --git a/codex-rs/tui/src/chatwidget/rendering.rs b/codex-rs/tui/src/chatwidget/rendering.rs
-index 36c8733..839cdc0 100644
+index adfe1ce..5f45d03 100644
 --- a/codex-rs/tui/src/chatwidget/rendering.rs
 +++ b/codex-rs/tui/src/chatwidget/rendering.rs
-@@ -166,7 +166,11 @@ impl ChatWidget {
+@@ -182,7 +182,11 @@ impl ChatWidget {
              })),
              None => RenderableItem::Owned(Box::new(())),
          };
@@ -2183,10 +2219,10 @@ index 36c8733..839cdc0 100644
          for cell in self
              .realtime_conversation
 diff --git a/codex-rs/tui/src/chatwidget/rendering_tests.rs b/codex-rs/tui/src/chatwidget/rendering_tests.rs
-index 624d587..67f0430 100644
+index 6a95ec4..d372d8c 100644
 --- a/codex-rs/tui/src/chatwidget/rendering_tests.rs
 +++ b/codex-rs/tui/src/chatwidget/rendering_tests.rs
-@@ -565,3 +565,94 @@ async fn external_writer_notice_offers_command_center_on_shared_servers() {
+@@ -563,3 +563,94 @@ async fn external_writer_notice_offers_command_center_on_shared_servers() {
          }
      }
  }
@@ -2418,7 +2454,7 @@ index 6008151..ade0979 100644
              screen_size_override: None,
          }
 diff --git a/codex-rs/tui/src/history_cell/messages.rs b/codex-rs/tui/src/history_cell/messages.rs
-index f80f311..f89abd3 100644
+index 1cd4a35..29689bd 100644
 --- a/codex-rs/tui/src/history_cell/messages.rs
 +++ b/codex-rs/tui/src/history_cell/messages.rs
 @@ -4,7 +4,6 @@
@@ -2487,7 +2523,7 @@ index f80f311..f89abd3 100644
              } else {
                  "  ".into()
              };
-@@ -555,6 +560,11 @@ impl AgentMarkdownCell {
+@@ -562,6 +567,11 @@ impl AgentMarkdownCell {
  
  fn normalize_whitespace_only_hyperlink_lines(mut lines: Vec<HyperlinkLine>) -> Vec<HyperlinkLine> {
      for line in &mut lines {
@@ -2499,7 +2535,7 @@ index f80f311..f89abd3 100644
          if line
              .line
              .spans
-@@ -584,7 +594,7 @@ impl AgentMarkdownCell {
+@@ -591,7 +601,7 @@ impl AgentMarkdownCell {
              else {
                  return prefix_hyperlink_lines(
                      vec![HyperlinkLine::new(Line::default())],
@@ -2508,7 +2544,7 @@ index f80f311..f89abd3 100644
                      "  ".into(),
                  );
              };
-@@ -607,7 +617,7 @@ impl AgentMarkdownCell {
+@@ -614,7 +624,7 @@ impl AgentMarkdownCell {
              };
              normalize_whitespace_only_hyperlink_lines(prefix_hyperlink_lines(
                  lines,
@@ -2517,7 +2553,7 @@ index f80f311..f89abd3 100644
                  "  ".into(),
              ))
          };
-@@ -688,7 +698,7 @@ impl HistoryCell for StreamingAgentTailCell {
+@@ -699,7 +709,7 @@ impl HistoryCell for StreamingAgentTailCell {
          normalize_whitespace_only_hyperlink_lines(prefix_hyperlink_lines(
              self.lines.clone(),
              if self.is_first_line {
@@ -2635,7 +2671,7 @@ index 50d5d01..cbe783a 100644
 +    );
 +}
 diff --git a/codex-rs/tui/src/history_cell/mod.rs b/codex-rs/tui/src/history_cell/mod.rs
-index bbb0598..a016421 100644
+index ac39aef..40e7625 100644
 --- a/codex-rs/tui/src/history_cell/mod.rs
 +++ b/codex-rs/tui/src/history_cell/mod.rs
 @@ -32,6 +32,7 @@ use crate::render::line_utils::push_owned_lines;
@@ -2647,10 +2683,10 @@ index bbb0598..a016421 100644
  use crate::terminal_hyperlinks::HyperlinkParagraph;
  use crate::terminal_hyperlinks::plain_hyperlink_lines;
 diff --git a/codex-rs/tui/src/history_cell/session.rs b/codex-rs/tui/src/history_cell/session.rs
-index 11cce0e..6b2270b 100644
+index 48295d4..1026973 100644
 --- a/codex-rs/tui/src/history_cell/session.rs
 +++ b/codex-rs/tui/src/history_cell/session.rs
-@@ -49,7 +49,12 @@ pub(crate) fn codex_title(version: &str) -> Vec<Span<'static>> {
+@@ -45,7 +45,12 @@ pub(crate) fn codex_title(version: &str) -> Vec<Span<'static>> {
      vec![
          ">_ ".fg(accent_color()),
          "OpenAI Codex".bold(),
@@ -2860,82 +2896,70 @@ index 0000000..d3a25f5
 +    ]
 +}
 diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
-index a9dd9ca..9f7c02d 100644
+index a9dd9ca..5cd62d9 100644
 --- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
 +++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__pnpm_update_available_history_cell_snapshot.snap
 @@ -1,9 +1,10 @@
  ---
  source: tui/src/history_cell/tests.rs
-+assertion_line: 1394
++assertion_line: 1397
  expression: rendered
  ---
  ╭─────────────────────────────────────────────────╮
 -│ ✨ Update available! 0.0.0 -> 9.9.9             │
-+│ ✨ Update available! 0.160.0 -> 9.9.9           │
++│ ✨ Update available! 0.162.0 -> 9.9.9           │
  │ Run pnpm add -g @openai/codex to update.        │
  │                                                 │
  │ See full release notes:                         │
 diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
-index e5cc9a0..de1a1a6 100644
+index e5cc9a0..40efd4c 100644
 --- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
 +++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__session_info_availability_nux_tooltip_snapshot.snap
-@@ -4,7 +4,7 @@ assertion_line: 778
+@@ -1,10 +1,10 @@
+ ---
+ source: tui/src/history_cell/tests.rs
+-assertion_line: 778
++assertion_line: 776
  expression: rendered
  ---
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
       /tmp/project
  
    Tip: Model just became available
 diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
-index c8f352d..a5a689d 100644
+index c8f352d..666c65c 100644
 --- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
 +++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_unix_update_available_history_cell_snapshot.snap
 @@ -1,9 +1,10 @@
  ---
  source: tui/src/history_cell/tests.rs
-+assertion_line: 1376
++assertion_line: 1379
  expression: rendered
  ---
  ╭─────────────────────────────────────────────────────────────────────────────────────────────────────╮
 -│ ✨ Update available! 0.0.0 -> 9.9.9                                                                 │
-+│ ✨ Update available! 0.160.0 -> 9.9.9                                                               │
++│ ✨ Update available! 0.162.0 -> 9.9.9                                                               │
  │ Run sh -c 'curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh' to update. │
  │                                                                                                     │
  │ See full release notes:                                                                             │
 diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
-index fb15a05..8161eaf 100644
+index fb15a05..8ec612c 100644
 --- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
 +++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__standalone_windows_update_available_history_cell_snapshot.snap
 @@ -1,9 +1,10 @@
  ---
  source: tui/src/history_cell/tests.rs
-+assertion_line: 1385
++assertion_line: 1388
  expression: rendered
  ---
  ╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 -│ ✨ Update available! 0.0.0 -> 9.9.9                                                                        │
-+│ ✨ Update available! 0.160.0 -> 9.9.9                                                                      │
++│ ✨ Update available! 0.162.0 -> 9.9.9                                                                      │
  │ Run powershell -ExecutionPolicy Bypass -c '$env:CODEX_NON_INTERACTIVE=1; irm                               │
  │ https://chatgpt.com/codex/install.ps1 | iex' to update.                                                    │
  │                                                                                                            │
-diff --git a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
-index 1a2df82..aee7caa 100644
---- a/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
-+++ b/codex-rs/tui/src/history_cell/snapshots/codex_tui__history_cell__tests__vite_plus_update_available_history_cell_snapshot.snap
-@@ -1,9 +1,10 @@
- ---
- source: tui/src/history_cell/tests.rs
-+assertion_line: 1405
- expression: rendered
- ---
- ╭─────────────────────────────────────────────────╮
--│ ✨ Update available! 0.0.0 -> 9.9.9             │
-+│ ✨ Update available! 0.160.0 -> 9.9.9           │
- │ Run vp install -g @openai/codex to update.      │
- │                                                 │
- │ See full release notes:                         │
 diff --git a/codex-rs/tui/src/insert_history.rs b/codex-rs/tui/src/insert_history.rs
 index d07d6cb..64235bd 100644
 --- a/codex-rs/tui/src/insert_history.rs
@@ -3053,10 +3077,10 @@ index d07d6cb..64235bd 100644
      fn vt100_blockquote_line_emits_green_fg() {
          // Set up a small off-screen terminal
 diff --git a/codex-rs/tui/src/lib.rs b/codex-rs/tui/src/lib.rs
-index 2697cba..8a5afc1 100644
+index dc0fbd0..6df66d3 100644
 --- a/codex-rs/tui/src/lib.rs
 +++ b/codex-rs/tui/src/lib.rs
-@@ -1431,9 +1431,11 @@ async fn run_ratatui_app(
+@@ -1440,9 +1440,11 @@ async fn run_ratatui_app(
      // Startup pickers need the current theme before selection can reload config.
      // Leave the one-time override initialization below to use the final config.
      if (cli.resume_picker || cli.fork_picker)
@@ -3072,7 +3096,7 @@ index 2697cba..8a5afc1 100644
          crate::render::highlight::set_syntax_theme(theme);
      }
 diff --git a/codex-rs/tui/src/markdown_render.rs b/codex-rs/tui/src/markdown_render.rs
-index c5033f8..cf1821a 100644
+index 8d65d0a..1a6e4f4 100644
 --- a/codex-rs/tui/src/markdown_render.rs
 +++ b/codex-rs/tui/src/markdown_render.rs
 @@ -66,6 +66,7 @@ use pulldown_cmark::Parser;
@@ -3145,7 +3169,7 @@ index c5033f8..cf1821a 100644
          }
      }
  }
-@@ -790,7 +811,11 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+@@ -820,7 +841,11 @@ impl<'a, 'policy> Writer<'a, 'policy> {
              self.needs_newline = false;
          }
          self.indent_stack.push(IndentContext::new(
@@ -3158,7 +3182,7 @@ index c5033f8..cf1821a 100644
              /*marker*/ None,
              /*is_list*/ false,
          ));
-@@ -2304,6 +2329,13 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+@@ -2340,6 +2365,13 @@ impl<'a, 'policy> Writer<'a, 'policy> {
                          hyperlink.columns.start + shift..hyperlink.columns.end + shift;
                  }
                  line.line = Line::from_iter(spans);
@@ -3172,7 +3196,7 @@ index c5033f8..cf1821a 100644
                  self.push_output_line(line.style(style));
              }
              self.current_initial_indent.clear();
-@@ -2364,9 +2396,18 @@ impl<'a, 'policy> Writer<'a, 'policy> {
+@@ -2402,9 +2434,18 @@ impl<'a, 'policy> Writer<'a, 'policy> {
          let blockquote_active = self.is_blockquote_active();
          let style = if blockquote_active {
              self.styles.blockquote
@@ -3286,7 +3310,7 @@ index 370da28..801fc2b 100644
              .zip(self.children.iter())
              .find_map(|(rect, child)| {
 diff --git a/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap b/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
-index 957e753..8b52d57 100644
+index 6065eb8..1e14288 100644
 --- a/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
 +++ b/codex-rs/tui/src/snapshots/codex_tui__startup_draft__layout__tests__owned_startup_layout.snap
 @@ -1,10 +1,11 @@
@@ -3301,9 +3325,9 @@ index 957e753..8b52d57 100644
 +  >_ OpenAI Codex (v<VERSION>)                    
       loading                                    
                                                  
-   Pull up a prompt.                             
+                                                 
 diff --git a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
-index 53c8053..6414077 100644
+index 53c8053..1ad372f 100644
 --- a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
 +++ b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_picker_selected_28x12.snap
 @@ -1,10 +1,11 @@
@@ -3316,12 +3340,12 @@ index 53c8053..6414077 100644
 -  Update available · 0.0.0
 -  → 9.9.9
 +  Update available ·
-+  0.160.0 → 9.9.9
++  0.162.0 → 9.9.9
    Release notes:
    https://github.com/opena
    i/codex/releases/latest
 diff --git a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
-index b547642..c935025 100644
+index b547642..15993cd 100644
 --- a/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
 +++ b/codex-rs/tui/src/snapshots/codex_tui__update_prompt__tests__update_prompt_modal.snap
 @@ -1,9 +1,10 @@
@@ -3332,15 +3356,15 @@ index b547642..c935025 100644
  ---
  
 -  Update available · 0.0.0 → 9.9.9
-+  Update available · 0.160.0 → 9.9.9
++  Update available · 0.162.0 → 9.9.9
    Release notes: https://github.com/openai/codex/releases/latest
  
  › 1. Update now (runs `npm install -g @openai/codex`)                           
 diff --git a/codex-rs/tui/src/startup_orchestration.rs b/codex-rs/tui/src/startup_orchestration.rs
-index a0ff9cb..e98e964 100644
+index 87c1c42..249f9ba 100644
 --- a/codex-rs/tui/src/startup_orchestration.rs
 +++ b/codex-rs/tui/src/startup_orchestration.rs
-@@ -494,7 +494,10 @@ pub(super) async fn run_main_inner(
+@@ -509,7 +509,10 @@ pub(super) async fn run_main_inner(
      let auto_start_daemon = config.features.enabled(Feature::DaemonAutoStart)
          && !cli.agents_overview
          && !cli.no_daemon
@@ -3352,7 +3376,7 @@ index a0ff9cb..e98e964 100644
      if auto_start_daemon
          && daemon_exclusion.is_none()
          && should_show_bedrock_setup_wizard(
-@@ -922,3 +925,40 @@ pub(super) async fn run_main_inner(
+@@ -948,3 +951,40 @@ pub(super) async fn run_main_inner(
  
      app_result
  }
@@ -3394,7 +3418,7 @@ index a0ff9cb..e98e964 100644
 +    }
 +}
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
-index a00c3ae..018a751 100644
+index a00c3ae..216bfb2 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_not_required.snap
 @@ -1,10 +1,11 @@
@@ -3406,12 +3430,12 @@ index a00c3ae..018a751 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
    Model:           gpt-5.6-sol (reasoning none, summaries auto)
    Model provider:  server-ollama
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
-index 6c856d5..3747704 100644
+index f7be0da..6eb7c8a 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_server_auth_required.snap
 @@ -1,10 +1,11 @@
@@ -3423,97 +3447,97 @@ index 6c856d5..3747704 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
-index 4f55f6a..e7eef75 100644
+index 0f7605b..bfae956 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_cached_limits_hide_credits_without_flag.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 2247
++assertion_line: 2258
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
-index 9d8fba7..fb4c70d 100644
+index 6783811..0e14568 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_credits_and_limits.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1981
++assertion_line: 1992
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
-index be84d82..27de908 100644
+index 92686ae..29ef478 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_enterprise_monthly_credit_limit.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1130
++assertion_line: 1137
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
-index a321135..b80234a 100644
+index 9e2dde9..23cc769 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_forked_from.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 998
++assertion_line: 1005
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
-index f2cc2fb..ea86c54 100644
+index bdf79ab..04f9714 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_monthly_limit.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1064
++assertion_line: 1071
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
-index 06866b5..4643a83 100644
+index db8ba4c..34c684b 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_includes_reasoning_details.snap
 @@ -1,10 +1,11 @@
@@ -3525,42 +3549,46 @@ index 06866b5..4643a83 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
-index 6cc0ff0..9190c80 100644
+index c20a532..523fa45 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_local_background_server.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1754
++assertion_line: 1762
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
-index 8478305..97220d9 100644
+index 57c0482..b5b690c 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_remote_server.snap
-@@ -4,7 +4,7 @@ expression: sanitized
+@@ -1,10 +1,11 @@
+ ---
+ source: tui/src/status/tests.rs
++assertion_line: 1762
+ expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
-index 01134f2..53e2aea 100644
+index e21309d..fe1c6f4 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_active_user_defined_profile.snap
 @@ -1,10 +1,11 @@
@@ -3572,29 +3600,29 @@ index 01134f2..53e2aea 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
-index 7173c99..59e767d 100644
+index a5c7c21..ce3fc36 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_auto_review_permissions.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 898
++assertion_line: 905
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
-index e3b9bae..83dfeef 100644
+index 51b58ec..6b99e9a 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_chatgpt_plan_without_email.snap
 @@ -1,10 +1,11 @@
@@ -3606,188 +3634,171 @@ index e3b9bae..83dfeef 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
-index 9a948fe..8c37ec7 100644
+index 8899e4e..13c7a95 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_missing_limits_message.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1688
++assertion_line: 1695
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
-index 49ac38b..e0a3193 100644
+index af4953d..6ffdd6a 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_refreshing_limits_notice.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1823
++assertion_line: 1831
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
-index 2474656..9474995 100644
+index 2ec2677..c384d60 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_stale_limits_message.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 2173
++assertion_line: 2184
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
-index 7d43405..e5c4adc 100644
+index d83ee6f..2348b66 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_shows_unavailable_limits_message.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 2042
++assertion_line: 2053
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
-   information on rate limits and credits
-diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
-index 7d43405..d643055 100644
---- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
-+++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_treats_refreshing_empty_limits_as_unavailable.snap
-@@ -1,10 +1,11 @@
- ---
- source: tui/src/status/tests.rs
-+assertion_line: 2103
- expression: sanitized
- ---
- /status
- 
--  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
- 
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
-index 23496e4..2bf61ea 100644
+index 593ffd2..bb18a5f 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_halfwidth_kana_in_narrow_terminal.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1637
++assertion_line: 1644
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit
-   https://chatgpt.com/codex/settings/usage
+   Visit https://chatgpt.com/settings/usage
+   for up-to-date
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
-index ac59138..0d1ad57 100644
+index be5c100..f2ae200 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_truncates_in_narrow_terminal.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1601
++assertion_line: 1608
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
-index bf5bb86..6058790 100644
+index 8661643..571e9e9 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_default_reasoning_when_config_empty.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1754
++assertion_line: 1762
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
-index a1430ac..351518c 100644
+index 1ba1146..1f8b5e2 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_uses_generic_limit_labels_for_unsupported_windows.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1212
++assertion_line: 1219
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
-index 950a3d4..6aa72ac 100644
+index 29cf797..cf59357 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__status_snapshot_wraps_enterprise_monthly_credit_details_in_narrow_terminal.snap
 @@ -1,10 +1,11 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1139
++assertion_line: 1146
  expression: sanitized
  ---
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit
-   https://chatgpt.com/codex/settings/usage for
+   Visit https://chatgpt.com/settings/usage for
+   up-to-date
 diff --git a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
-index f7871d8..e8399e6 100644
+index 51fbff6..53e950e 100644
 --- a/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
 +++ b/codex-rs/tui/src/status/snapshots/codex_tui__status__tests__transcript_overlay_status_rate_limit_refresh.snap
 @@ -1,12 +1,13 @@
  ---
  source: tui/src/status/tests.rs
-+assertion_line: 1905
++assertion_line: 1913
  expression: "format!(\"before:\\n{before}\\n\\nafter:\\n{after}\")"
  ---
  before:
@@ -3795,18 +3806,18 @@ index f7871d8..e8399e6 100644
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 @@ -38,7 +39,7 @@ after:
  / T R A N S C R I P T / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
  /status
  
 -  >_ OpenAI Codex (v0.0.0)
-+  >_ OpenAI Codex (v0.160.0)
++  >_ OpenAI Codex (v0.162.0)
  
-   Visit https://chatgpt.com/codex/settings/usage for up-to-date
+   Visit https://chatgpt.com/settings/usage for up-to-date
    information on rate limits and credits
 diff --git a/codex-rs/tui/src/style.rs b/codex-rs/tui/src/style.rs
 index b9f6d45..69e1480 100644
@@ -3890,7 +3901,7 @@ index a71bc52..5daae72 100644
          self.crossterm_backend.writer()
      }
 diff --git a/codex-rs/tui/src/tui.rs b/codex-rs/tui/src/tui.rs
-index 50b4e80..eb8eb81 100644
+index 9f49da4..41898c0 100644
 --- a/codex-rs/tui/src/tui.rs
 +++ b/codex-rs/tui/src/tui.rs
 @@ -81,6 +81,8 @@ mod screen_size;
@@ -3902,7 +3913,7 @@ index 50b4e80..eb8eb81 100644
  #[cfg(all(test, unix))]
  #[path = "tui_startup_tests.rs"]
  mod startup_tests;
-@@ -675,6 +677,7 @@ pub struct Tui {
+@@ -677,6 +679,7 @@ pub struct Tui {
      notification_backend: Option<DesktopNotificationBackend>,
      notification_condition: NotificationCondition,
      scrollback: ScrollbackStrategy,
@@ -3910,7 +3921,7 @@ index 50b4e80..eb8eb81 100644
      // When false, overlays stay on the inline screen.
      alt_screen_enabled: bool,
      // Keep the alternate screen alive when an overlay closes.
-@@ -749,6 +752,12 @@ impl Tui {
+@@ -751,6 +754,12 @@ impl Tui {
              notification_backend: Some(detect_backend(NotificationMethod::default())),
              notification_condition: NotificationCondition::default(),
              scrollback,
@@ -3923,7 +3934,7 @@ index 50b4e80..eb8eb81 100644
              alt_screen_enabled: true,
              owned_screen: false,
              overlay_input: OverlayInput::Default,
-@@ -1192,48 +1201,6 @@ impl Tui {
+@@ -1194,48 +1203,6 @@ impl Tui {
          self.clear_thread_switch_on_draw
      }
  
@@ -3972,7 +3983,7 @@ index 50b4e80..eb8eb81 100644
      /// Write any buffered history lines above the viewport and clear the buffer.
      fn flush_pending_history_lines(
          terminal: &mut Terminal,
-@@ -1452,12 +1419,9 @@ impl Tui {
+@@ -1454,12 +1421,9 @@ impl Tui {
              }
  
              let terminal = &mut self.terminal;
