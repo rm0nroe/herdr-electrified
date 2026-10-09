@@ -95,12 +95,16 @@ def notice_path():
 
 
 def processes():
-    return subprocess.run(['ps', '-axww', '-o', 'command='], capture_output=True, text=True).stdout
+    """Command lines of running processes, or None when ps fails."""
+    listed = subprocess.run(['ps', '-axww', '-o', 'command='], capture_output=True, text=True)
+    return listed.stdout if listed.returncode == 0 else None
 
 
 def prune_bundles(keep):
     """Remove superseded bundles no running process was started from; return the names removed."""
     running = processes()
+    if running is None:
+        return []  # unknown which bundles are in use: keep them all
     removed = []
     for old in sorted((store() / 'bundles').glob('herdr-electrified-*-macos-arm64')):
         # Launchers exec the resolved path, so a process names the bundle either way.

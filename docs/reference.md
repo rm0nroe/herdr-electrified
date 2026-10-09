@@ -196,14 +196,17 @@ The rest needs no new release and runs every time:
 - Reinstall: Electric with `install`, and each settings-only Herdr config with
   `install --settings-only` on the config path and Herdr executable it recorded.
   Options you chose (statusline, Codex theme, Ghostty look) stay selected, as
-  with any reinstall. `--yes` skips the prompt, as with `install`.
+  with any reinstall. `--yes` skips the prompt, as with `install`. Declining
+  the prompt ends the upgrade: the plugin, bundles and a running Electric stay
+  as they were.
 - Plugin: a `herdr-electrified` plugin installed from this repository moves to
   the same tag. A locally linked plugin, or none, is left alone. A failure here
   prints the command to run and does not undo the rest.
 - Old bundles: `install`, `upgrade` and the daily check remove
   `bundles/herdr-electrified-*-macos-arm64` directories other than the current
-  one when no running process was started from them. `undo` and settings-only
-  installs never remove bundles.
+  one when no running process was started from them. If the process list cannot
+  be read, nothing is removed. `undo` and settings-only installs never remove
+  bundles.
 - Restart: when Herdr Electric is running and the install changed Electric's
   files or an old bundle is still in use, `upgrade` asks before running
   `herdr-electric server stop` and relaunching. It never asks inside a Herdr

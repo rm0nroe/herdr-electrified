@@ -11,6 +11,8 @@ import test_electric
 import test_install
 from herdr_electrified import __version__, electric
 
+PROCESSES = electric.processes
+
 # Answers `plugin list` / `plugin install` and `server stop` the way Herdr does, recording each call.
 PLUGIN_STUB = '''elif 'plugin' in sys.argv or sys.argv[-2:] == ['server', 'stop']:
  import json
@@ -157,6 +159,18 @@ class Upgrade(unittest.TestCase):
         self.assertEqual((code, result['removed']), (0, [old.name]), result)
         self.assertFalse(old.exists())
 
+    def test_failed_process_listing_keeps_every_old_bundle(self):
+        self.release('v' + __version__)
+        old = self.old_bundle('0.9.0')
+        self.ps(None)  # ps failed: nothing is known to be unused
+        self.assertEqual(self.run_cli('install', '--yes')[0], 0)
+        self.assertTrue(old.exists())
+
+    def test_processes_reports_a_failed_ps_as_unknown(self):
+        failed = unittest.mock.Mock(returncode=1, stdout='')
+        with unittest.mock.patch('herdr_electrified.electric.subprocess.run', return_value=failed):
+            self.assertIsNone(PROCESSES())  # the real function; setUp stubs electric.processes
+
     def test_undo_and_settings_only_leave_bundles_alone(self):
         self.release('v' + __version__)
         old = self.old_bundle('0.9.0')
@@ -236,6 +250,52 @@ class Upgrade(unittest.TestCase):
         self.assertEqual([row['path'] for install in result['installs'] for row in install['targets']], [str(self.target.resolve())])
         self.assertFalse(elsewhere.exists())
         self.assertFalse(self.bundles.exists())  # settings-only never downloads the bundle
+
+    def test_upgrade_reapplies_settings_only_beside_electric(self):
+        self.release('v' + __version__)
+        self.assertEqual(self.run_cli('install', '--settings-only', '--yes', env={'PATH': f'{self.root}:/usr/bin:/bin'})[0], 0)
+        self.assertEqual(self.run_cli('install', '--yes')[0], 0)
+        code, result = self.run_cli('upgrade', '--yes')
+        self.assertEqual(code, 0, result)
+        self.assertEqual([install.get('bundle') for install in result['installs']], ['0.1.0', None])
+
+    def test_declined_install_stops_the_upgrade(self):
+        from herdr_electrified import config as c
+        self.release('v' + __version__)
+        self.assertEqual(self.run_cli('install', '--yes')[0], 0)
+        # An older release's launcher, recorded as ours: the new install has a change to offer.
+        launcher = str((self.root / '.local/bin/herdr-electric').resolve())
+        receipt = self.root / 'state/herdr-electrified/receipt.json'
+        data = json.loads(receipt.read_text())
+        entry = data['targets'][launcher]
+        entry['owned']['$file']['installed'] = '#!/bin/sh\nexit 0\n'
+        entry['installed_hash'] = c.digest(entry['owned']['$file']['installed'])
+        receipt.write_text(json.dumps(data))
+        os.chmod(launcher, 0o700)
+        (self.root / '.local/bin/herdr-electric').write_text('#!/bin/sh\nexit 0\n')
+        plugin = json.dumps({'plugin_id': 'herdr-electrified', 'source': {
+            'kind': 'github', 'owner': 'rm0nroe', 'repo': 'herdr-electrified', 'requested_ref': 'v1.0.0'}})
+        (self.root / 'plugin.json').write_text(plugin)
+        code, result = self.run_cli('upgrade', stdin=TTY('n\n'))
+        self.assertEqual(code, 0, result)
+        self.assertIn('declined', result['notice'])
+        self.assertEqual((self.root / 'plugin.json').read_text(), plugin)
+        self.assertEqual(self.calls(), [])
+
+    def test_interrupted_write_during_upgrade_says_to_check(self):
+        import contextlib
+        from herdr_electrified.cli import main
+        self.release('v' + __version__)
+        self.assertEqual(self.run_cli('install', '--yes')[0], 0)
+
+        def interrupted(args):
+            args.writing = True
+            raise KeyboardInterrupt
+        err = io.StringIO()
+        with unittest.mock.patch('herdr_electrified.cli.execute', interrupted), unittest.mock.patch.dict(os.environ, self.env, clear=True), \
+                unittest.mock.patch('sys.stderr', err), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(main(['upgrade', '--yes']), 130)
+        self.assertIn('Interrupted; run herdr-electrified check', err.getvalue())
 
     def test_nothing_installed_upgrade_says_how_to_install(self):
         self.release('v' + __version__)

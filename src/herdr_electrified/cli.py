@@ -57,7 +57,8 @@ def execute(args):
     blocked = args.command == 'undo' and data.get('electric') and electric.running(electric.recorded_session(data['electric']))
     if blocked and not readonly:
         raise ValueError('Herdr Electric is running; quit it, then rerun herdr-electrified undo')
-    bundle = args.electric or (data.get('electric', {}).get('root') if args.command != 'undo' else None)
+    # A settings-only install targets stock Herdr even when an Electric install is recorded beside it.
+    bundle = args.electric or (data.get('electric', {}).get('root') if args.command != 'undo' and not args.settings_only else None)
     if bundle:
         bundle_root, manifest = electric.verify(bundle)
         manifest_hash = hashlib.sha256((bundle_root / 'manifest.json').read_bytes()).hexdigest()
@@ -492,10 +493,16 @@ def upgrade(args):
         return result, 0
     for job in jobs:
         sub = parse(job + ['--yes'] * args.yes)
-        installed, code = run(sub)
+        try:
+            installed, code = run(sub)
+        finally:
+            args.writing = args.writing or sub.writing  # main's interrupt message must know a write began
         result['installs'].append(installed)
         result['removed'] += installed.get('removed', [])
         say(outcome(installed, sub))
+        if installed.get('notice') == 'declined; nothing written':
+            result['notice'] = 'Upgrade declined; the plugin, bundles and Electric were left as they were.'
+            return result, 0
         if code:
             result['error'] = installed.get('error', 'install failed; nothing else was changed')
             return result, code
