@@ -53,6 +53,34 @@ asks once before writing (`--yes` skips the prompt, `--diff` shows full diffs,
 `--dry-run` previews without writing). The launchers point at that
 directory by absolute path, so don't move or delete it.
 
+## Upgrade
+
+```sh
+herdr-electrified upgrade
+```
+
+`upgrade` installs the latest release of the CLI with uv, then reapplies
+whatever you installed (Electric or settings-only, with the options you chose)
+and asks once before writing, like `install`. It also moves a Herdr plugin
+installed from this repository to the same release and removes old Electric
+bundles that nothing is running from. If Herdr Electric is still running an
+older bundle, `upgrade` offers to restart it. Restarting closes its panes and
+Herdr reopens your agent conversations. Inside a Herdr pane it prints the
+restart command instead, since stopping the server would end the upgrade.
+`herdr-electrified upgrade --check` only reports whether a newer release exists.
+
+A bare `herdr-electric` prints one line when a newer release exists. It checks
+GitHub's latest-release API in the background at most once a day; nothing but
+that request leaves your machine. Set `HERDR_ELECTRIFIED_NO_UPDATE_CHECK=1` to
+turn the check off.
+
+v1.8.0 and earlier have no `upgrade`. To leave them, rerun the install with the
+new tag:
+
+```sh
+uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@v1.8.0 && herdr-electrified install
+```
+
 ### Manual install
 
 To verify the archive yourself:
@@ -119,9 +147,6 @@ profile puts another `codex` or `claude` first on PATH. Bash and fish panes don'
 get this; use `codex-electric`, or run
 `~/.local/share/herdr-electrified/commands/claude`, there. A shell alias named
 `claude` also bypasses it. Shell profiles are never edited.
-
-After upgrading herdr-electrified, run `herdr-electric server stop` so new panes
-pick up the new launcher.
 
 ## Settings only
 

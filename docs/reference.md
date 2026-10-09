@@ -162,8 +162,9 @@ before the first prompt. Bash and fish panes do not get this. There, if
 `command -v codex` does not point at `~/.local/share/herdr-electrified/commands/codex`,
 use `codex-electric` directly; for Claude, run
 `~/.local/share/herdr-electrified/commands/claude`. Shell profiles are never edited.
-After upgrading herdr-electrified, stop a running Electric server
-(`herdr-electric server stop`) so new panes pick up the launcher's environment.
+After an upgrade, restart a running Electric server so new panes pick up the
+launcher's environment; `herdr-electrified upgrade` offers to (see
+[Upgrade](#upgrade)).
 
 Codex uses the `CODEX_HOME` selected at installation, or your existing `~/.codex`.
 Settings, authentication, and session history remain shared. The launcher selects
@@ -179,6 +180,40 @@ only appears in OpenCode's theme list. The `herdr-electric` launcher sets
 that select that theme and the Build accent; OpenCode layers them over your global
 settings, so only OpenCode in an Electric pane changes. A project's own `tui.json`
 still wins over the theme selection. Undo removes all three files.
+
+## Upgrade
+
+`herdr-electrified upgrade` asks GitHub for the latest release
+(`api.github.com/repos/rm0nroe/herdr-electrified/releases/latest`; drafts and
+pre-releases never count). When it is newer, it runs
+`uv tool install --python 3.12 git+https://github.com/rm0nroe/herdr-electrified@<tag>`
+and hands over to the new version, which does the rest, so a release can fix its
+own upgrade steps. A copy not installed with `uv tool` is refused with the
+command to run instead.
+
+The rest needs no new release and runs every time:
+
+- Reinstall: Electric with `install`, and each settings-only Herdr config with
+  `install --settings-only` on the config path and Herdr executable it recorded.
+  Options you chose (statusline, Codex theme, Ghostty look) stay selected, as
+  with any reinstall. `--yes` skips the prompt, as with `install`.
+- Plugin: a `herdr-electrified` plugin installed from this repository moves to
+  the same tag. A locally linked plugin, or none, is left alone. A failure here
+  prints the command to run and does not undo the rest.
+- Old bundles: `install`, `upgrade` and the daily check remove
+  `bundles/herdr-electrified-*-macos-arm64` directories other than the current
+  one when no running process was started from them. `undo` and settings-only
+  installs never remove bundles.
+- Restart: when Herdr Electric is running and the install changed Electric's
+  files or an old bundle is still in use, `upgrade` asks before running
+  `herdr-electric server stop` and relaunching. It never asks inside a Herdr
+  pane or with `--yes`; it prints the commands instead.
+
+The update notice lives in `~/.local/share/herdr-electrified/update-notice`. A
+bare `herdr-electric` prints it, and when the file is older than a day it runs
+`herdr-electrified upgrade --check` in the background to refresh it. A failed
+check keeps the last notice and waits another day.
+`HERDR_ELECTRIFIED_NO_UPDATE_CHECK=1` disables both.
 
 ## Plugin keys
 

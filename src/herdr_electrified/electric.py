@@ -23,9 +23,11 @@ REQUIRED = {'herdr', 'codex/bin/codex', 'codex/bin/codex-code-mode-host',
             'codex/codex-path/rg', 'codex/codex-resources/zsh/bin/zsh', 'themes/codex-electric.tmTheme'}
 GHOSTTY_APPS = ('/Applications', '~/Applications')
 OPEN = '/usr/bin/open'
+REPO = 'rm0nroe/herdr-electrified'
+LATEST_URL = f'https://api.github.com/repos/{REPO}/releases/latest'
 # Pinned at release: install trusts only these exact archives.
 BUNDLE = 'herdr-electrified-0.10.0-macos-arm64'
-BUNDLE_URL = f'https://github.com/rm0nroe/herdr-electrified/releases/download/v{__version__}/{BUNDLE}.tar.gz'
+BUNDLE_URL = f'https://github.com/{REPO}/releases/download/v{__version__}/{BUNDLE}.tar.gz'
 VERSIONS = ('0.1.0', '0.2.0', '0.2.1', '0.2.2', '0.2.3', '0.3.0', '0.4.0', '0.5.0', '0.6.0', '0.7.0', '0.8.0', '0.9.0', '0.10.0')
 BUNDLE_SHA = '3f58d6396d079adc0c2064a7f59c9aa63b86ed900888d87ab6162509d46124e5'
 FONT_URL = 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz'
@@ -80,6 +82,34 @@ def fetch_bundle():
         archive.unlink()
         shutil.rmtree(staging)
     return root
+
+
+def latest_release():
+    """The newest published release tag (drafts and pre-releases excluded)."""
+    with urlopen(LATEST_URL, timeout=10) as response:
+        return json.load(response)['tag_name']
+
+
+def notice_path():
+    return store() / 'update-notice'
+
+
+def processes():
+    return subprocess.run(['ps', '-axww', '-o', 'command='], capture_output=True, text=True).stdout
+
+
+def prune_bundles(keep):
+    """Remove superseded bundles no running process was started from; return the names removed."""
+    running = processes()
+    removed = []
+    for old in sorted((store() / 'bundles').glob('herdr-electrified-*-macos-arm64')):
+        # Launchers exec the resolved path, so a process names the bundle either way.
+        if (old.resolve() == Path(keep).resolve() or old.name == BUNDLE or old.is_symlink()
+                or str(old) + '/' in running or str(old.resolve()) + '/' in running):
+            continue
+        shutil.rmtree(old)
+        removed.append(old.name)
+    return removed
 
 
 def fetch_fonts():
@@ -367,7 +397,14 @@ def targets(root, config, codex_home, agents=('codex',)):
               + ' --quit-after-last-window-closed=true --window-save-state=never '
               + shlex.quote('--command=' + shlex.quote(str(c.canonical(bin_dir / 'herdr-electric')))) + '\n'
               'fi\nunset HERDR_ELECTRIFIED_WINDOW\n') if app else ''
-    herdr = '#!/bin/sh\n' + window + 'unset HERDR_SOCKET_PATH HERDR_CLIENT_SOCKET_PATH HERDR_SESSION CLAUDE_CODE_CHILD_SESSION\n' + path + 'export HERDR_CONFIG_PATH=' + shlex.quote(str(config)) + '\nexec ' + shlex.quote(str(root / 'herdr')) + ' --session herdr-electrified "$@"\n'
+    # A bare launch shows the cached update notice, then refreshes it in the background at most daily.
+    notice = shlex.quote(str(notice_path()))
+    update = ('if [ $# -eq 0 ] && [ -z "${HERDR_ELECTRIFIED_WINDOW-}" ] && [ -z "${HERDR_ELECTRIFIED_NO_UPDATE_CHECK-}" ]; then\n'
+              f'  [ -s {notice} ] && cat {notice}\n'
+              f'  if [ -z "$(find {notice} -mtime -1 2>/dev/null)" ] && command -v herdr-electrified >/dev/null 2>&1; then\n'
+              '    herdr-electrified upgrade --check >/dev/null 2>&1 </dev/null &\n'
+              '  fi\nfi\n')
+    herdr = '#!/bin/sh\n' + update + window + 'unset HERDR_SOCKET_PATH HERDR_CLIENT_SOCKET_PATH HERDR_SESSION CLAUDE_CODE_CHILD_SESSION\n' + path + 'export HERDR_CONFIG_PATH=' + shlex.quote(str(config)) + '\nexec ' + shlex.quote(str(root / 'herdr')) + ' --session herdr-electrified "$@"\n'
     files = {c.canonical(bin_dir / 'herdr-electric'): herdr}
     if 'codex' in agents:
         files |= {c.canonical(codex_home / 'themes/herdr-electric.tmTheme'): (root / 'themes/codex-electric.tmTheme').read_text(),

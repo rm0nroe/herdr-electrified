@@ -352,10 +352,11 @@ def execute(args):
     return result, int(any(row['conflicts'] for row in result['targets']) and args.command == 'undo')
 
 
-def main(argv=None):
+def parse(argv):
     parser = argparse.ArgumentParser(prog='herdr-electrified')
     parser.add_argument('--version', action='version', version='herdr-electrified ' + __version__)
-    parser.add_argument('command', choices=['install', 'apply', 'preview-apply', 'check', 'undo'])
+    parser.add_argument('command', choices=['install', 'apply', 'preview-apply', 'check', 'undo', 'upgrade'])
+    parser.add_argument('--check', action='store_true', help='upgrade: only look for a newer release')
     parser.add_argument('--settings-only', action='store_true', help='install: stock Herdr settings, no Electric bundle')
     parser.add_argument('--dry-run', action='store_true', help='install, apply or undo: show what would change, write nothing')
     parser.add_argument('--diff', action='store_true', help='install or apply: show full diffs instead of the summary')
@@ -368,6 +369,11 @@ def main(argv=None):
     parser.add_argument('--yes', action='store_true')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args(argv)
+    if args.check and args.command != 'upgrade':
+        parser.error('--check is only valid for upgrade')
+    if args.command == 'upgrade' and any((args.settings_only, args.dry_run, args.diff, args.herdr_config, args.herdr_bin, args.electric,
+                                          args.agent, args.claude_statusline, args.codex_theme)):
+        parser.error('upgrade takes only --check, --yes and --json; it keeps the options you installed with')
     if args.command == 'preview-apply':
         args.command, args.dry_run = 'apply', True
     if args.electric and args.command == 'undo':
@@ -383,19 +389,33 @@ def main(argv=None):
     if args.command == 'install' and args.electric:
         parser.error('install fetches its own bundle; use apply --electric for a local one')
     args.ghostty, args.fonts, args.writing, args.prompted = False, None, False, False
+    return args
+
+
+def run(args):
+    if args.command == 'install':
+        args.command = 'apply'
+        if args.settings_only:
+            args.herdr_bin = args.herdr_bin or shutil.which('herdr')
+            if not args.herdr_bin:
+                raise ValueError('Herdr not found on PATH; install Herdr first, or pass --herdr-bin')
+            args.ghostty = electric.ghostty_installed()
+            if args.ghostty:
+                args.fonts = electric.fetch_fonts()
+        else:
+            args.electric = str(electric.fetch_bundle())
+    result, code = execute(args)
+    if args.command == 'apply' and not args.dry_run and not code and 'error' not in result:
+        clear_notice()
+        if result.get('bundle') and result.get('notice') != 'declined; nothing written':
+            result['removed'] = electric.prune_bundles(c.load_receipt(c.receipt_path())['electric']['root'])
+    return result, code
+
+
+def main(argv=None):
+    args = parse(argv)
     try:
-        if args.command == 'install':
-            args.command = 'apply'
-            if args.settings_only:
-                args.herdr_bin = args.herdr_bin or shutil.which('herdr')
-                if not args.herdr_bin:
-                    raise ValueError('Herdr not found on PATH; install Herdr first, or pass --herdr-bin')
-                args.ghostty = electric.ghostty_installed()
-                if args.ghostty:
-                    args.fonts = electric.fetch_fonts()
-            else:
-                args.electric = str(electric.fetch_bundle())
-        result, code = execute(args)
+        result, code = upgrade(args) if args.command == 'upgrade' else run(args)
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         result, code = {'error': str(error), 'loaded': 'unknown'}, 1
     except KeyboardInterrupt:
@@ -403,11 +423,149 @@ def main(argv=None):
         return 130
     if args.json:
         print(json.dumps(result, indent=2))
+    elif args.command == 'upgrade':
+        if text := upgrade_text(result):
+            print(text)
     elif args.command == 'apply' and not args.diff:
         print(outcome(result, args))
+        if result.get('removed'):
+            print('Removed old Electric bundles: ' + ', '.join(result['removed']))
     else:
         print(render(result))
     return code
+
+
+def version(tag):
+    return tuple(int(part) for part in tag.removeprefix('v').split('.'))
+
+
+def latest():
+    try:
+        tag = electric.latest_release()
+        version(tag)
+        return tag.removeprefix('v')
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise ValueError(f'could not look up the latest release: {error!r}') from None
+
+
+def clear_notice():
+    """Drop an update notice this version already satisfies."""
+    notice = electric.notice_path()
+    words = notice.read_text().split() if notice.is_file() else []
+    try:
+        if words[:1] == ['herdr-electrified'] and version(words[1]) <= version(__version__):
+            notice.write_text('')
+    except (IndexError, ValueError):
+        notice.write_text('')  # unreadable: the next daily check rewrites it
+
+
+def upgrade(args):
+    """Bring the CLI, every install it recorded, and the Herdr plugin to the latest release."""
+    data = c.load_receipt(c.receipt_path())
+    root = data.get('electric', {}).get('root')
+    if args.check:
+        notice = electric.notice_path()
+        notice.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            newest = latest()
+        except ValueError:
+            notice.touch()  # keep the last answer; the launcher retries tomorrow
+            raise
+        text = (f'herdr-electrified {newest} is available (you have {__version__}). Upgrade: herdr-electrified upgrade\n'
+                if version(newest) > version(__version__) else '')
+        notice.write_text(text)
+        return {'current': __version__, 'latest': newest, 'notice': text.strip() or f'herdr-electrified {__version__} is up to date.',
+                'removed': electric.prune_bundles(root) if root else []}, 0
+    newest = latest()
+    if version(newest) > version(__version__):
+        reinstall(newest, args)
+    say = (lambda line: None) if args.json else print
+    say(f'herdr-electrified {__version__} is up to date.')
+    result = {'current': __version__, 'latest': newest, 'installs': [], 'plugin': None, 'removed': [], 'restart': None}
+    # Re-running install keeps every option the receipt recorded (statusline, Codex theme, Ghostty look).
+    jobs = [['install']] if root else []
+    for path, entry in data['targets'].items():
+        if entry.get('kind', 'herdr') == 'herdr' and path != data.get('electric', {}).get('config'):
+            jobs.append(['install', '--settings-only', '--herdr-config', path] + (['--herdr-bin', entry['pin']['path']] if entry.get('pin') else []))
+    if not jobs:
+        result['notice'] = 'Nothing is installed yet; run herdr-electrified install.'
+        return result, 0
+    for job in jobs:
+        sub = parse(job + ['--yes'] * args.yes)
+        installed, code = run(sub)
+        result['installs'].append(installed)
+        result['removed'] += installed.get('removed', [])
+        say(outcome(installed, sub))
+        if code:
+            result['error'] = installed.get('error', 'install failed; nothing else was changed')
+            return result, code
+    launcher = c.canonical(Path.home() / '.local/bin/herdr-electric')
+    herdr = [str(launcher)] if root else [jobs[0][-1] if '--herdr-bin' in jobs[0] else 'herdr']
+    try:
+        result['plugin'] = sync_plugin(herdr)
+    except (OSError, ValueError, KeyError, IndexError, subprocess.SubprocessError) as error:
+        result['plugin_error'] = (f'Could not update the Herdr plugin ({error}); run: '
+                                  + shlex.join([*herdr, 'plugin', 'install', f'{electric.REPO}/plugin', '--ref', f'v{__version__}', '--yes']))
+    if root and electric.running(electric.recorded_session(data['electric'])):
+        # Bundles still on disk after pruning are in use: the running server predates this install.
+        current = Path(c.load_receipt(c.receipt_path())['electric']['root'])
+        stale = [p for p in current.parent.glob('herdr-electrified-*-macos-arm64') if p.resolve() != current.resolve()]
+        if stale or any(row.get('saved') for row in result['installs'][0]['targets']):
+            result['restart'] = 'Restart Herdr Electric to finish: herdr-electric server stop, then herdr-electric (it reopens your agent panes).'
+            # Stopping the server from inside one of its panes would kill this command before the relaunch.
+            if sys.stdin.isatty() and not args.yes and os.environ.get('HERDR_ENV') != '1':
+                if ask('Restart Herdr Electric now? Its panes close and reopen. [y/N] ') in ('y', 'yes'):
+                    subprocess.run([str(launcher), 'server', 'stop'], stdin=subprocess.DEVNULL, timeout=60, check=True)
+                    sys.stdout.flush()
+                    os.execv(str(launcher), [str(launcher)])
+    return result, 0
+
+
+def reinstall(newest, args):
+    """Replace this CLI with the release, then hand off to it: the new version runs its own upgrade steps."""
+    command = ['uv', 'tool', 'install', '--python', '3.12', f'git+https://github.com/{electric.REPO}@v{newest}']
+    uv = shutil.which('uv')
+    if not uv:
+        raise ValueError('uv not found on PATH; run: ' + shlex.join(command))
+    tools = subprocess.run([uv, 'tool', 'dir'], stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=30).stdout.strip()
+    if not tools or Path(sys.prefix).resolve().parent != Path(tools).resolve():
+        raise ValueError(f'this herdr-electrified ({sys.prefix}) was not installed with uv tool; upgrade it the way you installed it')
+    if not args.json:
+        print(f'Upgrading herdr-electrified {__version__} -> {newest}: https://github.com/{electric.REPO}/releases/tag/v{newest}', flush=True)
+    subprocess.run([uv, *command[1:]], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL if args.json else None, check=True)
+    sys.stdout.flush()
+    os.execv(sys.executable, [sys.executable, '-m', 'herdr_electrified.cli', 'upgrade'] + ['--yes'] * args.yes + ['--json'] * args.json)
+
+
+def sync_plugin(herdr):
+    """Move a GitHub-installed herdr-electrified plugin to this release's tag; a local link is left alone."""
+    listed = subprocess.run([*herdr, 'plugin', 'list', '--plugin', 'herdr-electrified', '--json'],
+                            stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=30)
+    answer = json.loads(listed.stdout)
+    if 'error' in answer:
+        raise ValueError(answer['error'].get('message', answer['error']))
+    plugins = answer['result']['plugins']
+    source = plugins[0]['source'] if plugins else {}
+    tag = f'v{__version__}'
+    if source.get('kind') != 'github' or f"{source.get('owner')}/{source.get('repo')}" != electric.REPO or source.get('requested_ref') == tag:
+        return None
+    installed = subprocess.run([*herdr, 'plugin', 'install', f'{electric.REPO}/plugin', '--ref', tag, '--yes'],
+                               stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=600)
+    if installed.returncode:
+        raise ValueError((installed.stderr or installed.stdout).strip() or f'exit status {installed.returncode}')
+    return tag
+
+
+def upgrade_text(result):
+    lines = [result['error']] if 'error' in result else []
+    lines += [result[key] for key in ('notice', 'plugin_error') if result.get(key)]
+    if result.get('plugin'):
+        lines.append(f"Herdr plugin updated to {result['plugin']}.")
+    if result.get('removed'):
+        lines.append('Removed old Electric bundles: ' + ', '.join(result['removed']))
+    if result.get('restart'):
+        lines.append(result['restart'])
+    return '\n'.join(lines)
 
 
 COMPONENTS = {'herdr': 'Herdr config', 'electric-file': 'Electric files', 'ghostty-config': 'Ghostty windows', 'codex-config': 'Codex',
