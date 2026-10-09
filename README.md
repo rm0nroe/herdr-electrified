@@ -50,7 +50,8 @@ Codex 0.162.0, JetBrainsMono Nerd Font Mono 3.5.1) into
 `~/.local/share/herdr-electrified/bundles/`, refuses it unless its SHA-256
 matches the checksum pinned in the CLI, lists the files it will write, and
 asks once before writing (`--yes` skips the prompt, `--diff` shows full diffs,
-`--dry-run` previews without writing). The launchers point at that
+`--dry-run` previews without changing your configs; it still downloads the
+bundle). The launchers point at that
 directory by absolute path, so don't move or delete it.
 
 ## Upgrade
@@ -61,17 +62,19 @@ herdr-electrified upgrade
 
 `upgrade` installs the latest release of the CLI with uv, then reapplies
 whatever you installed (Electric or settings-only, with the options you chose)
-and asks once before writing, like `install`. It also moves a Herdr plugin
+and asks before writing each one, like `install`. It also moves a Herdr plugin
 installed from this repository to the same release and removes old Electric
 bundles that nothing is running from. If Herdr Electric is still running an
 older bundle, `upgrade` offers to restart it. Restarting closes its panes and
 Herdr reopens your agent conversations. Inside a Herdr pane it prints the
 restart command instead, since stopping the server would end the upgrade.
-`herdr-electrified upgrade --check` only reports whether a newer release exists.
+`herdr-electrified upgrade --check` reports whether a newer release exists and
+removes old Electric bundles that nothing is running from; it installs nothing.
 
 A bare `herdr-electric` prints one line when a newer release exists. It checks
 GitHub's latest-release API in the background at most once a day; nothing but
-that request leaves your machine. Set `HERDR_ELECTRIFIED_NO_UPDATE_CHECK=1` to
+that request leaves your machine. Like `upgrade --check`, it also removes
+unused old bundles. Set `HERDR_ELECTRIFIED_NO_UPDATE_CHECK=1` to
 turn the check off.
 
 v1.8.0 and earlier have no `upgrade`. To leave them, rerun the install with the
@@ -166,8 +169,7 @@ your previous theme). It colors code and the status line only, applies in every
 terminal and needs a dark background. To preview first:
 
 ```sh
-herdr-electrified apply --dry-run --herdr-bin "$(command -v herdr)"
-herdr-electrified apply --herdr-bin "$(command -v herdr)"
+herdr-electrified install --settings-only --dry-run
 ```
 
 Add `--claude-statusline` for the optional Claude statusline (needs a Python
@@ -176,7 +178,7 @@ Add `--claude-statusline` for the optional Claude statusline (needs a Python
 ## Check and undo
 
 ```sh
-herdr-electrified check   # each owned file and its diff; empty diff and exit 0 mean no drift
+herdr-electrified check   # each owned file and its diff; an empty diff means no drift
 herdr-electrified undo
 ```
 
